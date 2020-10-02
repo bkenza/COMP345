@@ -9,25 +9,10 @@ using namespace std;
 
 namespace MapNamespace
 {
-    // // struct for an adjacency list node
-    // struct MapAdjListNode
-    // {
-    //     int data;
-    //     struct MapAdjListNode *next;
-    // };
-
-    //struct for an adjacency list
-    // struct MapAdjList
-    // {
-    //     MapAdjListNode *head; //pointer to head node of list
-    // };
-
     class Map
     {
     private:
-        // int V; // size of the map
-        // MapAdjList *arr; //TODO: should this be private??
-
+        // no private attributes for now
     public:
         struct MapAdjListNode
         {
@@ -48,8 +33,6 @@ namespace MapNamespace
         // TODO: do we need a copy constructor
         int V;
         Map::MapAdjList *arr;
-        // MapAdjList *arr;
-
         bool validate();
         Map *createMap(int V);
         MapAdjListNode *newNode(int);  // method to create a new node
