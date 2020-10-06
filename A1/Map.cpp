@@ -4,9 +4,17 @@
 
 using namespace std;
 
+// Default constructor
 Map::Map()
 {
-} //default contructor
+    name = new string("");
+}
+
+// Copy constructor
+Map::Map(const Map &orig)
+{
+    name = new string(*orig.name);
+}
 
 // Create a map
 Map::Map *createMap(int V)
@@ -21,6 +29,18 @@ Map::Map *createMap(int V)
         map->arr[i].head = NULL;
     }
     return map;
+}
+
+// Set map name
+void Map::setName(std::string title)
+{
+    *name = title;
+}
+
+// Get map name
+std::string Map::getName()
+{
+    return *name;
 }
 
 //TODO: not sure if this code is correct
@@ -156,4 +176,3 @@ void Territory::displayTerritory()
     cout << "Continent : " << getContinent() << endl;
     cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
 }
-
