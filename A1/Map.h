@@ -7,8 +7,6 @@ using namespace std;
 #include <vector>
 // #include "Territory.h"
 
-namespace MapNamespace
-{
     class Map
     {
     private:
@@ -39,6 +37,32 @@ namespace MapNamespace
         void addEdge(Map *, int, int); // method to add an edge between two territories
         void printMap(Map *);          // method to print the map (all territories and their adjacent territories)
     };
-} // namespace MapNamespace
+
+    class Territory
+    {
+    private:
+        int territoryID;
+        int playerID; // only one player can own a territory
+        string *pCountry;
+        string *pContinent;
+        int playerNumOfArmies;
+
+    public:
+        Territory(); // constructor
+        Territory(int territoryId, int playerId, string country, string continent, int num);
+        Territory(const Territory &obj);
+        ~Territory();
+        void setTerritoryID(int territoryId);
+        void setTerritoryPlayerID(int playerId);
+        void setCountry(string country);
+        void setContinent(string continent);
+        void setNumOfArmies(int num);
+        int getTerritoryID();
+        int getTerritoryPlayerID();
+        string getCountry();
+        string getContinent();
+        int getNumOfArmies();
+        void displayTerritory();
+    };
 
 #endif
