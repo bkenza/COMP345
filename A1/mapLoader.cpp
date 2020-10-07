@@ -16,7 +16,7 @@ using std::string;
 // Method that splits long strings into 2 strings
 string *splitString(string line)
 {
-    static string words[2];
+    static string words[4];
     istringstream ss(line);
     for (int i = 0; i < 2; i++)
     {
@@ -114,7 +114,7 @@ Map *MapLoader::MapReader(string fileName)
                 Territory *territory = new Territory();
                 words = splitString(line);
                 territory->setTerritoryID(++ter_counter);
-                territory->setTerritoryName(words[0]);
+                territory->setTerritoryName(words[2]);
                 map->Territories.push_back(territory);
             }
             else

@@ -13,6 +13,6 @@ using std::istringstream;
 int main()
 {
     MapLoader *mapLoader = new MapLoader();
-    Map *map = mapLoader->MapReader("Maps/carribean.map");
+    Map *map = mapLoader->MapReader("../Maps/caribbean.map");
     return 0;
 }
