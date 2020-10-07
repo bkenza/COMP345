@@ -49,8 +49,10 @@ std::string Map::getName()
 }
 
 //TODO: create this method
-bool validate(){
+bool validate()
+{
     //validate method
+    return true;
 };
 
 //TODO: create a printMap method
@@ -119,7 +121,7 @@ Territory::~Territory()
 //Setter for territoryID datamember
 void Territory::setTerritoryID(int territoryId)
 {
-    *pTerritoryID == territoryId;
+    *pTerritoryID = territoryId;
 }
 
 int Territory::getTerritoryID()
@@ -253,4 +255,5 @@ bool Continent::isInContinent(Territory *territory)
             return true;
         return false;
     }
+    return false;
 }

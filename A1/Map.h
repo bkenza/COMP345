@@ -6,6 +6,9 @@
 #include <vector>
 using namespace std;
 
+class Continent;
+class Territory;
+
 class Map
 {
 private:
