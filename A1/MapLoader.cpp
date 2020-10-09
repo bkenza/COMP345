@@ -129,19 +129,15 @@ Map *MapLoader::MapReader(string fileName)
         {
             if (line.length() > 0 && line != "\r")
             {
-                std::vector<int *> adjTerritories;
                 words = splitString(line);
                 int territoryId;
                 std::istringstream(words[0]) >> territoryId;
-                for (int i = 0; i < words.size(); i++)
+                for (int i = 1; i < words.size() - 1; i++)
                 {
-                    if (i != 0)
-                    {
-                        int adjTerritoryId;
-                        std::istringstream(words[i]) >> adjTerritoryId;
-                        std::vector<int*> terr_adj = map->getTerritoryById(territoryId).adjTerritories;
-                        terr_adj.push_back(&adjTerritoryId);
-                    }
+                    int adjTerritoryId;
+                    std::istringstream(words[i]) >> adjTerritoryId;
+                    // TODO: try to use the getter function to push the id (getTerritoryById)
+                    map->Territories[territoryId - 1]->adjTerritories.push_back(adjTerritoryId);
                 }
             }
             else
@@ -150,5 +146,6 @@ Map *MapLoader::MapReader(string fileName)
             }
         }
     };
+
     return map;
 }
