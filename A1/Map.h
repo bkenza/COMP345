@@ -12,7 +12,7 @@ class Territory;
 class Map
 {
 private:
-    std::string *pName; //name/title of a given map
+    std::string *pName; // name/title of a given map
 public:
     Map();                // default constructor
     Map(const Map &orig); // Copy constructor
