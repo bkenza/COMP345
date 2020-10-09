@@ -12,7 +12,7 @@ class Territory;
 class Map
 {
 private:
-    std::string *pName; //name/title of a given map
+    std::string *pName; // name/title of a given map
 public:
     Map();                // default constructor
     Map(const Map &orig); // Copy constructor
@@ -23,6 +23,7 @@ public:
     void printMap(Map *);            // method to print the map (all territories and their adjacent territories)
     void setName(std::string title); // set the name of a given map
     std::string getName();           // get the name of a given map
+    Territory getTerritoryById(int territoryID);
 };
 #endif
 
@@ -46,15 +47,16 @@ public:
     void setTerritoryID(int territoryId);
     void setTerritoryPlayerID(int playerId);
     void setTerritoryName(string territoryName);
+    std::string getTerritoryName();
     void setContinentName(string continent);
     void setNumOfArmies(int num);
     int getTerritoryID();
     int getTerritoryPlayerID();
-    std::string getTerritoryName();
-    std::string getContinentName();
+    std::string getCountry();
+    std::string getContinent();
     int getNumOfArmies();
     void displayTerritory();
-    std::vector<int *> adjTerritories;
+    std::vector<int> adjTerritories;
 };
 #endif
 

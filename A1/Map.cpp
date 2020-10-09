@@ -17,12 +17,15 @@ Map::Map()
 Map::Map(const Map &orig)
 {
     pName = new string(*orig.pName);
+    for (auto &&t : orig.Territories)
+    {
+        Territories.push_back(new Territory(*t));
+    }
 }
 
 // Destructor
 Map::~Map()
 {
-
     delete pName;
     for (auto t : Territories)
     {
@@ -53,12 +56,24 @@ bool validate()
 {
     //validate method
     return true;
-}
+};
 
 //TODO: create a printMap method
 void printMap(Map *map)
 {
     // print the current map
+    // Print territories
+}
+
+Territory Map::getTerritoryById(int territoryID)
+{
+    for (int i = 0; i < Territories.size(); i++)
+    {
+        if (Territories[i]->getTerritoryID() == territoryID)
+        {
+            return *Territories[i];
+        }
+    }
 }
 
 //---------------------------
@@ -68,12 +83,12 @@ void printMap(Map *map)
 //default constructor
 Territory::Territory()
 {
-    pTerritoryID = new int();
+    pTerritoryID = new int(1);
     pTerritoryName = new string("");
     pPlayerID = new int(); // only one player can own a territory
     pTerritoryName = new string("");
     pContinentName = new string("");
-    pPlayerNumOfArmies = new int();
+    pPlayerNumOfArmies = new int(0);
 }
 
 // TODO: check if the syntax is right aka do we need to add "new"???????
@@ -104,21 +119,20 @@ Territory::Territory(const Territory &orig)
 //Destructor to call finalize() and free unwanted resources
 Territory::~Territory()
 {
-    delete pTerritoryName;
     delete pTerritoryID;
     delete pPlayerID; // only one player can own a territory
     delete pTerritoryName;
-    delete pTerritoryName;
+    delete pContinentName;
     delete pPlayerNumOfArmies;
 
     for (auto adjTerritory : adjTerritories)
     {
-        delete adjTerritory;
+        delete &adjTerritory;
     }
     adjTerritories.clear();
 }
 
-//Setter for territoryID datamember
+//Setter for territoryID data member
 void Territory::setTerritoryID(int territoryId)
 {
     *pTerritoryID = territoryId;
@@ -127,6 +141,7 @@ void Territory::setTerritoryID(int territoryId)
 int Territory::getTerritoryID()
 {
     return *pTerritoryID;
+    ;
 }
 
 // Setter for playerID datamember
@@ -160,7 +175,7 @@ void Territory::setContinentName(string continent)
 }
 
 //Getter for pContinent data member
-string Territory::getContinentName()
+string Territory::getContinent()
 {
     return *pContinentName;
 }
@@ -182,8 +197,8 @@ void Territory::displayTerritory()
 {
     //cout << "Displaying information for Territory " << get << endl;
     cout << "Player: " << getTerritoryPlayerID() << endl;
-    cout << "Country: " << getTerritoryName() << endl;
-    cout << "Continent : " << getContinentName() << endl;
+    //    cout << "Country: " << getCountry() << endl;
+    cout << "Continent : " << getContinent() << endl;
     cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
 }
 
@@ -194,7 +209,7 @@ void Territory::displayTerritory()
 // default contructor
 Continent::Continent()
 {
-    pContinentId = new int();
+    pContinentId = new int(1);
     pContinentName = new string("");
 }
 
@@ -244,7 +259,7 @@ string Continent::getContinentName()
 void Continent::setContinentName(string continentName)
 {
     *pContinentName = continentName;
-}
+};
 
 bool Continent::isInContinent(Territory *territory)
 {
