@@ -1,67 +1,258 @@
 #include "Map.h"
 #include <iostream>
-#include <cstdlib>
 
 using namespace std;
-using namespace MapNamespace;
 
+//==========================
+//          MAP
+//==========================
+
+// Default constructor
 Map::Map()
 {
-} //default contructor
+    pName = new string("");
+}
 
-// Create a map
-Map::Map *createMap(int V)
+// Copy constructor
+Map::Map(const Map &orig)
 {
-    Map *map = new Map;
-    map->V = V;
-    //create an array of adjacency list. size of array - V
-    map->arr = new Map::MapAdjList[V];
-    //initialize with NULL (e.g root=NULL)
-    for (int i = 0; i < V; i++)
+    pName = new string(*orig.pName);
+}
+
+// Destructor
+Map::~Map()
+{
+
+    delete pName;
+    for (auto t : Territories)
     {
-        map->arr[i].head = NULL;
+        delete t;
     }
-    return map;
+    Territories.clear();
+    for (auto c : Continents)
+    {
+        delete c;
+    }
+    Continents.clear();
 }
 
-//TODO: not sure if this code is correct
-// Create a new node
-Map::MapAdjListNode *newNode(int id)
+// Set map pName
+void Map::setName(std::string title)
 {
-    Map::MapAdjListNode *nptr = new Map::MapAdjListNode;
-    nptr->id = id;
-    nptr->next = NULL;
-    return nptr;
+    *pName = title;
 }
 
-//add an edge to an undirected map
-void addEdge(Map *map, int territory1, int territory2)
+// Get map pName
+std::string Map::getName()
 {
-    //Add an edge from territory1 to territory2. A new node added to the adjacency list of src
-    //node added at beginning
-    Map::MapAdjListNode *nptr = newNode(territory2);
-    nptr->next = map->arr[territory1].head;
-    map->arr[territory1].head = nptr;
-    //connect from territory2 to src (since undirected)
-    nptr = newNode(territory1);
-    nptr->next = map->arr[territory2].head;
-    map->arr[territory2].head = nptr;
+    return *pName;
 }
 
-//function to print the map
+//TODO: create this method
+bool validate()
+{
+    //validate method
+    return true;
+}
+
+//TODO: create a printMap method
 void printMap(Map *map)
 {
-    //loop over each adjacent list
-    for (int i = 0; i < map->V; i++)
+    // print the current map
+}
+
+//---------------------------
+//     Territory
+//---------------------------
+
+//default constructor
+Territory::Territory()
+{
+    pTerritoryID = new int();
+    pTerritoryName = new string("");
+    pPlayerID = new int(); // only one player can own a territory
+    pTerritoryName = new string("");
+    pContinentName = new string("");
+    pPlayerNumOfArmies = new int();
+}
+
+// TODO: check if the syntax is right aka do we need to add "new"???????
+//setting our Territory object with a country, continent and armies value
+Territory::Territory(int territoryId, string country, string continent)
+{
+    *pTerritoryID = territoryId;
+    *pTerritoryName = country;
+    *pContinentName = continent;
+}
+
+// Copy constructor
+// TODO: if this does not work, add a pointer
+Territory::Territory(const Territory &orig)
+{
+    pTerritoryID = new int(*orig.pTerritoryID);
+    pTerritoryName = new string(*orig.pTerritoryName);
+    pTerritoryName = new string(*orig.pTerritoryName);
+    pContinentName = new string(*orig.pContinentName);
+    pPlayerID = new int(*orig.pPlayerID);
+    pPlayerNumOfArmies = new int(*orig.pPlayerNumOfArmies);
+    for (auto adjTerritory : orig.adjTerritories)
     {
-        Map::MapAdjListNode *root = map->arr[i].head;
-        cout << "Adjacency list of vertex " << i << endl;
-        //loop over each node in list
-        while (root != NULL)
-        {
-            cout << root->id << " ";
-            root = root->next;
-        }
-        cout << endl;
+        adjTerritories.push_back(adjTerritory);
     }
+}
+
+//Destructor to call finalize() and free unwanted resources
+Territory::~Territory()
+{
+    delete pTerritoryName;
+    delete pTerritoryID;
+    delete pPlayerID; // only one player can own a territory
+    delete pTerritoryName;
+    delete pTerritoryName;
+    delete pPlayerNumOfArmies;
+
+    for (auto adjTerritory : adjTerritories)
+    {
+        delete adjTerritory;
+    }
+    adjTerritories.clear();
+}
+
+//Setter for territoryID datamember
+void Territory::setTerritoryID(int territoryId)
+{
+    *pTerritoryID = territoryId;
+}
+
+int Territory::getTerritoryID()
+{
+    return *pTerritoryID;
+}
+
+// Setter for playerID datamember
+void Territory::setTerritoryPlayerID(int playerId)
+{
+    *pPlayerID = playerId;
+}
+
+// Getter for playerID datamember
+int Territory::getTerritoryPlayerID()
+{
+    return *pPlayerID;
+}
+
+// Setter for pTerritoryName data member
+void Territory::setTerritoryName(string territoryName)
+{
+    *pTerritoryName = territoryName;
+}
+
+// Getter for pTerritoryName data member
+string Territory::getTerritoryName()
+{
+    return *pTerritoryName;
+}
+
+//Setter for pContinentName data member
+void Territory::setContinentName(string continent)
+{
+    *pContinentName = continent;
+}
+
+//Getter for pContinent data member
+string Territory::getContinentName()
+{
+    return *pContinentName;
+}
+
+//Setter for pNumOfArmy data member
+void Territory::setNumOfArmies(int num)
+{
+    *pPlayerNumOfArmies = num;
+}
+
+//Getter for pNumOfArmy data member
+int Territory::getNumOfArmies()
+{
+    return *pPlayerNumOfArmies;
+}
+
+//Display territory information
+void Territory::displayTerritory()
+{
+    //cout << "Displaying information for Territory " << get << endl;
+    cout << "Player: " << getTerritoryPlayerID() << endl;
+    cout << "Country: " << getTerritoryName() << endl;
+    cout << "Continent : " << getContinentName() << endl;
+    cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
+}
+
+//-------------------------
+//        CONTINENT
+//-------------------------
+
+// default contructor
+Continent::Continent()
+{
+    pContinentId = new int();
+    pContinentName = new string("");
+}
+
+// Copy constructor
+// TODO: if this does not work, add a pointer
+Continent::Continent(const Continent &orig)
+{
+    pContinentId = new int(*orig.pContinentId);
+    pContinentName = new string(*orig.pContinentName);
+
+    for (auto territory : orig.territories)
+    {
+        territories.push_back(territory);
+    }
+}
+
+// Destructor
+Continent::~Continent()
+{
+    delete pContinentId;
+    delete pContinentName;
+    for (auto t : territories)
+    {
+        delete t;
+    }
+    territories.clear();
+}
+
+// Getter for the continent id
+int Continent::getContinentID()
+{
+    return *pContinentId;
+}
+
+// Setter for the continent id
+void Continent::setContinentID(int continentID)
+{
+    *pContinentId = continentID;
+}
+
+// Getter for the continent id
+string Continent::getContinentName()
+{
+    return *pContinentName;
+}
+
+void Continent::setContinentName(string continentName)
+{
+    *pContinentName = continentName;
+}
+
+bool Continent::isInContinent(Territory *territory)
+{
+    for (auto t : territories)
+    {
+        if (t == territory)
+            return true;
+        return false;
+    }
+    return false;
 }

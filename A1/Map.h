@@ -3,42 +3,80 @@
 
 #include <iostream>
 #include <cstdlib>
-using namespace std;
 #include <vector>
-// #include "Territory.h"
+using namespace std;
 
-namespace MapNamespace
+class Continent;
+class Territory;
+
+class Map
 {
-    class Map
-    {
-    private:
-        // no private attributes for now
-    public:
-        struct MapAdjListNode
-        {
-            int id;
-            MapAdjListNode *next;
-        };
-        MapAdjListNode mapAdjListNode;
+private:
+    std::string *pName; //name/title of a given map
+public:
+    Map();                // default constructor
+    Map(const Map &orig); // Copy constructor
+    virtual ~Map();       // destructor
+    std::vector<Continent *> Continents;
+    std::vector<Territory *> Territories;
+    bool validate();
+    void printMap(Map *);            // method to print the map (all territories and their adjacent territories)
+    void setName(std::string title); // set the name of a given map
+    std::string getName();           // get the name of a given map
+};
+#endif
 
-        struct MapAdjList
-        {
-            MapAdjListNode *head; //pointer to head node of list
-        };
-        MapAdjList mapAdjList;
+#ifndef TERRITORY_H
+#define TERRITORY_H
 
-        Map(); //constructor
-        // Map(int V); // Create a map of size V
-        ~Map(); // destructor
-        // TODO: do we need a copy constructor
-        int V;
-        Map::MapAdjList *arr;
-        bool validate();
-        Map *createMap(int V);
-        MapAdjListNode *newNode(int);  // method to create a new node
-        void addEdge(Map *, int, int); // method to add an edge between two territories
-        void printMap(Map *);          // method to print the map (all territories and their adjacent territories)
-    };
-} // namespace MapNamespace
+class Territory
+{
+private:
+    int *pTerritoryID;
+    std::string *pTerritoryName;
+    int *pPlayerID; // only one player can own a territory
+    std::string *pContinentName;
+    int *pPlayerNumOfArmies;
+
+public:
+    Territory(); // constructor
+    Territory(int territoryId, string country, string continent);
+    Territory(const Territory &obj);
+    virtual ~Territory(); // TODO: understand virtual
+    void setTerritoryID(int territoryId);
+    void setTerritoryPlayerID(int playerId);
+    void setTerritoryName(string territoryName);
+    void setContinentName(string continent);
+    void setNumOfArmies(int num);
+    int getTerritoryID();
+    int getTerritoryPlayerID();
+    std::string getTerritoryName();
+    std::string getContinentName();
+    int getNumOfArmies();
+    void displayTerritory();
+    std::vector<int *> adjTerritories;
+};
+#endif
+
+#ifndef CONTINENT_H
+#define CONTINENT_H
+
+class Continent
+{
+private:
+    int *pContinentId;
+    std::string *pContinentName;
+
+public:
+    std::vector<Territory *> territories;        //vector holding all territories in continent
+    Continent();                                 // default contructor
+    Continent(const Continent &orig);            // copy contructor
+    virtual ~Continent();                        // destructor TODO: does this need to be virtual
+    int getContinentID();                        // method that returns the id of a continent
+    void setContinentID(int continentID);        // method to set the id of a given continent
+    std::string getContinentName();              // method that returns the name of a given continent
+    void setContinentName(string continentName); // method that sets the name of a continent
+    bool isInContinent(Territory *territory);
+};
 
 #endif
