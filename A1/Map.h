@@ -23,6 +23,7 @@ public:
     void printMap(Map *);            // method to print the map (all territories and their adjacent territories)
     void setName(std::string title); // set the name of a given map
     std::string getName();           // get the name of a given map
+    Territory getTerritoryById(int territoryID);
 };
 #endif
 

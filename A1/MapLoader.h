@@ -3,7 +3,7 @@
 
 #include "Map.h"
 
-string *splitString(string line);
+std::vector<string> splitString(string line);
 
 class MapLoader
 {
