@@ -56,7 +56,7 @@ public:
     std::string getContinent();
     int getNumOfArmies();
     void displayTerritory();
-    std::vector<int *> adjTerritories;
+    std::vector<int> adjTerritories;
 };
 #endif
 

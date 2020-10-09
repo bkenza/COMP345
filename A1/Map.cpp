@@ -18,7 +18,8 @@ Map::Map()
 Map::Map(const Map &orig)
 {
     pName = new string(*orig.pName);
-    for(auto&& t:orig.Territories){
+    for (auto &&t : orig.Territories)
+    {
         Territories.push_back(new Territory(*t));
     }
 }
@@ -127,7 +128,7 @@ Territory::~Territory()
 
     for (auto adjTerritory : adjTerritories)
     {
-        delete adjTerritory;
+        delete &adjTerritory;
     }
     adjTerritories.clear();
 }
