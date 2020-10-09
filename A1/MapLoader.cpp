@@ -139,9 +139,9 @@ Map *MapLoader::MapReader(string fileName)
                     {
                         int adjTerritoryId;
                         std::istringstream(words[i]) >> adjTerritoryId;
-                        map->getTerritoryById(territoryId).adjTerritories.push_back(adjTerritoryId);
-                        map->Territories.
-                    };
+                        std::vector<int*> terr_adj = map->getTerritoryById(territoryId).adjTerritories;
+                        terr_adj.push_back(&adjTerritoryId);
+                    }
                 }
             }
             else

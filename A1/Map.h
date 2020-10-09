@@ -52,7 +52,6 @@ public:
     void setNumOfArmies(int num);
     int getTerritoryID();
     int getTerritoryPlayerID();
-    // Territory *getTerritoryById(int territoryID);
     std::string getCountry();
     std::string getContinent();
     int getNumOfArmies();

@@ -65,11 +65,11 @@ void printMap(Map *map)
     // Print territories
 }
 
-Territory Map::*getTerritoryById(Map *map, int territoryID)
+Territory Map::getTerritoryById(int territoryID)
 {
-    for (int i = 0; i < map->Territories.size(); i++)
+    for (int i = 0; i < Territories.size(); i++)
     {
-        if (map->Territories[i].getId() == territoryID)
+        if (Territories[i]->getTerritoryID() == territoryID)
         {
             return *Territories[i];
         }
@@ -119,7 +119,6 @@ Territory::Territory(const Territory &orig)
 //Destructor to call finalize() and free unwanted resources
 Territory::~Territory()
 {
-    delete pTerritoryName;
     delete pTerritoryID;
     delete pPlayerID; // only one player can own a territory
     delete pTerritoryName;
