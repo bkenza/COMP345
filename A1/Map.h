@@ -20,10 +20,13 @@ public:
     std::vector<Continent *> Continents;
     std::vector<Territory *> Territories;
     bool validate();
+    bool uniqueContinentCheck();
+    bool isMapConnected();
     void printMap(Map *);            // method to print the map (all territories and their adjacent territories)
     void setName(std::string title); // set the name of a given map
     std::string getName();           // get the name of a given map
     Territory getTerritoryById(int territoryID);
+    Continent getContinentById(int continentId);
 };
 #endif
 
@@ -38,6 +41,7 @@ private:
     int *pPlayerID; // only one player can own a territory
     std::string *pContinentName;
     int *pPlayerNumOfArmies;
+    int continentId;
 
 public:
     Territory(); // constructor
@@ -49,11 +53,13 @@ public:
     void setTerritoryName(string territoryName);
     std::string getTerritoryName();
     void setContinentName(string continent);
+    void setContinentId(int continentID);
     void setNumOfArmies(int num);
     int getTerritoryID();
     int getTerritoryPlayerID();
     std::string getCountry();
     std::string getContinent();
+    int getContinentId();
     int getNumOfArmies();
     void displayTerritory();
     std::vector<int> adjTerritories;
