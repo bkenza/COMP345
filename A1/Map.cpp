@@ -145,7 +145,7 @@ bool Map::isMapConnected()
         bool visitedC;
     };
     vector<visitedContinent> visitedContinents;
-    vector<int> stackOfIds;
+    vector<int> stackOfContIds;
     for (int i = 0; i < Continents.size(); i++)
     {
         visitedContinent currentContinent;
@@ -153,20 +153,20 @@ bool Map::isMapConnected()
         currentContinent.visitedC = false;
         visitedContinents.push_back(currentContinent);
     };
-    int startId = Continents[0]->getContinentID();
+    int startContId = Continents[0]->getContinentID();
     for (auto v : visitedContinents)
     {
-        if (v.id == startId)
+        if (v.id == startContId)
         {
             v.visitedC = true;
         };
     }
-    stackOfIds.push_back(startId);
+    stackOfContIds.push_back(startContId);
 
-    while (!stackOfIds.empty())
+    while (!stackOfContIds.empty())
     {
-        int poppedId = stackOfIds.back();
-        stackOfIds.pop_back();
+        int poppedId = stackOfContIds.back();
+        stackOfContIds.pop_back();
 
         Continent poppedContinent = getContinentById(poppedId);
 
@@ -180,7 +180,7 @@ bool Map::isMapConnected()
                     if (adjcontinentId == v.id && !v.visitedC)
                     {
                         v.visitedC = true;
-                        stackOfIds.push_back(adjcontinentId);
+                        stackOfContIds.push_back(adjcontinentId);
                     };
                 }
             }
@@ -194,7 +194,6 @@ bool Map::isMapConnected()
             isConnected = false;
         }
     }
-
     return isConnected;
 }
 
