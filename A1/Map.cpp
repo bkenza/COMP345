@@ -52,11 +52,151 @@ std::string Map::getName()
 }
 
 //TODO: create this method
-bool validate()
+bool Map::validate()
 {
-    //validate method
+    return uniqueContinentCheck() && isMapConnected();
+};
+
+bool Map::uniqueContinentCheck()
+{
+    for (auto t : Territories)
+    {
+        int continentCount = 0;
+        Territory currentTerritory = *t;
+        for (auto c : Continents)
+        {
+            for (auto ter : c->territories)
+            {
+                if (ter->getTerritoryID() == currentTerritory.getTerritoryID())
+                {
+                    continentCount++;
+                }
+            }
+        }
+        if (continentCount != 1)
+        {
+            return false;
+        }
+    }
     return true;
 };
+
+// Thus method checks if the graph is connected by using DFS (depth-first search).
+// TODO: explain more
+bool Map::isMapConnected()
+{
+    bool isConnected = true; // map is a connected graph
+    union visitedTerritory
+    {
+        int id;
+        bool visitedT;
+    };
+    vector<visitedTerritory> visitedTerritories;
+    vector<int> stackOfIds;
+    for (int i = 0; i < Territories.size(); i++)
+    {
+        visitedTerritory currentTerritory;
+        currentTerritory.id = Territories[i]->getTerritoryID();
+        currentTerritory.visitedT = false;
+        visitedTerritories.push_back(currentTerritory);
+    };
+    int startId = Territories[0]->getTerritoryID();
+    for (auto v : visitedTerritories)
+    {
+        if (v.id == startId)
+        {
+            v.visitedT = true;
+        };
+    }
+    stackOfIds.push_back(startId);
+
+    while (!stackOfIds.empty())
+    {
+        int poppedId = stackOfIds.back();
+        stackOfIds.pop_back();
+
+        Territory poppedTerritory = getTerritoryById(poppedId);
+
+        for (auto t : poppedTerritory.adjTerritories)
+        {
+            for (auto v : visitedTerritories)
+            {
+                if (t == v.id && !v.visitedT)
+                {
+                    v.visitedT = true;
+                    stackOfIds.push_back(t);
+                };
+            }
+        }
+    }
+
+    for (auto v : visitedTerritories)
+    {
+        if (!v.visitedT)
+        {
+            isConnected = false;
+        }
+    }
+
+    // Continents
+    union visitedContinent
+    {
+        int id;
+        bool visitedC;
+    };
+    vector<visitedContinent> visitedContinents;
+    vector<int> stackOfIds;
+    for (int i = 0; i < Continents.size(); i++)
+    {
+        visitedContinent currentContinent;
+        currentContinent.id = Continents[i]->getContinentID();
+        currentContinent.visitedC = false;
+        visitedContinents.push_back(currentContinent);
+    };
+    int startId = Continents[0]->getContinentID();
+    for (auto v : visitedContinents)
+    {
+        if (v.id == startId)
+        {
+            v.visitedC = true;
+        };
+    }
+    stackOfIds.push_back(startId);
+
+    while (!stackOfIds.empty())
+    {
+        int poppedId = stackOfIds.back();
+        stackOfIds.pop_back();
+
+        Continent poppedContinent = getContinentById(poppedId);
+
+        for (auto t : poppedContinent.territories)
+        {
+            for (auto a : t->adjTerritories)
+            {
+                int adjcontinentId = t->getContinentId();
+                for (auto v : visitedContinents)
+                {
+                    if (adjcontinentId == v.id && !v.visitedC)
+                    {
+                        v.visitedC = true;
+                        stackOfIds.push_back(adjcontinentId);
+                    };
+                }
+            }
+        }
+    }
+
+    for (auto v : visitedContinents)
+    {
+        if (!v.visitedC)
+        {
+            isConnected = false;
+        }
+    }
+
+    return isConnected;
+}
 
 //TODO: create a printMap method
 void printMap(Map *map)
@@ -72,6 +212,17 @@ Territory Map::getTerritoryById(int territoryID)
         if (Territories[i]->getTerritoryID() == territoryID)
         {
             return *Territories[i];
+        }
+    }
+}
+
+Continent Map::getContinentById(int continentId)
+{
+    for (int i = 0; i < Continents.size(); i++)
+    {
+        if (Continents[i]->getContinentID() == continentId)
+        {
+            return *Continents[i];
         }
     }
 }
@@ -178,6 +329,16 @@ void Territory::setContinentName(string continent)
 string Territory::getContinent()
 {
     return *pContinentName;
+}
+
+void Territory::setContinentId(int continentID)
+{
+    continentId = continentID;
+}
+
+int Territory::getContinentId()
+{
+    return continentId;
 }
 
 //Setter for pNumOfArmy data member

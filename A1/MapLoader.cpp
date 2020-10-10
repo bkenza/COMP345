@@ -111,6 +111,7 @@ Map *MapLoader::MapReader(string fileName)
                 territory->setTerritoryName(words[1]);
                 int index;
                 std::istringstream(words[2]) >> index;
+                territory->setContinentId(index);
                 territory->setContinentName(map->Continents[index - 1]->getContinentName());
                 map->Territories.push_back(territory);
                 map->Continents[index - 1]->territories.push_back(territory);
