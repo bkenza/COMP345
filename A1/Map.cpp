@@ -54,20 +54,34 @@ std::string Map::getName()
 //TODO: create this method
 bool Map::validate()
 {
-    return uniqueContinentCheck() && isMapConnected();
+    if (uniqueContinentCheck() && isMapConnected())
+    {
+        cout << "**************************************************"<<endl;
+        cout << "   \n          GREAT, YOUR MAP IS VALID!!!\n" << endl;
+        cout << "**************************************************\n"<<endl;
+
+        return true;
+    }
+    else{
+        cout << "Sorry, your map is massively invalid!!!" << endl;
+        return false;
+    }
+
 };
 
 bool Map::uniqueContinentCheck()
 {
+    Territory *currentTerritory = new Territory();
+    int continentCount = 0;
     for (auto t : Territories)
     {
-        int continentCount = 0;
-        Territory currentTerritory = *t;
+        continentCount = 0;
+        *currentTerritory = *t;
         for (auto c : Continents)
         {
             for (auto ter : c->territories)
             {
-                if (ter->getTerritoryID() == currentTerritory.getTerritoryID())
+                if (ter->getTerritoryID() == currentTerritory->getTerritoryID())
                 {
                     continentCount++;
                 }
@@ -86,20 +100,26 @@ bool Map::uniqueContinentCheck()
 bool Map::isMapConnected()
 {
     bool isConnected = true; // map is a connected graph
-    union visitedTerritory
+    int poppedId;
+
+    struct visitedTerritory
     {
-        int id;
-        bool visitedT;
+        int id = 0;
+        bool visitedT = false;
     };
     vector<visitedTerritory> visitedTerritories;
     vector<int> stackOfIds;
+    visitedTerritory currentTerritory;
+    Territory *poppedTerritory = new Territory();
+    int test;
+
     for (int i = 0; i < Territories.size(); i++)
     {
-        visitedTerritory currentTerritory;
         currentTerritory.id = Territories[i]->getTerritoryID();
         currentTerritory.visitedT = false;
         visitedTerritories.push_back(currentTerritory);
     };
+
     int startId = Territories[0]->getTerritoryID();
     for (auto v : visitedTerritories)
     {
@@ -112,84 +132,87 @@ bool Map::isMapConnected()
 
     while (!stackOfIds.empty())
     {
-        int poppedId = stackOfIds.back();
+        poppedId = stackOfIds.back();
         stackOfIds.pop_back();
 
-        Territory poppedTerritory = getTerritoryById(poppedId);
+        *poppedTerritory = *getTerritoryById(poppedId);
 
-        for (auto t : poppedTerritory.adjTerritories)
+        for (auto t : poppedTerritory->adjTerritories)
         {
-            for (auto v : visitedTerritories)
-            {
-                if (t == v.id && !v.visitedT)
-                {
-                    v.visitedT = true;
+            for(int r=0; r < visitedTerritories.size(); r++) {
+                if (t == visitedTerritories[r].id && !visitedTerritories[r].visitedT) {
+                    visitedTerritories[r].visitedT = true;
                     stackOfIds.push_back(t);
-                };
+                }
             }
         }
     }
 
-    for (auto v : visitedTerritories)
+    for (auto x : visitedTerritories)
     {
-        if (!v.visitedT)
+        if (!x.visitedT)
         {
             isConnected = false;
         }
     }
 
     // Continents
-    union visitedContinent
+    struct visitedContinent
     {
-        int id;
-        bool visitedC;
+        int idC = 0;
+        bool visitedC = false;
     };
     vector<visitedContinent> visitedContinents;
     vector<int> stackOfContIds;
-    for (int i = 0; i < Continents.size(); i++)
+    visitedContinent currentContinent;
+    int startContId;
+    Continent *poppedContinent = new Continent();
+    int adjcontinentId;
+    Territory *adjTerritory;
+
+    for (int j = 0; j < Continents.size(); j++)
     {
-        visitedContinent currentContinent;
-        currentContinent.id = Continents[i]->getContinentID();
-        currentContinent.visitedC = false;
+        currentContinent.idC = Continents[j]->getContinentID();
+//        currentContinent.visitedC = false;
         visitedContinents.push_back(currentContinent);
     };
-    int startContId = Continents[0]->getContinentID();
-    for (auto v : visitedContinents)
-    {
-        if (v.id == startContId)
-        {
-            v.visitedC = true;
-        };
-    }
+    startContId = Continents[0]->getContinentID();
+    visitedContinents[0].visitedC = true;
+//    for (auto z : visitedContinents)
+//    {
+//        if (z.idC == startContId)
+//        {
+//            z.visitedC = true;
+//        };
+//    }
     stackOfContIds.push_back(startContId);
 
     while (!stackOfContIds.empty())
     {
-        int poppedId = stackOfContIds.back();
+        poppedId = stackOfContIds.back();
         stackOfContIds.pop_back();
 
-        Continent poppedContinent = getContinentById(poppedId);
+        *poppedContinent = *getContinentById(poppedId);
 
-        for (auto t : poppedContinent.territories)
+        for (auto k : poppedContinent->territories)
         {
-            for (auto a : t->adjTerritories)
+            for (auto b : k->adjTerritories)
             {
-                int adjcontinentId = t->getContinentId();
-                for (auto v : visitedContinents)
-                {
-                    if (adjcontinentId == v.id && !v.visitedC)
-                    {
-                        v.visitedC = true;
+                adjTerritory = getTerritoryById(b);
+                adjcontinentId = adjTerritory->getContinentId();
+                for (int g=0; g < visitedContinents.size(); g++) {
+                    if (adjcontinentId == visitedContinents[g].idC && !visitedContinents[g].visitedC) {
+                        visitedContinents[g].visitedC = true;
                         stackOfContIds.push_back(adjcontinentId);
-                    };
+                    }
                 }
             }
         }
     }
 
-    for (auto v : visitedContinents)
+    for (auto q : visitedContinents)
     {
-        if (!v.visitedC)
+        if (!q.visitedC)
         {
             isConnected = false;
         }
@@ -204,31 +227,31 @@ void printMap(Map *map)
     // Print territories
 }
 
-Territory Map::getTerritoryById(int territoryID)
+Territory* Map::getTerritoryById(int territoryID)
 {
     for (int i = 0; i < Territories.size(); i++)
     {
-        if (Territories[i]->getTerritoryID() == territoryID)
+        if (territoryID == Territories[i]->getTerritoryID())
         {
-            return *Territories[i];
+            return Territories[i];
         }
     }
 }
 
-Continent Map::getContinentById(int continentId)
+Continent* Map::getContinentById(int continentId)
 {
     for (int i = 0; i < Continents.size(); i++)
     {
         if (Continents[i]->getContinentID() == continentId)
         {
-            return *Continents[i];
+            return Continents[i];
         }
     }
 }
 
-//---------------------------
+//==========================
 //     Territory
-//---------------------------
+//==========================
 
 //default constructor
 Territory::Territory()
@@ -291,16 +314,15 @@ void Territory::setTerritoryID(int territoryId)
 int Territory::getTerritoryID()
 {
     return *pTerritoryID;
-    ;
 }
 
-// Setter for playerID datamember
+// Setter for playerID data member
 void Territory::setTerritoryPlayerID(int playerId)
 {
     *pPlayerID = playerId;
 }
 
-// Getter for playerID datamember
+// Getter for playerID data member
 int Territory::getTerritoryPlayerID()
 {
     return *pPlayerID;
@@ -362,9 +384,9 @@ void Territory::displayTerritory()
     cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
 }
 
-//-------------------------
+//==========================
 //        CONTINENT
-//-------------------------
+//==========================
 
 // default contructor
 Continent::Continent()
