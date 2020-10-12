@@ -78,10 +78,15 @@ int main()
     cout << "***********************************************************" << endl;
     cout << "\nASSIGNING CARDS TO PLAYER 1" << endl;
     cout << "PLAYER 1 WILL HOLD THE FOLLOWING CARDS IN HIS DECK" << endl;
-    Deck d1;
-    d1.initializeDeck();
+    Deck *d1 = new Deck();
+    d1->initializeDeck();
 
-    Hand h1;
+    Hand *h1 = new Hand();
+    d1->draw(h1);
+    d1->draw(h1);
+    d1->draw(h1);
+    d1->draw(h1);
+    d1->draw(h1);
 
     cout << "***********************************************************" << endl;
     cout << "\nPLAYER 1'S COMMANDS" << endl;

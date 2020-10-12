@@ -390,7 +390,7 @@ void Territory::displayTerritory()
 {
     //cout << "Displaying information for Territory " << get << endl;
     cout << "Player: " << getTerritoryPlayerID() << endl;
-    //    cout << "Country: " << getCountry() << endl;
+        cout << "Country: " << getTerritoryName() << endl;
     cout << "Continent : " << getContinent() << endl;
     cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
 }

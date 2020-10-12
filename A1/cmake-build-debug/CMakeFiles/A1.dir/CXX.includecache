@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/kenza/Desktop/COMP345/A1/Cards.h
+vector
+-
+Map.h
+/Users/kenza/Desktop/COMP345/A1/Map.h
+string
+-
+
+/Users/kenza/Desktop/COMP345/A1/Map.h
+iostream
+-
+cstdlib
+-
+vector
+-
+
+/Users/kenza/Desktop/COMP345/A1/Orders.h
+vector
+-
+iostream
+-
+iomanip
+-
+string
+-
+
+/Users/kenza/Desktop/COMP345/A1/Player.h
+Map.h
+/Users/kenza/Desktop/COMP345/A1/Map.h
+Orders.h
+/Users/kenza/Desktop/COMP345/A1/Orders.h
+Cards.h
+/Users/kenza/Desktop/COMP345/A1/Cards.h
+
+/Users/kenza/Desktop/COMP345/A1/PlayerDriver.cpp
+Player.h
+/Users/kenza/Desktop/COMP345/A1/Player.h
+
