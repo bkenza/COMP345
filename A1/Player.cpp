@@ -5,12 +5,14 @@
 using namespace std;
 
 // Each player will have a collection of territories as well as a collection of cards, as well as an order list at the start of the game
-Player::Player() {}
+Player::Player() {
+    playerID =  int(0);
+}
 
-Player::Player(vector<Territory*> tList, vector<Cards*> cList, OrdersList oList)
+Player::Player(vector<Territory*> tList, Hand hand, OrdersList oList)
 {
     territoryList = &tList;
-    cardList = &cList;
+    playerHand = &hand;
     orderList = oList;
 }
 
@@ -23,11 +25,12 @@ Player::~Player()
 
     delete territoryList; // Delete the memory for the vector itself.
 
-    int cListSize = cardList->size();
+    int cListSize = playerHand->HandCards.size();
     for (int i = 0; i < cListSize; i++) // Delete memory for orders, which are always dynamically allocated.
-        delete (*cardList)[i];
+        delete (playerHand->HandCards)[i];
 
-    delete cardList; // Delete the memory for the vector itself.
+    delete &playerHand->HandCards; // Delete the memory for the vector itself.
+
 
     /*int oListSize = orderList;
     for (int i = 0; i < oListSize; i++) // Delete memory for orders, which are always dynamically allocated.
@@ -50,15 +53,14 @@ vector<Territory*> Player::getTerritoryList()
 
 
 // Assign a list of cards to a specified Player
-void Player::setCardList(vector<Cards*> cList)
+void Player::setHand(Hand *hand)
 {
-    cardList = &cList;
+    playerHand = hand;
 }
 
 // Get a Player's list of cards
-vector<Cards*> Player::getCardList()
-{
-    return *cardList;
+Hand* Player::getHand() {
+    return playerHand;
 }
 
 // Assign a list of orders to a specified Player
@@ -115,7 +117,6 @@ vector<Territory*> Player::toAttack()
 // Orders allowed are: deploy, advance, bomb, blockade, airlift, negotiate
 void Player::issueOrder(string orderName)
 {
-
     OrderFactory oFact; //Create OrderFactory to call createOrder method
     oFact.createOrder(orderName); //Create Order object
 
@@ -126,4 +127,28 @@ void Player::issueOrder(string orderName)
     }
     orderList.addOrder(oFact.createOrder(orderName));
 }
+
+// Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
+void Player::play(Deck *currentDeck, Cards *card) {
+// create an order & add it to player's order list
+
+    issueOrder(card->getCardType());
+
+    int removalCounter = 0;
+    Cards usedCard;
+
+    // Remove card from current hand
+    for (int p =0; p < playerHand->HandCards.size(); p++) {
+        if (playerHand->HandCards[p]->getCardType() == card->getCardType() && removalCounter == 0) {
+            usedCard = *playerHand->HandCards[p];
+            playerHand->HandCards.erase(playerHand->HandCards.begin() + p);
+            removalCounter++;
+        }
+    }
+
+    // Return current card to the deck & shuffle it
+    currentDeck->DeckCards.push_back(&usedCard);
+    currentDeck->shuffleDeck();
+}
+
 

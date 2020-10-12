@@ -54,6 +54,18 @@ std::string Map::getName()
 //TODO: create this method
 bool Map::validate()
 {
+    if(Continents.empty() || Territories.empty()) {
+        cout << "\nSorry, your map is massively invalid!!!" << endl;
+        return false;
+    }
+    else if(Continents.size() > 1 || Territories.size() > 1) {
+        for(int v=0; v < Territories.size(); v++) {
+            if(Territories[v]->adjTerritories.empty()) {
+                cout << "\nSorry, your map is massively invalid!!!" << endl;
+                return false;
+            }
+        };
+    }
     if (uniqueContinentCheck() && isMapConnected())
     {
         cout << "**************************************************"<<endl;
@@ -66,7 +78,6 @@ bool Map::validate()
         cout << "Sorry, your map is massively invalid!!!" << endl;
         return false;
     }
-
 };
 
 bool Map::uniqueContinentCheck()

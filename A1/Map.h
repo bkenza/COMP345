@@ -4,8 +4,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-using namespace std;
 
+using namespace std;
 class Continent;
 class Territory;
 
@@ -22,12 +22,12 @@ public:
     bool validate();
     bool uniqueContinentCheck();
     bool isMapConnected();
-    void printMap(Map *);            // method to print the map (all territories and their adjacent territories)
     void setName(std::string title); // set the name of a given map
     std::string getName();           // get the name of a given map
     Territory *getTerritoryById(int territoryID);
     Continent *getContinentById(int continentId);
 };
+
 #endif
 
 #ifndef TERRITORY_H
@@ -77,8 +77,8 @@ private:
 
 public:
     std::vector<Territory *> territories;        //vector holding all territories in continent
-    Continent();                                 // default contructor
-    Continent(const Continent &orig);            // copy contructor
+    Continent();                                 // default constructor
+    Continent(const Continent &orig);            // copy constructor
     virtual ~Continent();                        // destructor TODO: does this need to be virtual
     int getContinentID();                        // method that returns the id of a continent
     void setContinentID(int continentID);        // method to set the id of a given continent

@@ -1,16 +1,12 @@
 #include "MapLoader.h"
 #include <iostream>
-#include <cstdlib>
-#include <sstream>
-#include <fstream>
 #include <regex>
-#include <stdio.h>
 
 using std::cin;
 using std::cout;
 using std::istringstream;
 
-int main()
+int mlmain()
 {
     // Create a Map & MapLoader objects
     MapLoader *mapLoader = new MapLoader();
@@ -18,7 +14,7 @@ int main()
 
     // Check if the map is valid:
     // 1. Check that continents are connected
-    // 2. Check that subgraphs (territories) are connected
+    // 2. Check that sub-graphs (territories) are connected
     // 3. Check that each territory is found in only one continent
     map->validate();
 
@@ -39,6 +35,5 @@ int main()
         cout << "\n"
              << endl;
     }
-
     return 0;
 }

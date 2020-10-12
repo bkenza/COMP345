@@ -2,23 +2,27 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 #ifndef CARDS_H
 #define CARDS_H
 
-using namespace std;
-
 class Deck;
 class Hand;
+class Map;
+
 
 class Cards
 {
 public:
     Cards();  // default constructor
+    Cards(string type);
     ~Cards(); // destructor
-    void play(Hand *currentHand);
+//    void play(Map *map, Hand *currentHand, Deck *deck, Player *player);
     void setCardType(string type);
     string getCardType();
-    Cards(const Cards &orig); // copy contructor
+
+    Cards(const Cards &orig); // copy constructor
 private:
     string *cardType;
 };
@@ -31,12 +35,12 @@ private:
 class Deck
 {
 public:
-    Deck();                       // default contructor
+    Deck();                       // default constructor
     ~Deck();                      // destructor
     void draw(Hand *currentHand); // method that allows a player to draw a card at random from the cards remaining in the deck and place it in their hand.
     Deck(const Deck &orig);       // copy constructor
     vector<Cards *> DeckCards;
-    void initiliazeDeck();
+    void initializeDeck();
     void shuffleDeck();
 
 private:
@@ -55,9 +59,11 @@ public:
     ~Hand();
     Hand(const Hand &orig);
     vector<Cards *> HandCards;
-
+    void setPlayerID(int playerId);
+    int getPlayerID();
+//    vector<Cards *> DeckCards;
 private:
-    // no private attributes
+    int playerID;
 };
-
 #endif
+
