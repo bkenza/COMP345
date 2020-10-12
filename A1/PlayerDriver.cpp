@@ -1,7 +1,7 @@
 #include "Player.h"
 using namespace std;
 
-int main()
+int pmain()
 {
     cout << "\n***********************************************************" << endl;
     cout << "CREATING TERRITORIES" << endl;
@@ -69,24 +69,30 @@ int main()
     cout << "***********************************************************\n" << endl;
     cout << "PLAYER 1" << endl;
     Player* p1 = new Player();
+    Deck *d1 = new Deck();
+    d1->initializeDeck();
+
+    Hand *h1 = new Hand();
+    p1->setHand(h1);
+    d1->draw(h1);
+    d1->draw(h1);
+    d1->draw(h1);
+    d1->draw(h1);
+    d1->draw(h1);
     cout << endl;
+
     cout << "ASSIGNING MAP TO PLAYER 1" << endl;
     cout << "PLAYER 1 WILL CONTROL THE FOLLOWING TERRITORIES" << endl;
     cout << "***********************************************************" << endl;
     p1->setTerritoryList(m1->Territories);
     p1->printTerritoryList();
+
     cout << "***********************************************************" << endl;
     cout << "\nASSIGNING CARDS TO PLAYER 1" << endl;
-    cout << "PLAYER 1 WILL HOLD THE FOLLOWING CARDS IN HIS DECK" << endl;
-    Deck *d1 = new Deck();
-    d1->initializeDeck();
-
-    Hand *h1 = new Hand();
-    d1->draw(h1);
-    d1->draw(h1);
-    d1->draw(h1);
-    d1->draw(h1);
-    d1->draw(h1);
+    cout << "PLAYER 1 WILL HOLD THE FOLLOWING CARDS IN HIS HAND" << endl;
+    for (int i=0; i < p1->getHand()->HandCards.size(); i++) {
+        cout << p1->getHand()->HandCards[i]->getCardType() <<endl;
+    }
 
     cout << "***********************************************************" << endl;
     cout << "\nPLAYER 1'S COMMANDS" << endl;

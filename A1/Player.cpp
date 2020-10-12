@@ -11,7 +11,7 @@ Player::Player() {
 
 Player::Player(vector<Territory*> tList, Hand hand, OrdersList oList)
 {
-    territoryList = &tList;
+    territoryList = tList;
     playerHand = &hand;
     orderList = oList;
 }
@@ -26,10 +26,10 @@ Player::Player(const Player &obj)
 //Destructor to call finalize() and free unwanted resources
 Player::~Player()
 {
-    int tListSize = territoryList->size();
+    int tListSize = territoryList.size();
     for (int i = 0; i < tListSize; i++) // Delete memory for orders, which are always dynamically allocated.
         delete &territoryList[i];
-   territoryList->clear(); // Delete the memory for the vector itself.*/
+   territoryList.clear(); // Delete the memory for the vector itself.*/
 
     int cListSize = playerHand->HandCards.size();
     for (int i = 0; i < cListSize; i++) // Delete memory for orders, which are always dynamically allocated.
@@ -54,13 +54,13 @@ Player::~Player()
 void Player::setTerritoryList(vector<Territory*> tList)
 {
 
-    territoryList = &tList;
+    territoryList = tList;
 }
 
 // Get player's territories
 vector<Territory*> Player::getTerritoryList()
 {
-    return *territoryList;
+    return territoryList;
 }
 
 // Assign a list of cards to a specified Player
@@ -94,12 +94,12 @@ vector<Territory*> Player::toDefend()
     vector<Territory*> defendList;
 
     // Loop through OrderList, if order is blockade, then create a list and add the territories
-    int tListSize = territoryList->size();
+    int tListSize = territoryList.size();
     for(int i = 1; i < tListSize; i++)
     {
         if (i % 3  == 0)
         {
-            defendList.push_back((*territoryList)[i]);
+            defendList.push_back(territoryList[i]);
         }
     }
     return defendList;
@@ -109,7 +109,7 @@ vector<Territory*> Player::toDefend()
 void Player::printDefendList()
 {
     // Declare and initialize defendList
-    vector<Territory*> defendList;
+    vector<Territory*> defendList = toDefend();
     for (auto t : defendList)
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -124,12 +124,12 @@ void Player::printDefendList()
 vector<Territory*> Player::toAttack()
 {
     vector<Territory*> attackList;
-    int tListSize = territoryList->size();
+    int tListSize = territoryList.size();
     for(int i = 0; i < tListSize; i++)
     {
         if(i % 2 == 0)
         {
-            attackList.push_back((*territoryList)[i]);
+            attackList.push_back(territoryList[i]);
         }
     }
     return attackList;
@@ -138,7 +138,7 @@ vector<Territory*> Player::toAttack()
 // Print function for Player's list of territories to be attacked
 void Player::printAttackList()
 {
-    vector<Territory*> attackList;
+    vector<Territory*> attackList = toAttack();
     for (auto t : attackList)
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -189,7 +189,7 @@ void Player::play(Deck *currentDeck, Cards *card) {
 };
 
 void Player::printTerritoryList() {
-    for (auto t : *territoryList)
+    for (auto t : getTerritoryList())
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
         std::cout << "Territory ID: " << t->getTerritoryID() << " | ";

@@ -22,6 +22,18 @@ cstdlib
 vector
 -
 
+/Users/kenza/Desktop/COMP345/A1/MapLoader.h
+Map.h
+/Users/kenza/Desktop/COMP345/A1/Map.h
+
+/Users/kenza/Desktop/COMP345/A1/MapLoaderDriver.cpp
+MapLoader.h
+/Users/kenza/Desktop/COMP345/A1/MapLoader.h
+iostream
+-
+regex
+-
+
 /Users/kenza/Desktop/COMP345/A1/Orders.h
 vector
 -

@@ -8,7 +8,7 @@ class Hand;
 class Player
 {
     private:
-        vector<Territory*>* territoryList;
+        vector<Territory*> territoryList;
         Hand *playerHand;
         OrdersList orderList;
         int playerID;
