@@ -1,3 +1,4 @@
+
 #include "Cards.h"
 #include <algorithm>
 #include <random>
@@ -8,6 +9,10 @@ using namespace std;
 Cards::Cards()
 {
     cardType = new string("");
+}
+
+Cards::Cards(string type) {
+    *cardType = type;
 }
 
 // copy constructor
@@ -32,6 +37,34 @@ Cards::~Cards()
 {
     delete cardType;
 }
+
+// which creates an order and adds it to the player’s list of orders and then returns the card to the deck
+//void Cards::play(Map *map, Hand *currentHand, Deck *deck, Player *player) {
+////    int playerID = currentHand->getPlayerID();
+////    Player *currentPlayer = map->getPlayerById(playerID);
+//
+//
+//    // create an order & add it to player's order list
+//
+//    player->issueOrder(*cardType);
+//
+//    int removalCounter = 0;
+//    Cards current;
+//
+//    // Remove card from current hand
+//    for (int p =0; p < currentHand->HandCards.size(); p++) {
+//        if (currentHand->HandCards[p]->getCardType() == cardType && removalCounter == 0) {
+//            current = *currentHand->HandCards[p];
+//            currentHand->HandCards.erase(currentHand->HandCards.begin() + p);
+//
+//            removalCounter++;
+//        }
+//    }
+//
+//    // Return current card to the deck & shuffle it
+//    deck->DeckCards.push_back(&current);
+//    deck->shuffleDeck();
+//}
 
 //---------------------------
 //     Deck
@@ -76,13 +109,14 @@ void Deck::draw(Hand *currentHand)
 void Deck::initializeDeck()
 {
     vector<string> types = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
+//    vector<Cards *> cardTypes = {new Cards("bomb"), new Cards("reinforcement"), new Cards("blockade"), new Cards("airlift"), new Cards("diplomacy")};
     for (int j = 0; j < types.size(); j++)
     {
-        Cards newCard;
-        newCard.setCardType(types[j]);
-        for (int i = 0; i < 3; i++)
+        Cards *card = new Cards();
+        card->setCardType(types[j]);
+        for (int i = 0; i < 6; i++)
         {
-            DeckCards.push_back(&newCard);
+            DeckCards.push_back(card);
         }
     }
     shuffleDeck();
@@ -95,12 +129,6 @@ void Deck::shuffleDeck()
     shuffle(begin(DeckCards), end(DeckCards), rng);
 };
 
-int Deck::deckSize()
-{
-    return DeckCards.size();
-}
-
-
 //------------------------------
 //         Hand
 //------------------------------
@@ -110,7 +138,7 @@ Hand::Hand(){
     // empty hehe
 };
 
-// copy contructor
+// copy constructor
 Hand::Hand(const Hand &orig)
 {
     for (auto &&t : orig.HandCards)
@@ -128,7 +156,10 @@ Hand::~Hand()
     HandCards.clear();
 }
 
-int Hand::handSize()
-{
-    return HandCards.size();
+void Hand::setPlayerID(int playerId) {
+    playerID = playerId;
+}
+
+int Hand::getPlayerID() {
+    return playerID;
 }

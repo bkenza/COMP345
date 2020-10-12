@@ -24,18 +24,22 @@ std::vector<string> splitString(string line)
     }
     return words;
 };
+
 MapLoader::MapLoader()
 {
     // default contructor
 }
+
 MapLoader::MapLoader(const MapLoader &orig)
 {
     //Copy Constructor
 }
+
 MapLoader::~MapLoader()
 {
     //Destructor
 }
+
 Map *MapLoader::MapReader(string fileName)
 {
     istringstream stringStream;
@@ -57,7 +61,7 @@ Map *MapLoader::MapReader(string fileName)
         if (!mapIsValid)
         {
             std::cerr << "The map provided is invalid, please try again";
-            map->~Map(); //destroying map
+//            map->~Map(); //destroying map
             // TODO: HOW TO IMPLEMENT THE DELETION OF THE MAP OBJECT IF IT HAPPENS TO BE INVALID? + destructor of mapreader
         }
         // if wantedString exists in the line we are currently on,
@@ -111,6 +115,7 @@ Map *MapLoader::MapReader(string fileName)
                 territory->setTerritoryName(words[1]);
                 int index;
                 std::istringstream(words[2]) >> index;
+                territory->setContinentId(index);
                 territory->setContinentName(map->Continents[index - 1]->getContinentName());
                 map->Territories.push_back(territory);
                 map->Continents[index - 1]->territories.push_back(territory);

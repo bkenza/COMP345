@@ -5,13 +5,14 @@
 using namespace std;
 
 // Each player will have a collection of territories as well as a collection of cards, as well as an order list at the start of the game
-Player::Player() {}
+Player::Player() {
+    playerID =  int(0);
+}
 
-Player::Player(vector<Territory*> tList, Deck pDeck, Hand pHand, OrdersList oList)
+Player::Player(vector<Territory*> tList, Hand hand, OrdersList oList)
 {
-    territoryList = tList;
-    playerDeck = pDeck.DeckCards;
-    playerHand = pHand.HandCards;
+    territoryList = &tList;
+    playerHand = &hand;
     orderList = oList;
 }
 
@@ -36,11 +37,19 @@ Player::~Player()
         delete playerDeck[i];
     playerDeck.clear(); // Delete the memory for the vector itself.
 
-    int hListSize = playerHand.size();
+    for (int i = 0; i < cListSize; i++) // Delete memory for orders, which are always dynamically allocated.
+        delete (playerHand->HandCards)[i];
+    int hListSize = playerHand->HandCards.size();
     for (int i = 0; i < dListSize; i++) // Delete memory for orders, which are always dynamically allocated.
-        delete playerHand[i];
-    playerHand.clear(); // Delete the memory for the vector itself.
+        delete playerHand->HandCards[i];
+    playerHand->HandCards.clear(); // Delete the memory for the vector itself.
+    delete playerHand;
+    int cListSize = playerHand->HandCards.size();
 
+    delete &playerHand->HandCards; // Delete the memory for the vector itself.
+
+
+    /*int oListSize = orderList;
     int oListSize = orderList.listSize();
     for (int i = 0; i < oListSize; i++) // Delete memory for orders, which are always dynamically allocated.
         delete (*orderList.getListOfOrders())[i];
@@ -61,15 +70,14 @@ vector<Territory*> Player::getTerritoryList()
 }
 
 // Assign a list of cards to a specified Player
-void Player::setDeck(Deck d)
+void Player::setHand(Hand *hand)
 {
-    playerDeck = d.DeckCards;
+    playerHand = hand;
 }
 
 // Get a Player's list of cards
-vector<Cards*> Player::getDeck()
-{
-    return playerDeck;
+Hand* Player::getHand() {
+    return playerHand;
 }
 
 void Player::setHand(Hand h)
@@ -166,6 +174,9 @@ void Player::issueOrder(string orderName)
     orderList.addOrder(oFact.createOrder(orderName));
 }
 
+// Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
+void Player::play(Deck *currentDeck, Cards *card) {
+// create an order & add it to player's order list
 // Print function for Player's list of controlled territories
 void Player::printTerritoryList()
 {
@@ -179,20 +190,23 @@ void Player::printTerritoryList()
     }
 }
 
-// Print function for a Player's deck
-void Player::printDeck()
-{
-    for (auto d : playerDeck)
-    {
-        cout << d->getCardType() << endl;
+    issueOrder(card->getCardType());
+
+    int removalCounter = 0;
+    Cards usedCard;
+
+    // Remove card from current hand
+    for (int p =0; p < playerHand->HandCards.size(); p++) {
+        if (playerHand->HandCards[p]->getCardType() == card->getCardType() && removalCounter == 0) {
+            usedCard = *playerHand->HandCards[p];
+            playerHand->HandCards.erase(playerHand->HandCards.begin() + p);
+            removalCounter++;
+        }
     }
+
+    // Return current card to the deck & shuffle it
+    currentDeck->DeckCards.push_back(&usedCard);
+    currentDeck->shuffleDeck();
 }
 
-// Print function for a Player's deck
-void Player::printHand()
-{
-    for (auto h : playerHand)
-    {
-        cout << h->getCardType() << endl;
-    }
-}
+

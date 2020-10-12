@@ -3,27 +3,27 @@
 #include "Orders.h"
 #include "Cards.h"
 
+class Hand;
+
 class Player
 {
     private:
-        vector<Territory*> territoryList;
-        vector<Cards*> playerDeck;
-        vector<Cards*> playerHand;
+        vector<Territory*>* territoryList;
+//        vector<Cards*>* cardList;
+        Hand *playerHand;
         OrdersList orderList;
-        vector<Territory*> attackList;
-        vector<Territory*> defendList;
+        int playerID;
 
     public:
         Player();
-        Player(vector<Territory*> tList, Deck pDeck, Hand pHand, OrdersList oList);
+        Player(vector<Territory*> tList, Hand hand, OrdersList oList);
         ~Player();
         Player(const Player &obj);
         void setTerritoryList(vector<Territory*> tList);
         vector<Territory*> getTerritoryList();
-        void setDeck(Deck deck);
-        vector<Cards*> getDeck();
-        void setHand(Hand hand);
-        vector<Cards*> getHand();
+        void setHand(Hand *hand);
+        Hand *getHand();
+        void play(Deck *currentDeck, Cards *card);
         void setOrderList(OrdersList oList);
         OrdersList getOrderList();
         vector<Territory*> toDefend();
@@ -34,4 +34,7 @@ class Player
         void issueOrder(string orderName);
         void printHand();
         void printDeck();
+        int getPlayerID();
+        void setPlayerID(int );
+        void printTerritoryList();
 };
