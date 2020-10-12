@@ -10,7 +10,7 @@ crd LOTR2.cards
 [continents]
 MORDOR 5 #666666
 RHOVANION 6 yellow
-RHï¿½N 3 #00cc00
+RHûN 3 #00cc00
 GONDOR 5 red
 ROHAN 4 #0000cc
 ERIADOR 7 #00cccc
@@ -20,7 +20,7 @@ ARNOR 5 #ff9999
 1 NURN 1 528 322
 2 Plateau_of_Gorogoth 1 514 285
 3 Orodruin 1 501 267
-4 Barad_Dï¿½r 1 544 276
+4 Barad_Dûr 1 544 276
 5 Ered_Lithui 1 502 244
 6 Black_lake 1 596 315
 7 Anfalas 4 323 332
@@ -59,7 +59,7 @@ ARNOR 5 #ff9999
 40 The_shire 6 210 142
 41 Old_Forest 6 239 122
 42 Bree 6 285 136
-43 Sea_of_Rhï¿½n 3 620 171
+43 Sea_of_Rhûn 3 620 171
 
 [borders]
 1 2 4 6

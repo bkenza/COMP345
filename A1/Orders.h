@@ -15,12 +15,12 @@ using std::string;
 
 // This is an abstract class for orders. All functionalities meant
 // to be implemented by subclasses.
-class Order
+class Order // ORDER MIGHT NEED ID IN THE FUTURE
 {
 public:
 	virtual string getLabel() const = 0;
-	virtual bool validate() = 0;
-	virtual void execute() = 0;
+	virtual bool validate() const = 0;
+	virtual void execute() const = 0;
 	virtual ~Order() = 0;
 
 private:
@@ -34,14 +34,14 @@ private:
 class deploy : public Order
 {
 public:
-
+	
 	string getLabel() const override;
-	bool validate() override;
-	void execute() override;
+	bool validate() const override;
+	void execute() const override;
 	~deploy();
 
 private:
-	const string label = "deploy";
+	const static string label;
 	Order* clone() const override;
 	ostream& printOrder(ostream&) const override;
 };
@@ -51,12 +51,12 @@ class advance : public Order
 {
 public:
 	string getLabel() const override;
-	bool validate() override;
-	void execute() override;
+	bool validate() const override;
+	void execute() const override;
 	~advance();
 
 private:
-	const string label = "advance";
+	const static string label;
 	Order* clone() const override;
 	ostream& printOrder(ostream&) const override;
 };
@@ -65,12 +65,12 @@ class bomb : public Order
 {
 public:
 	string getLabel() const override;
-	bool validate() override;
-	void execute() override;
+	bool validate() const override;
+	void execute() const override;
 	~bomb();
 
 private:
-	const string label = "bomb";
+	const static string label;
 	Order* clone() const override;
 	ostream& printOrder(ostream&) const override;
 };
@@ -79,12 +79,12 @@ class blockade : public Order
 {
 public:
 	string getLabel() const override;
-	bool validate() override;
-	void execute() override;
+	bool validate() const override;
+	void execute() const override;
 	~blockade();
 
 private:
-	const string label = "blockade";
+	const static string label;
 	Order* clone() const override;
 	ostream& printOrder(ostream&) const override;
 };
@@ -93,12 +93,12 @@ class airlift : public Order
 {
 public:
 	string getLabel() const override;
-	bool validate() override;
-	void execute() override;
+	bool validate() const override;
+	void execute() const override;
 	~airlift();
 
 private:
-	const string label = "airlift";
+	const static string label;
 	Order* clone() const override;
 	ostream& printOrder(ostream&) const override;
 };
@@ -107,12 +107,12 @@ class negotiate : public Order
 {
 public:
 	string getLabel() const override;
-	bool validate() override;
-	void execute() override;
+	bool validate() const override;
+	void execute() const override;
 	~negotiate();
 
 private:
-	const string label = "negotiate";
+	const static string label;
 	Order* clone() const override;
 	ostream& printOrder(ostream&) const override;
 };
@@ -125,24 +125,22 @@ public:
 	Order* createOrder(string) const;
 };
 
-
 // Designed to hold a list of valid orders
 // and carry out basic list functions.
 class OrdersList
 {
-    public:
-	    OrdersList();
-	    ~OrdersList();
-	    OrdersList(const OrdersList&);
+public:
+	OrdersList();
+	~OrdersList();
+	OrdersList(const OrdersList&);
+	void addOrder(Order* o);
+	void deleteOrder(int);
+	void moveOrder(int, int);
+	void executeOrders(); // Executes orders and empties the list
+	OrdersList& operator=(const OrdersList&);
 
-	    vector<Order*>* getListOfOrders();
-	    void addOrder(Order* o);
-	    void deleteOrder(int);
-	    void moveOrder(int, int);
-	    OrdersList& operator=(const OrdersList&);
-        int listSize();
+private:
+	vector<Order*> orders;
 
-    private:
-	    vector<Order*>* orders;
-	    friend ostream& operator<<(ostream&, const OrdersList&);
+	friend ostream& operator<<(ostream&, const OrdersList&);
 };
