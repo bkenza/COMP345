@@ -18,103 +18,103 @@ using std::string;
 class Order // ORDER MIGHT NEED ID IN THE FUTURE
 {
 public:
-	virtual string getLabel() const = 0;
-	virtual bool validate() const = 0;
-	virtual void execute() const = 0;
-	virtual ~Order() = 0;
+    virtual string getLabel() const = 0;
+    virtual bool validate() const = 0;
+    virtual void execute() const = 0;
+    virtual ~Order() = 0;
 
 private:
-	virtual Order* clone() const = 0;
-	virtual ostream& printOrder(ostream&) const = 0;
+    virtual Order* clone() const = 0;
+    virtual ostream& printOrder(ostream&) const = 0;
 
-	friend ostream& operator<<(ostream&, const Order&);
-	friend class OrdersList;
+    friend ostream& operator<<(ostream&, const Order&);
+    friend class OrdersList;
 };
 
 class deploy : public Order
 {
 public:
-	
-	string getLabel() const override;
-	bool validate() const override;
-	void execute() const override;
-	~deploy();
+
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+    ~deploy();
 
 private:
-	const static string label;
-	Order* clone() const override;
-	ostream& printOrder(ostream&) const override;
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
 };
 
 
 class advance : public Order
 {
 public:
-	string getLabel() const override;
-	bool validate() const override;
-	void execute() const override;
-	~advance();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+    ~advance();
 
 private:
-	const static string label;
-	Order* clone() const override;
-	ostream& printOrder(ostream&) const override;
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
 };
 
 class bomb : public Order
 {
 public:
-	string getLabel() const override;
-	bool validate() const override;
-	void execute() const override;
-	~bomb();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+    ~bomb();
 
 private:
-	const static string label;
-	Order* clone() const override;
-	ostream& printOrder(ostream&) const override;
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
 };
 
 class blockade : public Order
 {
 public:
-	string getLabel() const override;
-	bool validate() const override;
-	void execute() const override;
-	~blockade();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+    ~blockade();
 
 private:
-	const static string label;
-	Order* clone() const override;
-	ostream& printOrder(ostream&) const override;
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
 };
 
 class airlift : public Order
 {
 public:
-	string getLabel() const override;
-	bool validate() const override;
-	void execute() const override;
-	~airlift();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+    ~airlift();
 
 private:
-	const static string label;
-	Order* clone() const override;
-	ostream& printOrder(ostream&) const override;
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
 };
 
 class negotiate : public Order
 {
 public:
-	string getLabel() const override;
-	bool validate() const override;
-	void execute() const override;
-	~negotiate();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+    ~negotiate();
 
 private:
-	const static string label;
-	Order* clone() const override;
-	ostream& printOrder(ostream&) const override;
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
 };
 
 // Should be created at the beginning of the program.
@@ -122,7 +122,7 @@ private:
 class OrderFactory
 {
 public:
-	Order* createOrder(string) const;
+    Order* createOrder(string) const;
 };
 
 // Designed to hold a list of valid orders
@@ -130,17 +130,17 @@ public:
 class OrdersList
 {
 public:
-	OrdersList();
-	~OrdersList();
-	OrdersList(const OrdersList&);
-	void addOrder(Order* o);
-	void deleteOrder(int);
-	void moveOrder(int, int);
-	void executeOrders(); // Executes orders and empties the list
-	OrdersList& operator=(const OrdersList&);
+    OrdersList();
+    ~OrdersList();
+    OrdersList(const OrdersList&);
+    void addOrder(Order* o);
+    void deleteOrder(int);
+    void moveOrder(int, int);
+    void executeOrders(); // Executes orders and empties the list
+    OrdersList& operator=(const OrdersList&);
 
 private:
-	vector<Order*> orders;
+    vector<Order*> orders;
 
-	friend ostream& operator<<(ostream&, const OrdersList&);
+    friend ostream& operator<<(ostream&, const OrdersList&);
 };
