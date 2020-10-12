@@ -9,11 +9,9 @@ class Player
 {
     private:
         vector<Territory*>* territoryList;
-//        vector<Cards*>* cardList;
         Hand *playerHand;
         OrdersList orderList;
         int playerID;
-
     public:
         Player();
         Player(vector<Territory*> tList, Hand hand, OrdersList oList);
@@ -33,8 +31,6 @@ class Player
         void printDefendList();
         void issueOrder(string orderName);
         void printHand();
-        void printDeck();
         int getPlayerID();
         void setPlayerID(int );
-        void printTerritoryList();
 };

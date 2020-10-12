@@ -80,8 +80,6 @@ int main()
     cout << "PLAYER 1 WILL HOLD THE FOLLOWING CARDS IN HIS DECK" << endl;
     Deck d1;
     d1.initializeDeck();
-    p1->setDeck(d1);
-    p1->printDeck();
 
     Hand h1;
 

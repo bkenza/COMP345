@@ -1,6 +1,6 @@
 #include "Orders.h"
 
-int main()
+int omain()
 {
 	OrderFactory factory;
 	OrdersList list;

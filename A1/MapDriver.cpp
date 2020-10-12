@@ -5,7 +5,7 @@ using std::cin;
 using std::cout;
 using std::istringstream;
 
-int main()
+int mmain()
 {
     //==============
     //    Map
