@@ -16,41 +16,58 @@ Player::Player(vector<Territory*> tList, Hand hand, OrdersList oList)
     orderList = oList;
 }
 
+Player::Player(const Player &obj)
+{
+    territoryList = obj.territoryList;
+    playerDeck = obj.playerDeck;
+    playerHand = obj.playerHand;
+    orderList = obj.orderList;
+}
+
 //Destructor to call finalize() and free unwanted resources
 Player::~Player()
 {
-    int tListSize = territoryList->size();
+    int tListSize = territoryList.size();
     for (int i = 0; i < tListSize; i++) // Delete memory for orders, which are always dynamically allocated.
-        delete (*territoryList)[i];
+        delete territoryList[i];
+   territoryList.clear(); // Delete the memory for the vector itself.*/
 
-    delete territoryList; // Delete the memory for the vector itself.
+    int dListSize = playerDeck.size();
+    for (int i = 0; i < dListSize; i++) // Delete memory for orders, which are always dynamically allocated.
+        delete playerDeck[i];
+    playerDeck.clear(); // Delete the memory for the vector itself.
 
-    int cListSize = playerHand->HandCards.size();
     for (int i = 0; i < cListSize; i++) // Delete memory for orders, which are always dynamically allocated.
         delete (playerHand->HandCards)[i];
+    int hListSize = playerHand->HandCards.size();
+    for (int i = 0; i < dListSize; i++) // Delete memory for orders, which are always dynamically allocated.
+        delete playerHand->HandCards[i];
+    playerHand->HandCards.clear(); // Delete the memory for the vector itself.
+    delete playerHand;
+    int cListSize = playerHand->HandCards.size();
 
     delete &playerHand->HandCards; // Delete the memory for the vector itself.
 
 
     /*int oListSize = orderList;
+    int oListSize = orderList.listSize();
     for (int i = 0; i < oListSize; i++) // Delete memory for orders, which are always dynamically allocated.
-        delete (*orderList)[i];
-
-    delete orderList; // Delete the memory for the vector itself.*/
+        delete (*orderList.getListOfOrders())[i];
+    delete orderList.getListOfOrders(); // Delete the memory for the vector itself.*/
 }
 
 // Assign a list of territories to Player
 void Player::setTerritoryList(vector<Territory*> tList)
 {
-    territoryList = &tList;
+
+    territoryList = tList;
 }
 
 // Get player's territories
 vector<Territory*> Player::getTerritoryList()
 {
-    return *territoryList;
+    return territoryList;
 }
-
 
 // Assign a list of cards to a specified Player
 void Player::setHand(Hand *hand)
@@ -60,6 +77,16 @@ void Player::setHand(Hand *hand)
 
 // Get a Player's list of cards
 Hand* Player::getHand() {
+    return playerHand;
+}
+
+void Player::setHand(Hand h)
+{
+    playerHand = h.HandCards;
+}
+
+vector<Cards*> Player::getHand()
+{
     return playerHand;
 }
 
@@ -76,42 +103,61 @@ OrdersList Player::getOrderList()
 }
 
 
-// List of territories that are going to be defended
+// Player's list of territories that are going to be defended
 vector<Territory*> Player::toDefend()
 {
-    // Declare and initialize defendList
-    vector<Territory*> defendList;
-
-    // Loop through OrderList, if order is blockade, then create a list and add the territories
-    /*for (auto o : territoryList)
+    int tListSize = territoryList.size();
+    for(int i = 1; i < tListSize; i++)
     {
-        if (o == )
+        if(i % 3  == 0)
         {
-            // add to defendList
+            defendList.push_back(territoryList[i]);
         }
-    }*/
-     return defendList;
+    }
+
+    return defendList;
 }
 
-// List of territories that are going to be attacked
+//Print function for Player's list of territories to be defended
+void Player::printDefendList()
+{
+    for (auto t : defendList)
+    {
+        std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
+        std::cout << "Territory ID: " << t->getTerritoryID() << " | ";
+        std::cout << "Territory Name: " << t->getTerritoryName() << " | ";
+        std::cout << "Continent Name: " << t->getContinent() << " | ";
+        std::cout << "Number of Armies: " << t->getNumOfArmies() << "\n";
+    }
+}
+
+// Player's list of territories that are going to be attacked
 vector<Territory*> Player::toAttack()
 {
-    //declare and initialize attackList
-    vector<Territory*> attackList;
-
-    // Loop through OrderList, if order is bomb or advance, then create a list and add the territories
-    /*int listSize = orderList.listSize();
-    for(int i = 0; i < listSize; i++)
+    int tListSize = territoryList.size();
+    for(int i = 0; i < tListSize; i++)
     {
-
-        if( (*orderList.getListOfOrders())[i]->getLabel() == "deploy" || (*orderList.getListOfOrders())[i]->getLabel() == "advance")
+        if(i % 2 == 0)
         {
-            attackList.push_back(territoryList);
+            attackList.push_back(territoryList[i]);
         }
-    }*/
-    //attackList.push_back(territoryList);
+    }
     return attackList;
 }
+
+// Print function for Player's list of territories to be attacked
+void Player::printAttackList()
+{
+    for (auto t : attackList)
+    {
+        std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
+        std::cout << "Territory ID: " << t->getTerritoryID() << " | ";
+        std::cout << "Territory Name: " << t->getTerritoryName() << " | ";
+        std::cout << "Continent Name: " << t->getContinent() << " | ";
+        std::cout << "Number of Armies: " << t->getNumOfArmies() << "\n";
+    }
+}
+
 
 // Method to allow a Player to make an Order and add it to the orderList
 // Orders allowed are: deploy, advance, bomb, blockade, airlift, negotiate
@@ -131,6 +177,18 @@ void Player::issueOrder(string orderName)
 // Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
 void Player::play(Deck *currentDeck, Cards *card) {
 // create an order & add it to player's order list
+// Print function for Player's list of controlled territories
+void Player::printTerritoryList()
+{
+    for (auto t : territoryList)
+    {
+        std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
+        std::cout << "Territory ID: " << t->getTerritoryID() << " | ";
+        std::cout << "Territory Name: " << t->getTerritoryName() << " | ";
+        std::cout << "Continent Name: " << t->getContinent() << " | ";
+        std::cout << "Number of Armies: " << t->getNumOfArmies() << "\n";
+    }
+}
 
     issueOrder(card->getCardType());
 

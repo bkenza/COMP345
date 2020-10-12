@@ -28,7 +28,12 @@ class Player
         OrdersList getOrderList();
         vector<Territory*> toDefend();
         vector<Territory*> toAttack();
+        void printTerritoryList();
+        void printAttackList();
+        void printDefendList();
         void issueOrder(string orderName);
+        void printHand();
+        void printDeck();
         int getPlayerID();
         void setPlayerID(int );
         void printTerritoryList();
