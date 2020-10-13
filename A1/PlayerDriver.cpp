@@ -79,6 +79,8 @@ int pmain()
     d1->draw(h1);
     d1->draw(h1);
     d1->draw(h1);
+    d1->draw(h1);
+
     cout << endl;
 
     cout << "ASSIGNING MAP TO PLAYER 1" << endl;

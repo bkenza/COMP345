@@ -7,13 +7,18 @@ using namespace std;
 //          MAP
 //==========================
 
-// Default constructor
+/**
+ * Default constructor
+ */
 Map::Map()
 {
     pName = new string("");
 }
 
-// Copy constructor
+/**
+ * Copy constructor
+ * @param orig
+ */
 Map::Map(const Map &orig)
 {
     pName = new string(*orig.pName);
@@ -23,7 +28,9 @@ Map::Map(const Map &orig)
     }
 }
 
-// Destructor
+/**
+ * Destructor
+ */
 Map::~Map()
 {
     delete pName;
@@ -39,27 +46,40 @@ Map::~Map()
     Continents.clear();
 }
 
-// Set map pName
+/**
+ * Method that sets the map name
+ * @param title
+ */
 void Map::setName(std::string title)
 {
     *pName = title;
 }
 
-// Get map pName
+/**
+ * Method that gets the map name
+ * @return
+ */
 std::string Map::getName()
 {
     return *pName;
 }
 
-//TODO: create this method
+/**
+ * Boolean method that validate a given map by calling the uniqueContinentCheck()
+ * & the isMapConnected() methods
+ * @return
+ */
 bool Map::validate()
 {
+    // if the Continents or the Territories vectors are empty, the map is invalid
     if(Continents.empty() || Territories.empty()) {
         cout << "\nSorry, your map is massively invalid!!!" << endl;
         return false;
     }
+    // If Territories/Continents are not empty
     else if(Continents.size() > 1 || Territories.size() > 1) {
         for(int v=0; v < Territories.size(); v++) {
+            // if the adjacentTerritories vector is empty
             if(Territories[v]->adjTerritories.empty()) {
                 cout << "\nSorry, your map is massively invalid!!!" << endl;
                 return false;
@@ -80,6 +100,11 @@ bool Map::validate()
     }
 };
 
+/**
+ * Boolean method that checks if a territory belongs to one continent only
+ * Returns true if the condition is true. Otherwise, it returns false
+ * @return
+ */
 bool Map::uniqueContinentCheck()
 {
     Territory *currentTerritory = new Territory();
@@ -106,8 +131,15 @@ bool Map::uniqueContinentCheck()
     return true;
 };
 
-// Thus method checks if the graph is connected by using DFS (depth-first search).
-// TODO: explain more
+
+/**
+ * This boolean method checks if the map graph is connected by using DFS (depth-first search)
+ * First, it checks that all the adjacent territories are in fact connected, by assigning each territory an id as well
+ * as a "visitedT" flag.
+ * Lastly, inside each continent, it checks that the adjacent territories (contained inside the territories vector)
+ * are connected as well.
+ * @return
+ */
 bool Map::isMapConnected()
 {
     bool isConnected = true; // map is a connected graph
@@ -184,18 +216,11 @@ bool Map::isMapConnected()
     for (int j = 0; j < Continents.size(); j++)
     {
         currentContinent.idC = Continents[j]->getContinentID();
-//        currentContinent.visitedC = false;
         visitedContinents.push_back(currentContinent);
     };
     startContId = Continents[0]->getContinentID();
     visitedContinents[0].visitedC = true;
-//    for (auto z : visitedContinents)
-//    {
-//        if (z.idC == startContId)
-//        {
-//            z.visitedC = true;
-//        };
-//    }
+
     stackOfContIds.push_back(startContId);
 
     while (!stackOfContIds.empty())
@@ -231,13 +256,11 @@ bool Map::isMapConnected()
     return isConnected;
 }
 
-//TODO: create a printMap method
-void printMap(Map *map)
-{
-    // print the current map
-    // Print territories
-}
-
+/**
+ * Method that gets a territory by id
+ * @param territoryID
+ * @return territory
+ */
 Territory* Map::getTerritoryById(int territoryID)
 {
     for (int i = 0; i < Territories.size(); i++)
@@ -249,6 +272,11 @@ Territory* Map::getTerritoryById(int territoryID)
     }
 }
 
+/**
+ * Method that gets a continent by id
+ * @param continentId
+ * @return continent
+ */
 Continent* Map::getContinentById(int continentId)
 {
     for (int i = 0; i < Continents.size(); i++)
@@ -264,7 +292,9 @@ Continent* Map::getContinentById(int continentId)
 //     Territory
 //==========================
 
-//default constructor
+/**
+ * Default constructor
+ */
 Territory::Territory()
 {
     pTerritoryID = new int(1);
@@ -275,8 +305,13 @@ Territory::Territory()
     pPlayerNumOfArmies = new int(0);
 }
 
-// TODO: check if the syntax is right aka do we need to add "new"???????
 //setting our Territory object with a country, continent and armies value
+/**
+ * Constructor that sets our Territory object with a territoryID, name and continent name
+ * @param territoryId
+ * @param country
+ * @param continent
+ */
 Territory::Territory(int territoryId, string country, string continent)
 {
     *pTerritoryID = territoryId;
@@ -284,8 +319,10 @@ Territory::Territory(int territoryId, string country, string continent)
     *pContinentName = continent;
 }
 
-// Copy constructor
-// TODO: if this does not work, add a pointer
+/**
+ * Copy constuctor
+ * @param orig
+ */
 Territory::Territory(const Territory &orig)
 {
     pTerritoryID = new int(*orig.pTerritoryID);
@@ -300,7 +337,9 @@ Territory::Territory(const Territory &orig)
     }
 }
 
-//Destructor to call finalize() and free unwanted resources
+/**
+ * Destructor
+ */
 Territory::~Territory()
 {
     delete pTerritoryID;
@@ -316,79 +355,119 @@ Territory::~Territory()
     adjTerritories.clear();
 }
 
-//Setter for territoryID data member
+/**
+ * Setter for the territoryID data member
+ * @param territoryId
+ */
 void Territory::setTerritoryID(int territoryId)
 {
     *pTerritoryID = territoryId;
 }
 
+/**
+ * Getter for the territoryID data member
+ * @return
+ */
 int Territory::getTerritoryID()
 {
     return *pTerritoryID;
 }
 
-// Setter for playerID data member
+/**
+ * Setter for the playerID
+ * @param playerId
+ */
 void Territory::setTerritoryPlayerID(int playerId)
 {
     *pPlayerID = playerId;
 }
 
-// Getter for playerID data member
+/**
+ * Getter for the playerID
+ * @return *pPlayerID
+ */
 int Territory::getTerritoryPlayerID()
 {
     return *pPlayerID;
 }
 
-// Setter for pTerritoryName data member
+/**
+ * Setter for the territoryName
+ * @param territoryName
+ */
 void Territory::setTerritoryName(string territoryName)
 {
     *pTerritoryName = territoryName;
 }
 
-// Getter for pTerritoryName data member
+/**
+ * Getter for the territoryName
+ * @return *pTerritoryName
+ */
 string Territory::getTerritoryName()
 {
     return *pTerritoryName;
 }
 
-//Setter for pContinentName data member
+/**
+ * Setter for the continentName
+ * @param continent
+ */
 void Territory::setContinentName(string continent)
 {
     *pContinentName = continent;
 }
 
-//Getter for pContinent data member
+/**
+ * Getter for the continent name
+ * @return *pContinentName
+ */
 string Territory::getContinent()
 {
     return *pContinentName;
 }
 
+/**
+ * Setter for the continent ID
+ * @param continentID
+ */
 void Territory::setContinentId(int continentID)
 {
     continentId = continentID;
 }
 
+/**
+ * Getter for the continent ID
+ * @return continentId
+ */
 int Territory::getContinentId()
 {
     return continentId;
 }
 
-//Setter for pNumOfArmy data member
+/**
+ * Setter for the number of armies
+ * @param num
+ */
 void Territory::setNumOfArmies(int num)
 {
     *pPlayerNumOfArmies = num;
 }
 
-//Getter for pNumOfArmy data member
+/**
+ * Getter for the number of armies
+ * @return *pPlayerNumOfArmies
+ */
 int Territory::getNumOfArmies()
 {
     return *pPlayerNumOfArmies;
 }
 
-//Display territory information
+/**
+ * Method that prints territory information
+ */
 void Territory::displayTerritory()
 {
-    //cout << "Displaying information for Territory " << get << endl;
     cout << "Player: " << getTerritoryPlayerID() << endl;
         cout << "Country: " << getTerritoryName() << endl;
     cout << "Continent : " << getContinent() << endl;
@@ -399,15 +478,18 @@ void Territory::displayTerritory()
 //        CONTINENT
 //==========================
 
-// default contructor
+/**
+ * Default constructor
+ */
 Continent::Continent()
 {
     pContinentId = new int(1);
     pContinentName = new string("");
 }
 
-// Copy constructor
-// TODO: if this does not work, add a pointer
+/**
+ * Copy constructor
+ */
 Continent::Continent(const Continent &orig)
 {
     pContinentId = new int(*orig.pContinentId);
@@ -419,7 +501,9 @@ Continent::Continent(const Continent &orig)
     }
 }
 
-// Destructor
+/**
+ * Destructor
+ */
 Continent::~Continent()
 {
     delete pContinentId;
@@ -431,29 +515,47 @@ Continent::~Continent()
     territories.clear();
 }
 
-// Getter for the continent id
+/**
+ * Getter for the continent ID
+ * @return *pContinentId
+ */
 int Continent::getContinentID()
 {
     return *pContinentId;
 }
 
-// Setter for the continent id
+/**
+ * Setter for the continent ID
+ * @param continentID
+ */
 void Continent::setContinentID(int continentID)
 {
     *pContinentId = continentID;
 }
 
-// Getter for the continent id
+/**
+ * Getter for the continent name
+ * @return
+ */
 string Continent::getContinentName()
 {
     return *pContinentName;
 }
 
+/**
+ * Setter for the continent name
+ * @param continentName
+ */
 void Continent::setContinentName(string continentName)
 {
     *pContinentName = continentName;
 };
 
+/**
+ * Method that checks if a given territory is inside a continent
+ * @param territory
+ * @return
+ */
 bool Continent::isInContinent(Territory *territory)
 {
     for (auto t : territories)

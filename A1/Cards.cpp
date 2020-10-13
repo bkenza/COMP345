@@ -1,79 +1,73 @@
-
 #include "Cards.h"
 #include <algorithm>
 #include <random>
 
 using namespace std;
 
-// default constructor
+/**
+ * Default constructor
+ */
 Cards::Cards()
 {
     cardType = new string("");
 }
 
+/**
+ * Constructor with a string parameter
+ * @param type
+ */
 Cards::Cards(string type) {
     *cardType = type;
 }
 
-// copy constructor
+/**
+ * Copy constructor
+ * @param orig
+ */
 Cards::Cards(const Cards &orig)
 {
     cardType = new string(*orig.cardType);
 }
-
+/**
+ * Method that sets the card type/name
+ * @param type
+ */
 void Cards::setCardType(string type)
 {
     *cardType = type;
 }
 
-// Card type getter
+/**
+ * Method that gets the card type/name
+ * @return
+ */
 string Cards::getCardType()
 {
     return *cardType;
 }
 
-//Destructor
+/**
+ * Destructor
+ */
 Cards::~Cards()
 {
     delete cardType;
 }
 
-// which creates an order and adds it to the player’s list of orders and then returns the card to the deck
-//void Cards::play(Map *map, Hand *currentHand, Deck *deck, Player *player) {
-////    int playerID = currentHand->getPlayerID();
-////    Player *currentPlayer = map->getPlayerById(playerID);
-//
-//
-//    // create an order & add it to player's order list
-//
-//    player->issueOrder(*cardType);
-//
-//    int removalCounter = 0;
-//    Cards current;
-//
-//    // Remove card from current hand
-//    for (int p =0; p < currentHand->HandCards.size(); p++) {
-//        if (currentHand->HandCards[p]->getCardType() == cardType && removalCounter == 0) {
-//            current = *currentHand->HandCards[p];
-//            currentHand->HandCards.erase(currentHand->HandCards.begin() + p);
-//
-//            removalCounter++;
-//        }
-//    }
-//
-//    // Return current card to the deck & shuffle it
-//    deck->DeckCards.push_back(&current);
-//    deck->shuffleDeck();
-//}
-
 //---------------------------
 //     Deck
 //---------------------------
+
+/**
+ * Default constructor
+ */
 Deck::Deck()
 {
 }
 
-// Destructor
+/**
+ * Destructor
+ */
 Deck::~Deck()
 {
     for (auto c : DeckCards)
@@ -83,7 +77,10 @@ Deck::~Deck()
     DeckCards.clear();
 }
 
-// copy constructor
+/**
+ * Copy constructor
+ * @param orig
+ */
 Deck::Deck(const Deck &orig)
 {
     for (auto &&t : orig.DeckCards)
@@ -92,12 +89,15 @@ Deck::Deck(const Deck &orig)
     }
 }
 
-// Method to draw a card from the deck
+/**
+ * Method to draw a card from the deck
+ * @param currentHand
+ */
 void Deck::draw(Hand *currentHand)
 {
     if (DeckCards.empty())
     {
-        cout << "No more cards in the deck, sorry!" << endl;
+        cout << "No more cards in the deck, sorry!" << endl; // output this if the deck is empty
     }
     else
     {
@@ -106,10 +106,12 @@ void Deck::draw(Hand *currentHand)
     }
 }
 
+/**
+ * Method to initialize & shuffle the deck of cards
+ */
 void Deck::initializeDeck()
 {
     vector<string> types = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
-//    vector<Cards *> cardTypes = {new Cards("bomb"), new Cards("reinforcement"), new Cards("blockade"), new Cards("airlift"), new Cards("diplomacy")};
     for (int j = 0; j < types.size(); j++)
     {
         Cards *card = new Cards();
@@ -122,23 +124,29 @@ void Deck::initializeDeck()
     shuffleDeck();
 }
 
-// Method that shuffles a given deck of cards
+/**
+ * Method that shuffles the deck of cards
+ */
 void Deck::shuffleDeck()
 {
-    auto rng = default_random_engine{};
-    shuffle(begin(DeckCards), end(DeckCards), rng);
+    mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
+    shuffle(std::begin(DeckCards), std::end(DeckCards), rng);
 };
 
 //------------------------------
 //         Hand
 //------------------------------
 
-// default constructor
+/**
+ * Default constructor
+ */
 Hand::Hand(){
-    // empty hehe
 };
 
-// copy constructor
+/**
+ * Copy constructor
+ * @param orig
+ */
 Hand::Hand(const Hand &orig)
 {
     for (auto &&t : orig.HandCards)
@@ -147,6 +155,9 @@ Hand::Hand(const Hand &orig)
     }
 };
 
+/**
+ * Destructor
+ */
 Hand::~Hand()
 {
     for (auto c : HandCards)
@@ -156,10 +167,18 @@ Hand::~Hand()
     HandCards.clear();
 }
 
+/**
+ * Method that sets the playerID
+ * @param playerId
+ */
 void Hand::setPlayerID(int playerId) {
     playerID = playerId;
 }
 
+/**
+ * Method that gets the playerID
+ * @return
+ */
 int Hand::getPlayerID() {
     return playerID;
 }

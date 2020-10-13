@@ -16,15 +16,14 @@ class Cards
 {
 public:
     Cards();  // default constructor
-    Cards(string type);
+    Cards(string type); // constructor
     ~Cards(); // destructor
-//    void play(Map *map, Hand *currentHand, Deck *deck, Player *player);
-    void setCardType(string type);
-    string getCardType();
+    void setCardType(string type); // card type setter
+    string getCardType(); // card type getter
 
     Cards(const Cards &orig); // copy constructor
 private:
-    string *cardType;
+    string *cardType; // card type/name
 };
 
 #endif
@@ -39,10 +38,9 @@ public:
     ~Deck();                      // destructor
     void draw(Hand *currentHand); // method that allows a player to draw a card at random from the cards remaining in the deck and place it in their hand.
     Deck(const Deck &orig);       // copy constructor
-    vector<Cards *> DeckCards;
-    void initializeDeck();
-    void shuffleDeck();
-
+    vector<Cards *> DeckCards; // vector of card pointers
+    void initializeDeck(); // Method to initialize the deck of cards
+    void shuffleDeck(); // Method to shuffle the deck of cards
 private:
     // no private attributes for now
 };
@@ -55,15 +53,14 @@ private:
 class Hand
 {
 public:
-    Hand();
-    ~Hand();
-    Hand(const Hand &orig);
-    vector<Cards *> HandCards;
-    void setPlayerID(int playerId);
-    int getPlayerID();
-//    vector<Cards *> DeckCards;
+    Hand(); // default constructor
+    ~Hand(); // destructor
+    Hand(const Hand &orig); //copy constructor
+    vector<Cards *> HandCards; // vector of card pointers
+    void setPlayerID(int playerId); // method to set the playerID
+    int getPlayerID(); // method to get the playerID
 private:
-    int playerID;
+    int playerID; // ID of a given player
 };
 #endif
 

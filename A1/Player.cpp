@@ -3,12 +3,20 @@
 #include <iostream>
 
 using namespace std;
-
-// Each player will have a collection of territories as well as a collection of cards, as well as an order list at the start of the game
+/**
+ * Each player will have a collection of territories as well as a
+ * collection of cards, as well as an order list at the start of the game
+ */
 Player::Player() {
     playerID =  int(0);
 }
 
+/**
+ * Constructor
+ * @param tList
+ * @param hand
+ * @param oList
+ */
 Player::Player(vector<Territory*> tList, Hand hand, OrdersList oList)
 {
     territoryList = tList;
@@ -42,12 +50,6 @@ Player::~Player()
     delete playerHand;
 
     delete &playerHand->HandCards; // Delete the memory for the vector itself.
-
-    /*int oListSize = orderList;
-    int oListSize = orderList.listSize();
-    for (int i = 0; i < oListSize; i++) // Delete memory for orders, which are always dynamically allocated.
-        delete (*orderList.getListOfOrders())[i];
-    delete orderList.getListOfOrders(); // Delete the memory for the vector itself.*/
 }
 
 // Assign a list of territories to Player

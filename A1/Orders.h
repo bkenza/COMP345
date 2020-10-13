@@ -13,8 +13,9 @@ using std::setfill;
 using std::left;
 using std::string;
 
-// This is an abstract class for orders. All functionalities meant
-// to be implemented by subclasses.
+/**
+ * This is an abstract class for orders. All functionalities meant to be implemented by subclasses.
+ */
 class Order // ORDER MIGHT NEED ID IN THE FUTURE
 {
 public:
@@ -117,16 +118,20 @@ private:
     ostream& printOrder(ostream&) const override;
 };
 
-// Should be created at the beginning of the program.
-// Creates an order, the type depending on the user input.
+/**
+ * Should be created at the beginning of the program.
+ * Creates an order, the type depending on the user input.
+ */
 class OrderFactory
 {
 public:
     Order* createOrder(string) const;
 };
 
-// Designed to hold a list of valid orders
-// and carry out basic list functions.
+/**
+ * Designed to hold a list of valid orders
+ * and carry out basic list functions.
+ */
 class OrdersList
 {
 public:

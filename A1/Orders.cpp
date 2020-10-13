@@ -1,6 +1,8 @@
 #include "Orders.h"
 
-// The labels of the orders, which are constant and static.
+/**
+ *  The labels of the orders, which are constant and static.
+ */
 const string deploy::label = "Deploy";
 const string advance::label = "Advance";
 const string bomb::label = "Bomb";
@@ -8,11 +10,16 @@ const string blockade::label = "Blockade";
 const string airlift::label = "Airlift";
 const string negotiate::label = "Negotiate";
 
+/**
+ * Default constructor
+ */
 OrdersList::OrdersList()
 {
-
 }
 
+/**
+ * Destructor
+ */
 OrdersList::~OrdersList()
 {
     int listSize = orders.size();
@@ -21,7 +28,10 @@ OrdersList::~OrdersList()
         delete orders[i];
 }
 
-// Makes a deep-copy of a list.
+/**
+ * Copy constructor: makes a deep copy of a list
+ * @param oldList
+ */
 OrdersList::OrdersList(const OrdersList& oldList)
 {
     int listSize = oldList.orders.size();
@@ -33,41 +43,62 @@ OrdersList::OrdersList(const OrdersList& oldList)
     cout << "The list has been copied!" << endl;
 }
 
+/**
+ * Destructor
+ */
 Order::~Order()
 {
-
 }
 
+/**
+ * Destructor
+ */
 deploy::~deploy()
 {
-
 }
 
+/**
+ * Destructor
+ */
 advance::~advance()
 {
-
 }
 
+/**
+ * Destructor
+ */
 bomb::~bomb()
 {
-
 }
 
+/**
+ * Destructor
+ */
 blockade::~blockade()
 {
 
 }
 
+/**
+ * Destructor
+ */
 airlift::~airlift()
 {
 
 }
 
+/**
+ * Destructor
+ */
 negotiate::~negotiate()
 {
 
 }
 
+/**
+ * Method that adds an order to the orders vector
+ * @param o
+ */
 void OrdersList::addOrder(Order* o)
 {
     if (o == nullptr) // See OrdersFactory.
@@ -80,6 +111,10 @@ void OrdersList::addOrder(Order* o)
     }
 }
 
+/**
+ * Method that deletes an order
+ * @param pos
+ */
 void OrdersList::deleteOrder(int pos)
 {
     int listSize = orders.size();
@@ -97,6 +132,11 @@ void OrdersList::deleteOrder(int pos)
     }
 }
 
+/**
+ * Method that moves an order
+ * @param pos1
+ * @param pos2
+ */
 void OrdersList::moveOrder(int pos1, int pos2)
 {
     int listSize = orders.size(); // Compute size to check if a move can be performed.
@@ -117,6 +157,9 @@ void OrdersList::moveOrder(int pos1, int pos2)
     }
 }
 
+/**
+ * Method that executes an order
+ */
 void OrdersList::executeOrders()
 {
     int listSize = orders.size();
@@ -136,6 +179,11 @@ void OrdersList::executeOrders()
     }
 }
 
+/**
+ * Assignment operator
+ * @param rhsList
+ * @return
+ */
 OrdersList& OrdersList::operator=(const OrdersList& rhsList) // Releases resources by LHS and deep-copy
 {                                                            // to RHS
     if (&rhsList == this) // Checks for self assignment
@@ -155,7 +203,12 @@ OrdersList& OrdersList::operator=(const OrdersList& rhsList) // Releases resourc
     return *this;
 }
 
-// Prints the list using cout.
+/**
+ * Prints the list using cout.
+ * @param strm
+ * @param ol
+ * @return
+ */
 ostream& operator<<(ostream& strm, const OrdersList& ol)
 {
     int listSize = ol.orders.size(); // For iteration
@@ -175,45 +228,77 @@ ostream& operator<<(ostream& strm, const OrdersList& ol)
     return strm;
 }
 
-// Returns the label of the order.
+/**
+ * Returns the label of the order.
+ * @return
+ */
 string deploy::getLabel() const
 {
     return label;
 }
 
+/**
+ * Returns the label of the order.
+ * @return
+ */
 string advance::getLabel() const
 {
     return label;
 }
 
+/**
+ * Returns the label of the order.
+ * @return
+ */
 string bomb::getLabel() const
 {
     return label;
 }
 
+/**
+ * Returns the label of the order.
+ * @return
+ */
 string blockade::getLabel() const
 {
     return label;
 }
 
+/**
+ * Returns the label of the order.
+ * @return
+ */
 string airlift::getLabel() const
 {
     return label;
 }
 
+/**
+ * Returns the label of the order.
+ * @return
+ */
 string negotiate::getLabel() const
 {
     return label;
 }
 
-// Works in conjunction with printOrder() from subclasses to polymorphically
-// give information about a specific order using cout.
+/**
+ * Works in conjunction with printOrder() from subclasses to polymorphically
+ * give information about a specific order using cout.
+ * @param strm
+ * @param o
+ * @return
+ */
 ostream& operator<<(ostream& strm, const Order& o)
 {
     return o.printOrder(strm);
 }
 
-// Does not print anything useful for this assignment.
+/**
+ * Does not print anything useful for this assignment.
+ * @param out
+ * @return
+ */
 ostream& deploy::printOrder(ostream& out) const
 {
     return out << "This is a deploy order!";
@@ -244,7 +329,10 @@ ostream& negotiate::printOrder(ostream& out) const
     return out << "This is a negotiate order!";
 }
 
-// For this assignment, validation is not defined.
+/**
+ * For this assignment, validation is not defined.
+ * @return
+ */
 bool deploy::validate() const
 {
     cout << "Validating Deploy...\n";
@@ -281,8 +369,9 @@ bool negotiate::validate() const
     return true;
 }
 
-// Validates an order and proceeds accordingly. For this assignment, execution
-// is not defined.
+/**
+ * Validates an order and proceeds accordingly. For this assignment, execution is not defined.
+ */
 void deploy::execute() const
 {
     if (validate())
@@ -319,11 +408,14 @@ void negotiate::execute() const
         cout << "Negotiate is being executed!\n";
 }
 
-// Since we have a list of pointers to an abstract class,
-// we need a way to polymorphically clone the objects in the
-// list if we ever decide to deep-copy the list. Calls the
-// compiler-generated copy constructor, which is OK since
-// these subclasses don't have object specific data members.
+/**
+ * Since we have a list of pointers to an abstract class,
+ * we need a way to polymorphically clone the objects in the
+ * list if we ever decide to deep-copy the list. Calls the
+ * compiler-generated copy constructor, which is OK since
+ * these subclasses don't have object specific data members.
+ * @return
+ */
 Order* deploy::clone() const
 {
     return new deploy(*this);
@@ -354,10 +446,14 @@ Order* negotiate::clone() const
     return new negotiate(*this);
 }
 
-// Creates an order based on user input. Only the strings below
-// are the possible orders in this game. If the user inputs a
-// string different than those listed, it returns a null pointer,
-// which is meant to be handled in OrdersList::addOrder().
+/**
+ * Creates an order based on user input. Only the strings below
+ * are the possible orders in this game. If the user inputs a
+ * string different than those listed, it returns a null pointer,
+ * which is meant to be handled in OrdersList::addOrder().
+ * @param orderType
+ * @return
+ */
 Order* OrderFactory::createOrder(string orderType) const
 {
     if (orderType == "deploy")

@@ -4,13 +4,18 @@
 #include <sstream>
 #include <fstream>
 #include <regex>
+
 using namespace std;
 using std::cin;
 using std::cout;
 using std::istringstream;
 using std::string;
 
-// Method that splits long strings into 2 strings
+/**
+ * Method that splits a long string (sentence) into multiple strings
+ * @param line
+ * @return words<string>
+ */
 std::vector<string> splitString(string line)
 {
     std::vector<string> words;
@@ -25,21 +30,33 @@ std::vector<string> splitString(string line)
     return words;
 };
 
+/**
+ * Default constructor
+ */
 MapLoader::MapLoader()
 {
-    // default contructor
 }
 
+/**
+ * copy constructor
+ */
 MapLoader::MapLoader(const MapLoader &orig)
 {
-    //Copy Constructor
 }
 
+/**
+ * Destructor
+ */
 MapLoader::~MapLoader()
 {
-    //Destructor
 }
 
+/**
+ * Method that loads a map file and creates a map object in order to populate it as a connected graph
+ * First
+ * @param fileName
+ * @return map
+ */
 Map *MapLoader::MapReader(string fileName)
 {
     istringstream stringStream;
@@ -53,6 +70,7 @@ Map *MapLoader::MapReader(string fileName)
     bool hasBorders = false;
     int cont_counter = 0;
     int ter_counter = 0;
+
     //  Create map object
     Map *map = new Map();
     // For each line of the file, we want to check for a ["Map"] section, a ["Continents"] section
@@ -61,8 +79,6 @@ Map *MapLoader::MapReader(string fileName)
         if (!mapIsValid)
         {
             std::cerr << "The map provided is invalid, please try again";
-//            map->~Map(); //destroying map
-            // TODO: HOW TO IMPLEMENT THE DELETION OF THE MAP OBJECT IF IT HAPPENS TO BE INVALID? + destructor of mapreader
         }
         // if wantedString exists in the line we are currently on,
         if (line.substr(0, 3) == "map")
@@ -71,7 +87,7 @@ Map *MapLoader::MapReader(string fileName)
             continue;
         }
         else if (!line.compare("[continents]\r"))
-        { // TODO: if it doesnt work maybe add brackets []
+        {
             hasContinents = true;
             continue;
         }
@@ -92,9 +108,6 @@ Map *MapLoader::MapReader(string fileName)
             if (line.length() > 0 && line != "\r")
             {
                 Continent *continent = new Continent();
-                //                for(auto w : *splitString(line)){
-                //                    words.push_back(w);
-                //                };
                 words = splitString(line);
                 continent->setContinentID(++cont_counter);
                 continent->setContinentName(words[0]);
@@ -141,7 +154,6 @@ Map *MapLoader::MapReader(string fileName)
                 {
                     int adjTerritoryId;
                     std::istringstream(words[i]) >> adjTerritoryId;
-                    // TODO: try to use the getter function to push the id (getTerritoryById)
                     map->Territories[territoryId - 1]->adjTerritories.push_back(adjTerritoryId);
                 }
             }
@@ -151,6 +163,5 @@ Map *MapLoader::MapReader(string fileName)
             }
         }
     };
-
     return map;
 }
