@@ -12,6 +12,8 @@ class Player
         Hand *playerHand;
         OrdersList orderList;
         int playerID;
+        int reinforcementPool;
+
     public:
         Player();
         Player(vector<Territory*> tList, Hand hand, OrdersList oList);
@@ -33,4 +35,7 @@ class Player
         void printHand();
         int getPlayerID();
         void setPlayerID(int );
+        void setReinforcementPool(int n);
+        int getReinforcementPool();
+        bool ownAllTerritoryInContinent();
 };

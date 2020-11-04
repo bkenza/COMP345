@@ -15,6 +15,10 @@ public:
     bool getObserversOn();
     void setObserversOn(bool observersOn);
     string mapSelector(int mapNumber);
+    void mainGameLoop();
+    void reinforcementPhase();
+    void issueOrdersPhase();
+    void executeOrdersPhase();
 
 private:
     int numPlayers;

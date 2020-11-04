@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
+#include "Map.h"
 #include <iostream>
-#include <sstream>
 
 using namespace std;
 
@@ -162,4 +162,85 @@ void GameEngine::setObserversOn(bool observersOn)
 string GameEngine::mapSelector(int mapNumber)
 {
     return mapList[mapNumber - 1];
+}
+
+/*
+ * round robin fashion 3 phases -> reinfrocement, issuing order, orders execution
+ */
+void GameEngine::mainGameLoop()
+{
+    // Winner object is stored once game is over and we have a winner
+    Player* winner = NULL;
+
+    //loop continues until only one of the players owns all territories in map
+    while(numPlayers != 1)
+    {
+        if(numPlayers == 1)
+        {
+            winner = players[numPlayers];
+            exit(0);
+        }
+
+        //If a players territoryList size is 0, he/she is removed from the game because he/she no longer controls at least 1 territory
+        //Iterating through GameEngine's list of players
+        for(int i = 0; i < players.size(); i++)
+        {
+            if(players[i]->getTerritoryList().empty())
+            {
+                players.erase(players.begin()+i);
+                numPlayers--;
+            }
+        }
+
+        // Reinforcement Phase
+        reinforcementPhase();
+
+        // Issuing Orders Phase
+        issueOrdersPhase();
+
+        // Orders Execution Phase
+        executeOrdersPhase();
+    }
+
+    cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
+}
+
+/*
+ * Players are given a number of armies that depends on the number of territories
+ * they own, (# of territories owned divided by 3, rounded down). If the player owns all the territories of an
+ * entire continent, the player is given a number of armies corresponding to the continent’s control bonus
+ * value. In any case, the minimal number of reinforcement armies per turn for any player is 3. These armies
+ * are placed in the player’s reinforcement pool.
+ */
+void GameEngine::reinforcementPhase()
+{
+    for(int i = 0; i < players.size(); i++)
+    {
+        // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
+        if(round((players[i]->getTerritoryList().size()) / 3) < 3)
+        {
+            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 3);
+        }
+
+        //check if players owned number of territories matches a continent that hold n amount of territories in order to gain control bonus
+        else if(players[i]->ownAllTerritoryInContinent())
+        {
+            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 10);
+        }
+
+        else
+        {
+            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + round((players[i]->getTerritoryList().size()) / 3));
+        }
+    }
+}
+
+void GameEngine::issueOrdersPhase()
+{
+
+}
+
+void GameEngine::executeOrdersPhase()
+{
+
 }

@@ -190,6 +190,9 @@ void Player::play(Deck *currentDeck, Cards *card) {
     currentDeck->shuffleDeck();
 };
 
+/*
+ * Print method for player's territory list
+ */
 void Player::printTerritoryList() {
     for (auto t : getTerritoryList())
     {
@@ -201,4 +204,46 @@ void Player::printTerritoryList() {
     }
 }
 
+/*
+ * Setting player's reinforcement pool
+ */
+void Player::setReinforcementPool(int n)
+{
+    reinforcementPool = n;
+}
 
+/*
+ * Getting player's reinforcement pool
+ */
+int Player::getReinforcementPool()
+{
+    return reinforcementPool;
+}
+
+/* For every Continent vector in Map obj, it will store its size and while iterating through player's territory list,
+ * checks whether a territory's continent owned by a player matches the Continent name Continents[i] of map obj,
+ * if so we increment the playerTerritoryInContinentCount and then we check if it matches with Map Continent[i]'s size
+ * if so then we can conclude that a player owns all territories in a particular continent and gains bonus power!
+ */
+bool Player::ownAllTerritoryInContinent()
+{
+    for(int v = 0; v < Map::Continents.size(); v++)
+    {
+        int numOfTerritoriesInContinentMap = Map::Continents[v]->territories.size();
+        int playerTerritoryInContinentCount;
+
+        for(int j = 0; j < territoryList.size(); j++)
+        {
+            if(territoryList.at(j)->getContinent() == Map::Continents[v]->getContinentName())
+            {
+                playerTerritoryInContinentCount++;
+            }
+        }
+
+        if(playerTerritoryInContinentCount == numOfTerritoriesInContinentMap)
+        {
+            return true;
+        }
+    }
+    return false;
+}
