@@ -203,6 +203,20 @@ OrdersList& OrdersList::operator=(const OrdersList& rhsList) // Releases resourc
     return *this;
 }
 
+int OrdersList::getOrdersListSize()
+{
+    return orders.size();
+}
+
+Order* OrdersList::getOrder(int index)
+{
+    if(index < orders.size() && index >= 0)
+    {
+        return orders[index];
+    }
+    return nullptr;
+}
+
 /**
  * Prints the list using cout.
  * @param strm
@@ -471,3 +485,4 @@ Order* OrderFactory::createOrder(string orderType) const
     else
         return nullptr;
 }
+

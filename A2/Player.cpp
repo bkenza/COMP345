@@ -55,7 +55,6 @@ Player::~Player()
 // Assign a list of territories to Player
 void Player::setTerritoryList(vector<Territory*> tList)
 {
-
     territoryList = tList;
 }
 
@@ -92,18 +91,6 @@ OrdersList Player::getOrderList()
 // List of territories that are going to be defended
 vector<Territory*> Player::toDefend()
 {
-    // Declare and initialize defendList
-    vector<Territory*> defendList;
-
-    // Loop through OrderList, if order is blockade, then create a list and add the territories
-    int tListSize = territoryList.size();
-    for(int i = 1; i < tListSize; i++)
-    {
-        if (i % 3  == 0)
-        {
-            defendList.push_back(territoryList[i]);
-        }
-    }
     return defendList;
 }
 
@@ -125,15 +112,6 @@ void Player::printDefendList()
 // Player's list of territories that are going to be attacked
 vector<Territory*> Player::toAttack()
 {
-    vector<Territory*> attackList;
-    int tListSize = territoryList.size();
-    for(int i = 0; i < tListSize; i++)
-    {
-        if(i % 2 == 0)
-        {
-            attackList.push_back(territoryList[i]);
-        }
-    }
     return attackList;
 }
 
@@ -154,6 +132,7 @@ void Player::printAttackList()
 
 // Method to allow a Player to make an Order and add it to the orderList
 // Orders allowed are: deploy, advance, bomb, blockade, airlift, negotiate
+// Player uses one of the cards in their hand to issue an order that corresponds to the card in question
 void Player::issueOrder(string orderName)
 {
     OrderFactory oFact; //Create OrderFactory to call createOrder method
@@ -162,32 +141,105 @@ void Player::issueOrder(string orderName)
     //Add to Player's orderList
     if(oFact.createOrder(orderName) == nullptr)
     {
-        cout << orderName << " cannot be added to the orders list!" << endl;
+        cout << orderName << " Order does not exist, cannot be added to the orders list!" << endl;
     }
-    orderList.addOrder(oFact.createOrder(orderName));
+
+    else if(oFact.createOrder(orderName)->getLabel() == "deploy")
+    {
+        int id;
+        cout << "Input a territory ID where you wish to deploy your armies!" << endl;
+        cin >> id;
+
+        vector<Territory*> gameMapTerritoryList = map->Territories;
+        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        {
+            if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+            {
+                defendList.push_back(gameMapTerritoryList[i]);
+                orderList.addOrder(oFact.createOrder(orderName));
+            }
+            else
+            {
+                cout << "The territory either does not exist or does not belong to you!" << endl;
+            }
+        }
+    }
+
+    else if(oFact.createOrder(orderName)->getLabel() == "advance")
+    {
+        int inputSourceID, inputDestID;
+        cout << "Input a source by territory ID" << endl;
+        cin >> inputSourceID;
+        cout << "Input a destination by territory ID" << endl;
+        cin >> inputDestID;
+
+        Territory* source = new Territory();
+        Territory* dest = new Territory();
+
+        vector<Territory*> gameMapTerritoryList = map->Territories;
+
+        // To find source territory in the map, in a seperate loop incase the source happens to be last element in the list
+        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        {
+            if(gameMapTerritoryList[i]->getTerritoryID() == inputSourceID
+            && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+            {
+                source = gameMapTerritoryList[i];
+            }
+        }
+
+        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        {
+            if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
+                    gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID && source->isAdjacent(dest))
+            {
+                dest = gameMapTerritoryList[i];
+                defendList.push_back(dest);
+                orderList.addOrder(oFact.createOrder(orderName));
+            }
+
+            else if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
+                    gameMapTerritoryList[i]->getTerritoryPlayerID() != playerID && source->isAdjacent(dest))
+            {
+                dest = gameMapTerritoryList[i];
+                attackList.push_back(dest);
+                orderList.addOrder(oFact.createOrder(orderName));
+            }
+
+            else
+            {
+                cout << "Invalid choice! Territory does not belong to you or Source and Destination are not adjacent" << endl;
+            }
+        }
+    }
+
+    else
+    {
+        orderList.addOrder(oFact.createOrder(orderName));
+    }
 };
 
 // Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
 void Player::play(Deck *currentDeck, Cards *card) {
 // create an order & add it to player's order list
 
-    issueOrder(card->getCardType());
+        issueOrder(card->getCardType());
 
-    int removalCounter = 0;
-    Cards usedCard;
+        int removalCounter = 0;
+        Cards usedCard;
 
-    // Remove card from current hand
-    for (int p =0; p < playerHand->HandCards.size(); p++) {
-        if (playerHand->HandCards[p]->getCardType() == card->getCardType() && removalCounter == 0) {
-            usedCard = *playerHand->HandCards[p];
-            playerHand->HandCards.erase(playerHand->HandCards.begin() + p);
-            removalCounter++;
+        // Remove card from current hand
+        for (int p =0; p < playerHand->HandCards.size(); p++) {
+            if (playerHand->HandCards[p]->getCardType() == card->getCardType() && removalCounter == 0) {
+                usedCard = *playerHand->HandCards[p];
+                playerHand->HandCards.erase(playerHand->HandCards.begin() + p);
+                removalCounter++;
+            }
         }
-    }
 
-    // Return current card to the deck & shuffle it
-    currentDeck->DeckCards.push_back(&usedCard);
-    currentDeck->shuffleDeck();
+        // Return current card to the deck & shuffle it
+        currentDeck->DeckCards.push_back(&usedCard);
+        currentDeck->shuffleDeck();
 };
 
 /*
@@ -227,20 +279,20 @@ int Player::getReinforcementPool()
  */
 bool Player::ownAllTerritoryInContinent()
 {
-    for(int v = 0; v < Map::Continents.size(); v++)
+    for(int i = 0; i < map->Continents.size(); i++)
     {
-        int numOfTerritoriesInContinentMap = Map::Continents[v]->territories.size();
-        int playerTerritoryInContinentCount;
+        int numOfTerritoriesInContinentMap = map->Continents[i]->territories.size();
+        int playerTerritoryIsInContinentCount;
 
         for(int j = 0; j < territoryList.size(); j++)
         {
-            if(territoryList.at(j)->getContinent() == Map::Continents[v]->getContinentName())
+            if(territoryList.at(j)->getContinent() == map->Continents[i]->getContinentName())
             {
-                playerTerritoryInContinentCount++;
+                playerTerritoryIsInContinentCount++;
             }
         }
 
-        if(playerTerritoryInContinentCount == numOfTerritoriesInContinentMap)
+        if(playerTerritoryIsInContinentCount == numOfTerritoriesInContinentMap)
         {
             return true;
         }

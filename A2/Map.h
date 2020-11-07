@@ -17,7 +17,7 @@ public:
     Map();                // default constructor
     Map(const Map &orig); // Copy constructor
     virtual ~Map();       // destructor
-    static std::vector<Continent *> Continents; // Vector containing pointers to continents
+    std::vector<Continent *> Continents; // Vector containing pointers to continents
     std::vector<Territory *> Territories; // Vector containing pointers to territories
     bool validate(); // method that validates a given map
     bool uniqueContinentCheck(); // method that checks if a territory is inside one continent only
@@ -62,6 +62,7 @@ public:
     int getNumOfArmies(); // getter for the number of armies
     void displayTerritory(); // method that displays territory info
     std::vector<int> adjTerritories; // vector containing ids of adjacent territories
+    bool isAdjacent(Territory* dest);
 };
 #endif
 

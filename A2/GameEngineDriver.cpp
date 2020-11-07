@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 
-int main()
+int gmain()
 {
     GameEngine *game = new GameEngine();
     game->startGame();

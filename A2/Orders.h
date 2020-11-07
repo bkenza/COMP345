@@ -143,9 +143,10 @@ public:
     void moveOrder(int, int);
     void executeOrders(); // Executes orders and empties the list
     OrdersList& operator=(const OrdersList&);
+    int getOrdersListSize();
+    Order* getOrder(int index);
 
 private:
     vector<Order*> orders;
-
     friend ostream& operator<<(ostream&, const OrdersList&);
 };

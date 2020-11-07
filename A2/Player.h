@@ -13,6 +13,9 @@ class Player
         OrdersList orderList;
         int playerID;
         int reinforcementPool;
+        vector<Territory*> attackList;
+        vector<Territory*> defendList;
+        Map *map;
 
     public:
         Player();

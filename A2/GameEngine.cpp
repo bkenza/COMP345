@@ -178,7 +178,6 @@ void GameEngine::mainGameLoop()
         if(numPlayers == 1)
         {
             winner = players[numPlayers];
-            exit(0);
         }
 
         //If a players territoryList size is 0, he/she is removed from the game because he/she no longer controls at least 1 territory
@@ -235,12 +234,141 @@ void GameEngine::reinforcementPhase()
     }
 }
 
+// each player make orders and place them in their orderlist
 void GameEngine::issueOrdersPhase()
 {
+    //deploy -> put armies in a territory
 
+    /*advance -> moves a specified number of armies between adjacent territories, if its a player territory, armies get transfered
+     *           to that territory, if its an enemy territory, an attack happens between the 2 territories
+    */
+
+    //bomb -> destory half of the armies located on an opponent's territory that is adjacent to one of player's territory
+
+    //blockade -> triple number of armies on one of player's current territory and make it a neutral territory (cannot be attacked?)
+
+    //airlift ->
+
+    //negotiate -> prevent attacks between current and another player until end of turn
+
+    for(int i = 0; i < players.size(); i++)
+    {
+        Player* currentPlayer = players[i];
+        int pID = players[i]->getPlayerID();
+        vector<Cards*> currentPlayerHandCards = currentPlayer->getHand()->HandCards;
+        string type;
+        string answer;
+
+        while(answer != "y")
+        {
+            cout << "Player "<< pID << "it is now your turn to make a move! Make an order of your choice!"<< endl;
+            cin >> type;
+
+            if(type == "advance" || type == "deploy")
+            {
+                currentPlayer->issueOrder(type);
+            }
+
+            else
+            {
+                for(int j = 0; j < currentPlayerHandCards.size(); j++)
+                {
+                    if(currentPlayerHandCards[j]->getCardType() == type)
+                    {
+                        currentPlayer->play(deck, currentPlayerHandCards[j]);
+                    }
+
+                    else
+                    {
+                        cout << "Such a card does not exist in your deck!" << endl;
+                    }
+                }
+            }
+
+
+            cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
+            cin >> answer;
+
+            /*if(ans == "y")
+            {
+                break;
+            }*/
+        }
+    }
 }
 
+// Executing orders for each player in a round robin fashion based on the order priority 1:deploy, 2:airlift, 3:blockade, 4: all others
 void GameEngine::executeOrdersPhase()
 {
+    // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
+    for(int i = 0; i < players.size(); i++)
+    {
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
+        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        {
+            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "deploy")
+            {
+                //execute deploy actions here
+                currentPlayerOrdersList.getOrder(j)->execute();
+            }
+        }
+    }
+
+    // 2: airlift
+    for(int i = 0; i < players.size(); i++)
+    {
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+
+        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        {
+            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "airlift")
+            {
+                //execute airlift actions here
+                currentPlayerOrdersList.getOrder(j)->execute();
+            }
+        }
+    }
+
+    // 3: blockade
+    for(int i = 0; i < players.size(); i++)
+    {
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+
+        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        {
+            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "blockade")
+            {
+                //execute blockade actions here
+                currentPlayerOrdersList.getOrder(j)->execute();
+            }
+        }
+    }
+
+    // 4: rest of the orders executed in this block
+    for(int i = 0; i < players.size(); i++)
+    {
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+
+        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        {
+            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "advance")
+            {
+                //execute advance actions here
+                currentPlayerOrdersList.getOrder(j)->execute();
+            }
+
+            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "bomb")
+            {
+                //execute bomb actions here
+                currentPlayerOrdersList.getOrder(j)->execute();
+            }
+
+            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "negotiate")
+            {
+                //execute negotiate actions here
+                currentPlayerOrdersList.getOrder(j)->execute();
+            }
+        }
+    }
 }

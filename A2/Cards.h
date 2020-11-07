@@ -38,7 +38,7 @@ public:
     ~Deck();                      // destructor
     void draw(Hand *currentHand); // method that allows a player to draw a card at random from the cards remaining in the deck and place it in their hand.
     Deck(const Deck &orig);       // copy constructor
-    vector<Cards *> DeckCards; // vector of card pointers
+    static vector<Cards *> DeckCards; // vector of card pointers
     void initializeDeck(); // Method to initialize the deck of cards
     void shuffleDeck(); // Method to shuffle the deck of cards
 private:
