@@ -303,7 +303,7 @@ void GameEngine::executeOrdersPhase()
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {
@@ -318,7 +318,7 @@ void GameEngine::executeOrdersPhase()
     // 2: airlift
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {
@@ -333,7 +333,7 @@ void GameEngine::executeOrdersPhase()
     // 3: blockade
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {
@@ -348,7 +348,7 @@ void GameEngine::executeOrdersPhase()
     // 4: rest of the orders executed in this block
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {

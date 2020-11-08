@@ -136,7 +136,7 @@ void Player::printAttackList()
 void Player::issueOrder(string orderName)
 {
     OrderFactory oFact; //Create OrderFactory to call createOrder method
-    oFact.createOrder(orderName); //Create Order object
+    //oFact.createOrder(orderName); //Create Order object
 
     //Add to Player's orderList
     if(oFact.createOrder(orderName) == nullptr)
@@ -178,7 +178,7 @@ void Player::issueOrder(string orderName)
 
         vector<Territory*> gameMapTerritoryList = map->Territories;
 
-        // To find source territory in the map, in a seperate loop incase the source happens to be last element in the list
+        // To find input source territory in the map, in a seperate loop incase the source happens to be last element in the list
         for(int i = 0; i < gameMapTerritoryList.size(); i++)
         {
             if(gameMapTerritoryList[i]->getTerritoryID() == inputSourceID
@@ -240,6 +240,8 @@ void Player::play(Deck *currentDeck, Cards *card) {
         // Return current card to the deck & shuffle it
         currentDeck->DeckCards.push_back(&usedCard);
         currentDeck->shuffleDeck();
+
+        cout << "Your" << usedCard.getCardType() << "card has been used and sent to deck" << endl;
 };
 
 /*

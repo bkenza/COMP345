@@ -1,14 +1,18 @@
 #include "Orders.h"
+#include "GameEngine.h"
+#include "Player.h"
+
+using namespace OrderNamespace;
 
 /**
  *  The labels of the orders, which are constant and static.
  */
-const string deploy::label = "Deploy";
-const string advance::label = "Advance";
-const string bomb::label = "Bomb";
-const string blockade::label = "Blockade";
-const string airlift::label = "Airlift";
-const string negotiate::label = "Negotiate";
+const string deploy::label = "deploy";
+const string advance::label = "advance";
+const string bomb::label = "bomb";
+const string blockade::label = "blockade";
+const string airlift::label = "airlift";
+const string negotiate::label = "negotiate";
 
 /**
  * Default constructor
@@ -223,7 +227,7 @@ Order* OrdersList::getOrder(int index)
  * @param ol
  * @return
  */
-ostream& operator<<(ostream& strm, const OrdersList& ol)
+ostream& OrderNamespace::operator<<(ostream& strm, const OrdersList& ol)
 {
     int listSize = ol.orders.size(); // For iteration
     const int MAX_WIDTH = 9; // To force the amount of space a string takes.
@@ -303,7 +307,7 @@ string negotiate::getLabel() const
  * @param o
  * @return
  */
-ostream& operator<<(ostream& strm, const Order& o)
+ostream& OrderNamespace::operator<<(ostream& strm, const Order& o)
 {
     return o.printOrder(strm);
 }
