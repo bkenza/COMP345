@@ -4,6 +4,7 @@
 #include "Cards.h"
 
 class Hand;
+class OrdersList;
 
 class Player
 {

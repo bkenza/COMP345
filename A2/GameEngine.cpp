@@ -216,7 +216,7 @@ void GameEngine::reinforcementPhase()
     for(int i = 0; i < players.size(); i++)
     {
         // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
-        if(round((players[i]->getTerritoryList().size()) / 3) < 3)
+        if(((players[i]->getTerritoryList().size()) / 3) < 3) // removed round
         {
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 3);
         }
@@ -229,7 +229,7 @@ void GameEngine::reinforcementPhase()
 
         else
         {
-            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + round((players[i]->getTerritoryList().size()) / 3));
+            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + ((players[i]->getTerritoryList().size()) / 3)); // removed round
         }
     }
 }
@@ -303,7 +303,7 @@ void GameEngine::executeOrdersPhase()
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
     for(int i = 0; i < players.size(); i++)
     {
-        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {
@@ -318,7 +318,7 @@ void GameEngine::executeOrdersPhase()
     // 2: airlift
     for(int i = 0; i < players.size(); i++)
     {
-        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {
@@ -333,7 +333,7 @@ void GameEngine::executeOrdersPhase()
     // 3: blockade
     for(int i = 0; i < players.size(); i++)
     {
-        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {
@@ -348,7 +348,7 @@ void GameEngine::executeOrdersPhase()
     // 4: rest of the orders executed in this block
     for(int i = 0; i < players.size(); i++)
     {
-        OrderNamespace::OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
         {

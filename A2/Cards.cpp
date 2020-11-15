@@ -7,6 +7,9 @@ using namespace std;
 /**
  * Default constructor
  */
+
+vector<Cards*> Deck::DeckCards; // Static members need to be initialized.
+
 Cards::Cards()
 {
     cardType = new string("");

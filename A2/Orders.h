@@ -1,156 +1,180 @@
 #pragma once
 #include <vector> // To implement a list containing orders.
-#include <iostream> // For input/output.
-#include <iomanip> // To format output.
 #include <string> // To store the label of an order within the order object itself.
+#include <iostream>
+#include "Player.h"
 
-using std::cout;
-using std::endl;
 using std::vector;
-using std::ostream;
-using std::setw;
-using std::setfill;
-using std::left;
 using std::string;
+using std::ostream;
 
-namespace OrderNamespace
-{
-    /**
+/**
  * This is an abstract class for orders. All functionalities meant to be implemented by subclasses.
  */
-    class Order // ORDER MIGHT NEED ID IN THE FUTURE
-    {
-    public:
-        virtual string getLabel() const = 0;
-        virtual bool validate() const = 0;
-        virtual void execute() const = 0;
-        virtual ~Order() = 0;
 
-    private:
-        virtual Order* clone() const = 0;
-        virtual ostream& printOrder(ostream&) const = 0;
+class Player;
 
-        friend ostream& operator<<(ostream&, const Order&);
-        friend class OrdersList;
-    };
+class Order // ORDER MIGHT NEED ID IN THE FUTURE
+{
+public:
+    virtual string getLabel() const = 0;
+    virtual bool validate() const = 0;
+    virtual void execute() const = 0;
+    Order();
+    Order(&Player);
+    virtual ~Order() = 0;
 
-    class deploy : public Order
-    {
-    public:
+protected:
+    Player* currentPlayer;
 
-        string getLabel() const override;
-        bool validate() const override;
-        void execute() const override;
-        ~deploy();
+private:
+    virtual Order* clone() const = 0;
+    virtual ostream& printOrder(ostream&) const = 0;
 
-    private:
-        const static string label;
-        Order* clone() const override;
-        ostream& printOrder(ostream&) const override;
-    };
+    friend ostream& operator<<(ostream&, const Order&);
+    friend class OrdersList;
+};
 
+class deploy : public Order
+{
+public:
+    deploy();
+    deploy(Territory&, Player&, int); // Target territory, current player, amount
+    ~deploy();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
 
-    class advance : public Order
-    {
-    public:
-        string getLabel() const override;
-        bool validate() const override;
-        void execute() const override;
-        ~advance();
+private:
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
+    Territory* target; // Target territory to deploy at
+    int* amount; // Amount of armies to deploy
+};
 
-    private:
-        const static string label;
-        Order* clone() const override;
-        ostream& printOrder(ostream&) const override;
-    };
+class advance : public Order
+{
+public:
+    advance();
+    advance(Territory&, Territory&, Player&, int); // Src, dest, current player, amount
+    ~advance();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
 
-    class bomb : public Order
-    {
-    public:
-        string getLabel() const override;
-        bool validate() const override;
-        void execute() const override;
-        ~bomb();
+private:
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
+    Territory* source;
+    Territory* target;
+    int* amount;
+};
 
-    private:
-        const static string label;
-        Order* clone() const override;
-        ostream& printOrder(ostream&) const override;
-    };
+class bomb : public Order
+{
+public:
+    bomb();
+    bomb(Territory&, Player&); // Target territory to bomb, current player
+    ~bomb();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
 
-    class blockade : public Order
-    {
-    public:
-        string getLabel() const override;
-        bool validate() const override;
-        void execute() const override;
-        ~blockade();
+private:
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
+    Territory* target;
+};
 
-    private:
-        const static string label;
-        Order* clone() const override;
-        ostream& printOrder(ostream&) const override;
-    };
+class blockade : public Order
+{
+public:
+    blockade();
+    blockade(Territory&, Player&); // Target, current player
+    ~blockade();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
 
-    class airlift : public Order
-    {
-    public:
-        string getLabel() const override;
-        bool validate() const override;
-        void execute() const override;
-        ~airlift();
+private:
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
+    Territory* target;
+};
 
-    private:
-        const static string label;
-        Order* clone() const override;
-        ostream& printOrder(ostream&) const override;
-    };
+class airlift : public Order
+{
+public:
+    airlift();
+    airlift(Territory&, Territory&, Player&, int); // Source, target, current player, amount
+    ~airlift();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
 
-    class negotiate : public Order
-    {
-    public:
-        string getLabel() const override;
-        bool validate() const override;
-        void execute() const override;
-        ~negotiate();
+private:
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
+    Territory* source;
+    Territory* target;
+    int* amount;
+};
 
-    private:
-        const static string label;
-        Order* clone() const override;
-        ostream& printOrder(ostream&) const override;
-    };
+class negotiate : public Order
+{
+public:
+    negotiate();
+    negotiate(Player&, Player&);
+    ~negotiate();
+    string getLabel() const override;
+    bool validate() const override;
+    void execute() const override;
+
+private:
+    const static string label;
+    Order* clone() const override;
+    ostream& printOrder(ostream&) const override;
+    Player* targetPlayer;
+};
 
 /**
- * Should be created at the beginning of the program.
- * Creates an order, the type depending on the user input.
- */
-    class OrderFactory
-    {
-    public:
-        Order* createOrder(string) const;
-    };
+* Should be created at the beginning of the program.
+* Creates an order, the type depending on the user input.
+*/
+class OrderFactory
+{
+public:
+    Order* createOrder(string) const;
+};
 
 /**
- * Designed to hold a list of valid orders
- * and carry out basic list functions.
- */
-    class OrdersList
-    {
-    public:
-        OrdersList();
-        ~OrdersList();
-        OrdersList(const OrdersList&);
-        void addOrder(Order* o);
-        void deleteOrder(int);
-        void moveOrder(int, int);
-        void executeOrders(); // Executes orders and empties the list
-        OrdersList& operator=(const OrdersList&);
-        int getOrdersListSize();
-        Order* getOrder(int index);
+* Designed to hold a list of valid orders
+* and carry out basic list functions.
+*/
+class OrdersList
+{
+public:
+    OrdersList();
+    ~OrdersList();
+    OrdersList(const OrdersList&);
+    void addOrder(Order* o);
+    void deleteOrder(int);
+    void moveOrder(int, int);
+    void executeOrders(); // Executes orders and empties the list
+    OrdersList& operator=(const OrdersList&);
+    int getOrdersListSize();
+    Order* getOrder(int index);
 
-    private:
-        vector<Order*> orders;
-        friend ostream& operator<<(ostream&, const OrdersList&);
-    };
-}
+private:
+    vector<Order*> orders;
+    friend ostream& operator<<(ostream&, const OrdersList&);
+};
+
+void attackSimulation(Territory*, Territory*, Player*, int*);
+
 

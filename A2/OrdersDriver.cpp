@@ -1,6 +1,10 @@
 #include "Orders.h"
 
-int omain()
+using namespace OrderNamespace;
+using std::cout;
+using std::endl;
+
+int main()
 {
     OrderFactory factory;
     OrdersList list;
@@ -41,7 +45,7 @@ int omain()
 
     cout << "\n********** EXECUTING ORDERS FROM LIST **********\n";
 
-    list.executeOrders();
+    /*list.executeOrders();*/
 
     cout << "\n********** PRINTING ALL THE LISTS **********\n";
 

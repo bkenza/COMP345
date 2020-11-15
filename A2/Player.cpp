@@ -17,7 +17,7 @@ Player::Player() {
  * @param hand
  * @param oList
  */
-Player::Player(vector<Territory*> tList, Hand hand, OrdersList oList)
+Player::Player(vector<Territory*> tList, Hand hand, OrderNamespace::OrdersList oList)
 {
     territoryList = tList;
     playerHand = &hand;
@@ -76,13 +76,13 @@ Hand* Player::getHand() {
 }
 
 // Assign a list of orders to a specified Player
-void Player::setOrderList(OrdersList oList)
+void Player::setOrderList(OrderNamespace::OrdersList oList)
 {
     orderList = oList;
 }
 
 // Get a Player's list of orders
-OrdersList Player::getOrderList()
+OrderNamespace::OrdersList Player::getOrderList()
 {
     return orderList;
 }
@@ -135,7 +135,7 @@ void Player::printAttackList()
 // Player uses one of the cards in their hand to issue an order that corresponds to the card in question
 void Player::issueOrder(string orderName)
 {
-    OrderFactory oFact; //Create OrderFactory to call createOrder method
+    OrderNamespace::OrderFactory oFact; //Create OrderFactory to call createOrder method
     //oFact.createOrder(orderName); //Create Order object
 
     //Add to Player's orderList
@@ -300,4 +300,14 @@ bool Player::ownAllTerritoryInContinent()
         }
     }
     return false;
+}
+
+int Player::getPlayerID()
+{
+    return playerID;
+}
+
+void Player::setPlayerID(int id)
+{
+    playerID = id;
 }

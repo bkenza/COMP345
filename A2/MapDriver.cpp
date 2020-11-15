@@ -5,7 +5,7 @@ using std::cin;
 using std::cout;
 using std::istringstream;
 
-int main()
+int mdmain()
 {
     //==============
     //    Map
@@ -214,4 +214,6 @@ int main()
 
     // validate map3
     map3->validate();
+
+    return 0;
 }
