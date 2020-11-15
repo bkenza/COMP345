@@ -1,44 +1,50 @@
 #pragma once
-#include "Map.h"
-#include "Orders.h"
-#include "Cards.h"
+#include <vector>
+#include <string>
 
+using std::vector;
+using std::string;
+
+class Map;
+class Territory;
 class Hand;
+class Deck;
+class Cards;
 class OrdersList;
 
 class Player
 {
     private:
         vector<Territory*> territoryList;
-        Hand *playerHand;
-        OrdersList orderList;
+        Hand* playerHand;
+        OrdersList* orderList;
         int playerID;
         int reinforcementPool;
         vector<Territory*> attackList;
         vector<Territory*> defendList;
-        Map *map;
+        Map* map;
 
     public:
         Player();
-        Player(vector<Territory*> tList, Hand hand, OrdersList oList);
+        Player(vector<Territory*> tList, Hand* hand, OrdersList* oList);
         ~Player();
-        Player(const Player &obj);
+        Player(const Player& obj);
         void setTerritoryList(vector<Territory*> tList);
         vector<Territory*> getTerritoryList();
-        void setHand(Hand *hand);
+        void setHand(Hand* hand);
         Hand *getHand();
-        void play(Deck *currentDeck, Cards *card);
-        void setOrderList(OrdersList oList);
-        OrdersList getOrderList();
+        void play(Deck* currentDeck, Cards* card);
+        void setOrderList(OrdersList* oList);
+        OrdersList* getOrderList();
         vector<Territory*> toDefend();
         vector<Territory*> toAttack();
         void printTerritoryList();
         void printAttackList();
         void printDefendList();
         void issueOrder(string orderName);
-        void printHand();
+        //void printHand();
         int getPlayerID();
-        void setPlayerID(int );
+        void setPlayerID(int);
         void setReinforcementPool(int n);
         int getReinforcementPool();
         bool ownAllTerritoryInContinent();

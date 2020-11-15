@@ -1,6 +1,8 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
 #include "Map.h"
+#include "Orders.h"
+#include "Cards.h"
 #include <iostream>
 
 using namespace std;
@@ -303,14 +305,14 @@ void GameEngine::executeOrdersPhase()
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "deploy")
+            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "deploy")
             {
                 //execute deploy actions here
-                currentPlayerOrdersList.getOrder(j)->execute();
+                currentPlayerOrdersList->getOrder(j)->execute();
             }
         }
     }
@@ -318,14 +320,14 @@ void GameEngine::executeOrdersPhase()
     // 2: airlift
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "airlift")
+            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "airlift")
             {
                 //execute airlift actions here
-                currentPlayerOrdersList.getOrder(j)->execute();
+                currentPlayerOrdersList->getOrder(j)->execute();
             }
         }
     }
@@ -333,14 +335,14 @@ void GameEngine::executeOrdersPhase()
     // 3: blockade
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "blockade")
+            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "blockade")
             {
                 //execute blockade actions here
-                currentPlayerOrdersList.getOrder(j)->execute();
+                currentPlayerOrdersList->getOrder(j)->execute();
             }
         }
     }
@@ -348,26 +350,26 @@ void GameEngine::executeOrdersPhase()
     // 4: rest of the orders executed in this block
     for(int i = 0; i < players.size(); i++)
     {
-        OrdersList currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList.getOrdersListSize(); j++)
+        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "advance")
+            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "advance")
             {
                 //execute advance actions here
-                currentPlayerOrdersList.getOrder(j)->execute();
+                currentPlayerOrdersList->getOrder(j)->execute();
             }
 
-            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "bomb")
+            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
             {
                 //execute bomb actions here
-                currentPlayerOrdersList.getOrder(j)->execute();
+                currentPlayerOrdersList->getOrder(j)->execute();
             }
 
-            if(currentPlayerOrdersList.getOrder(j)->getLabel() == "negotiate")
+            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
             {
                 //execute negotiate actions here
-                currentPlayerOrdersList.getOrder(j)->execute();
+                currentPlayerOrdersList->getOrder(j)->execute();
             }
         }
     }

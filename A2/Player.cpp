@@ -1,13 +1,17 @@
-#include "Player.h"
 #include <vector>
 #include <iostream>
+#include "Player.h"
+#include "Map.h"
+#include "Cards.h"
+#include "Orders.h"
 
 using namespace std;
 /**
  * Each player will have a collection of territories as well as a
  * collection of cards, as well as an order list at the start of the game
  */
-Player::Player() {
+Player::Player()
+{
     playerID =  int(0);
 }
 
@@ -17,10 +21,10 @@ Player::Player() {
  * @param hand
  * @param oList
  */
-Player::Player(vector<Territory*> tList, Hand hand, OrderNamespace::OrdersList oList)
+Player::Player(vector<Territory*> tList, Hand* hand, OrdersList* oList)
 {
     territoryList = tList;
-    playerHand = &hand;
+    playerHand = hand;
     orderList = oList;
 }
 
@@ -76,13 +80,13 @@ Hand* Player::getHand() {
 }
 
 // Assign a list of orders to a specified Player
-void Player::setOrderList(OrderNamespace::OrdersList oList)
+void Player::setOrderList(OrdersList* oList)
 {
     orderList = oList;
 }
 
 // Get a Player's list of orders
-OrderNamespace::OrdersList Player::getOrderList()
+OrdersList* Player::getOrderList()
 {
     return orderList;
 }
@@ -135,7 +139,7 @@ void Player::printAttackList()
 // Player uses one of the cards in their hand to issue an order that corresponds to the card in question
 void Player::issueOrder(string orderName)
 {
-    OrderNamespace::OrderFactory oFact; //Create OrderFactory to call createOrder method
+    OrderFactory oFact; //Create OrderFactory to call createOrder method
     //oFact.createOrder(orderName); //Create Order object
 
     //Add to Player's orderList
@@ -156,7 +160,7 @@ void Player::issueOrder(string orderName)
             if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
             {
                 defendList.push_back(gameMapTerritoryList[i]);
-                orderList.addOrder(oFact.createOrder(orderName));
+                orderList->addOrder(oFact.createOrder(orderName));
             }
             else
             {
@@ -195,7 +199,7 @@ void Player::issueOrder(string orderName)
             {
                 dest = gameMapTerritoryList[i];
                 defendList.push_back(dest);
-                orderList.addOrder(oFact.createOrder(orderName));
+                orderList->addOrder(oFact.createOrder(orderName));
             }
 
             else if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
@@ -203,7 +207,7 @@ void Player::issueOrder(string orderName)
             {
                 dest = gameMapTerritoryList[i];
                 attackList.push_back(dest);
-                orderList.addOrder(oFact.createOrder(orderName));
+                orderList->addOrder(oFact.createOrder(orderName));
             }
 
             else
@@ -215,7 +219,7 @@ void Player::issueOrder(string orderName)
 
     else
     {
-        orderList.addOrder(oFact.createOrder(orderName));
+        orderList->addOrder(oFact.createOrder(orderName));
     }
 };
 

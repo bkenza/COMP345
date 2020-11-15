@@ -1,8 +1,9 @@
 #include <iomanip> // To format output.
-#include <stdlib.h>
+#include <cstdlib>
 #include "Orders.h"
+#include "Map.h"
+#include "Player.h"
 
-//using namespace OrderNamespace;
 using std::ostream;
 using std::setw;
 using std::setfill;
@@ -10,13 +11,11 @@ using std::left;
 using std::cout;
 using std::endl;
 
-class Player;
-
 /**
  *  The labels of the orders, which are constant and static.
  */
 const string deploy::label = "deploy";
-const string advance::label = "advance";
+const string AdvanceOrder::advance::label = "advance";
 const string bomb::label = "bomb";
 const string blockade::label = "blockade";
 const string airlift::label = "airlift";
@@ -97,14 +96,14 @@ deploy::~deploy()
     delete amount;
 }
 
-advance::advance() : Order()
+AdvanceOrder::advance::advance() : Order()
 {
     source = nullptr;
     target = nullptr;
     amount = nullptr;
 }
 
-advance::advance(Territory& source, Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+AdvanceOrder::advance::advance(Territory& source, Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
 {
     this->source = &source;
     this->target = &target;
@@ -115,7 +114,7 @@ advance::advance(Territory& source, Territory& target, Player& currentPlayer, in
 /**
  * Destructor
  */
-advance::~advance()
+AdvanceOrder::advance::~advance()
 {
     source = nullptr;
     target = nullptr;
@@ -329,7 +328,7 @@ Order* OrdersList::getOrder(int index)
  * @param ol
  * @return
  */
-ostream& OrderNamespace::operator<<(ostream& strm, const OrdersList& ol)
+ostream& operator<<(ostream& strm, const OrdersList& ol)
 {
     int listSize = ol.orders.size(); // For iteration
     const int MAX_WIDTH = 9; // To force the amount of space a string takes.
@@ -361,7 +360,7 @@ string deploy::getLabel() const
  * Returns the label of the order.
  * @return
  */
-string advance::getLabel() const
+string AdvanceOrder::advance::getLabel() const
 {
     return label;
 }
@@ -409,7 +408,7 @@ string negotiate::getLabel() const
  * @param o
  * @return
  */
-ostream& OrderNamespace::operator<<(ostream& strm, const Order& o)
+ostream& operator<<(ostream& strm, const Order& o)
 {
     return o.printOrder(strm);
 }
@@ -424,7 +423,7 @@ ostream& deploy::printOrder(ostream& out) const
     return out << "This is a deploy order!";
 }
 
-ostream& advance::printOrder(ostream& out) const
+ostream& AdvanceOrder::advance::printOrder(ostream& out) const
 {
     return out << "This is an advance order!";
 }
@@ -474,7 +473,7 @@ bool deploy::validate() const
     return true;
 }
 
-bool advance::validate() const
+bool AdvanceOrder::advance::validate() const
 {
     cout << "Validating Advance...\n";
 
@@ -574,7 +573,7 @@ void deploy::execute() const
     }
 }
 
-void advance::execute() const
+void AdvanceOrder::advance::execute() const
 {
     if (validate())
     {
@@ -613,7 +612,7 @@ void blockade::execute() const
         cout << "Blockade is being executed!\n";
 
         target->setNumOfArmies(target->getNumOfArmies() * 2);
-        target->setTerritoryPlayerID(12310230123); // Transfer to neutral player. Just gibberish so far.
+        target->setTerritoryPlayerID(1231023); // Transfer to neutral player. Just gibberish so far.
     }
 
 }
@@ -652,7 +651,7 @@ Order* deploy::clone() const
     return new deploy(*this);
 }
 
-Order* advance::clone() const
+Order* AdvanceOrder::advance::clone() const
 {
     return new advance(*this);
 }
@@ -690,7 +689,7 @@ Order* OrderFactory::createOrder(string orderType) const
     if (orderType == "deploy")
         return new deploy;
     else if (orderType == "advance")
-        return new advance;
+        return new AdvanceOrder::advance;
     else if (orderType == "bomb")
         return new bomb;
     else if (orderType == "blockade")
@@ -703,7 +702,7 @@ Order* OrderFactory::createOrder(string orderType) const
         return nullptr;
 }
 
-void OrderNamespace::attackSimulation(Territory* source, Territory* target, Player* currentPlayer, int* amount)
+void attackSimulation(Territory* source, Territory* target, Player* currentPlayer, int* amount)
 {
     source->setNumOfArmies(source->getNumOfArmies() - *amount); // Attackers leave home territory
 

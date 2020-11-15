@@ -1,6 +1,5 @@
 #include "Orders.h"
 
-using namespace OrderNamespace;
 using std::cout;
 using std::endl;
 

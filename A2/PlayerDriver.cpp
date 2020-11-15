@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "Map.h"
+#include "Cards.h"
+#include <iostream>
 using namespace std;
 
 int pmain()
