@@ -78,7 +78,7 @@ public:
     std::vector<Territory *> territories;        //vector holding all territories in continent
     Continent();                                 // default constructor
     Continent(const Continent &orig);            // copy constructor
-    virtual ~Continent();                        // destructor TODO: does this need to be virtual
+    virtual ~Continent();                        // destructor does this need to be virtual
     int getContinentID();                        // method that returns the id of a continent
     void setContinentID(int continentID);        // method to set the id of a given continent
     std::string getContinentName();              // method that returns the name of a given continent

@@ -17,6 +17,8 @@ add_executable(A2
         GameEngine.cpp
         GameEngine.h
         GameEngineDriver.cpp
+        GameObservers.cpp
+        GameObservers.h
         Map.cpp
         Map.h
         MapDriver.cpp
@@ -28,6 +30,4 @@ add_executable(A2
         OrdersDriver.cpp
         Player.cpp
         Player.h
-        PlayerDriver.cpp
-        GameObservers.h
-        GameObservers.cpp)
+        PlayerDriver.cpp)
