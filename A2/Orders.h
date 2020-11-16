@@ -33,6 +33,7 @@ public:
 
 protected:
     Player *currentPlayer;
+    bool enabled;
 
 private:
     virtual Order *clone() const = 0;
@@ -197,7 +198,7 @@ private:
 */
 class OrderFactory {
 public:
-    Order *createOrder(string) const;
+    Order *createOrder(const string&) const;
 };
 
 /**

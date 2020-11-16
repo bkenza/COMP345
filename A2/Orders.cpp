@@ -57,11 +57,13 @@ OrdersList::OrdersList(const OrdersList& oldList)
 Order::Order()
 {
     currentPlayer = nullptr;
+    enabled = true;
 }
 
 Order::Order(Player& currentPlayer)
 {
     this->currentPlayer = &currentPlayer;
+    enabled = true;
 }
 
 /**
@@ -468,6 +470,11 @@ bool deploy::validate() const
         return false;
     }
 
+    else if (*amount < 1)
+    {
+        cout << "Please enter a value that is at least 1 for this order\n" << endl;
+    }
+
     cout << "Your order has been validated!\n" << endl;
 
     return true;
@@ -480,6 +487,12 @@ bool AdvanceOrder::advance::validate() const
     if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID())
     {
         cout << "The source territory is not your own!\n" << endl;
+        return false;
+    }
+
+    else if (!source->isAdjacent(target))
+    {
+        cout << "The target territory is not adjacent to the source territory!\n" << endl;
         return false;
     }
 
@@ -533,11 +546,20 @@ bool airlift::validate() const
 {
     cout << "Validating Airlift...\n";
 
-    if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID()
-    || target->getTerritoryPlayerID() != currentPlayer->getPlayerID())
+    if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID())
     {
-        cout << "You must own both of the territories!\n" << endl;
+        cout << "The source territory is not your own!\n" << endl;
         return false;
+    }
+
+    else if (*amount > source->getNumOfArmies())
+    {
+        cout << "You do not have this many armies in this territory!\n" << endl;
+    }
+
+    else if (*amount < 1)
+    {
+        cout << "Please enter a value that is at least 1 for this order\n" << endl;
     }
 
     cout << "Your order has been validated!\n" << endl;
@@ -602,7 +624,6 @@ void bomb::execute() const
         target->setNumOfArmies(target->getNumOfArmies() / 2);
         cout << "Bomb has finished executing!\n" << endl;
     }
-
 }
 
 void blockade::execute() const
@@ -612,9 +633,8 @@ void blockade::execute() const
         cout << "Blockade is being executed!\n";
 
         target->setNumOfArmies(target->getNumOfArmies() * 2);
-        target->setTerritoryPlayerID(1231023); // Transfer to neutral player. Just gibberish so far.
+        target->setTerritoryPlayerID(-1); // Transfer to neutral player.
     }
-
 }
 
 void airlift::execute() const
@@ -623,8 +643,18 @@ void airlift::execute() const
     {
         cout << "Airlift is being executed!\n";
 
-        source->setNumOfArmies(source->getNumOfArmies() - *amount);
-        attackSimulation(source, target, currentPlayer, amount);
+        if (source->getTerritoryPlayerID() == target->getTerritoryPlayerID()) // Transferring army to another territory
+        {
+            source->setNumOfArmies(source->getNumOfArmies() - *amount);
+            target->setNumOfArmies(target->getNumOfArmies() + *amount);
+        }
+
+        else // If you try to airlift on enemy territory, considered as attack.
+        {
+            attackSimulation(source, target, currentPlayer, amount);
+        }
+
+        cout << "Advance has finished executing!\n" << endl;
     }
 }
 
@@ -633,9 +663,7 @@ void negotiate::execute() const
     if (validate())
     {
         cout << "Negotiate is being executed!\n";
-
     }
-
 }
 
 /**
@@ -684,7 +712,7 @@ Order* negotiate::clone() const
  * @param orderType
  * @return
  */
-Order* OrderFactory::createOrder(string orderType) const
+Order* OrderFactory::createOrder(const string& orderType) const
 {
     if (orderType == "deploy")
         return new deploy;
@@ -750,11 +778,23 @@ void attackSimulation(Territory* source, Territory* target, Player* currentPlaye
         target->setNumOfArmies(remainingAttackArmies); // Attackers advance to conquered territory
     }
 
-    else // Lose. A draw is considered a loss.
+    else // Lose. A draw is considered a loss. If any, attackers retreat. If any, defenders retreat.
     {
         cout << "Territory has not been conquered. You have lost this battle!\n" << endl;
         source->setNumOfArmies(source->getNumOfArmies() + remainingAttackArmies); // Attackers retreat
         target->setNumOfArmies(remainingDefendArmies);
+    }
+
+    if (source->getNumOfArmies() == 0)
+    {
+        cout << "The attacker has lost his territory in the process!\n" << endl;
+        source->setTerritoryPlayerID(-1);
+    }
+
+    if (target->getNumOfArmies() == 0)
+    {
+        cout << "The defender has lost his territory in the process!\n" << endl;
+        target->setTerritoryPlayerID(-1);
     }
 }
 
