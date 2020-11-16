@@ -316,6 +316,13 @@ void GameEngine::mainGameLoop()
 
         // Orders Execution Phase
         executeOrdersPhase();
+
+        int listSize = players.size();
+
+        for (int i = 0; i < listSize; i++)
+        {
+            players[i]->clearFriends();
+        }
     }
 
     cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
