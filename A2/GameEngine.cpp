@@ -1,7 +1,8 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
 #include <iostream>
-#include <sstream>
+#include <algorithm>
+#include <random>
 
 using namespace std;
 
@@ -9,16 +10,20 @@ using namespace std;
 //     GAME ENGINE
 //#########################
 
+//TODO: type checking ??
+//TODO: check number of cards in deck
+//TODO: each class must have an assignment operator
+
 /**
  * Default constructor
  **/
 GameEngine::GameEngine()
 {
     numPlayers = int(0);
-    observersOn = false;
-    mapList;
-    players;
-    deck;
+    phaseObserverOn = false;
+    statsObserverOn = false;
+    playerTurn = int(0);
+    playerOrder;
 }
 
 /**
@@ -26,6 +31,11 @@ GameEngine::GameEngine()
  **/
 GameEngine::GameEngine(const GameEngine &obj)
 {
+    playerOrder = obj.playerOrder;
+    playerTurn = obj.playerTurn;
+    phaseObserverOn = obj.phaseObserverOn;
+    statsObserverOn = obj.statsObserverOn;
+    numPlayers = obj.numPlayers;
 }
 
 /**
@@ -38,6 +48,8 @@ GameEngine::~GameEngine()
         delete p;
     }
     players.clear();
+
+    playerOrder.clear();
 }
 
 /**
@@ -47,48 +59,47 @@ void GameEngine::startGame()
 {
     // Ask the user to pick a map
     cout << "################################################### \n";
-    cout << "               WELCOME TO WARZONE!                    ";
+    cout << "               WELCOME TO WARZONE!                  \n";
     cout << "################################################### \n";
-
-    cout << "Here are the available maps: ";
+    cout << "\n \n";
+    cout << "Here are the available maps: \n\n";
 
     getMaps();
-    cout << "Please select a map by entering the corresponding number: \n"
-         << endl;
+    cout << "\nPlease select a map by entering the corresponding number: ";
 
     int mapSelected;
     cin >> mapSelected;
 
-    while (mapSelected < 1 || mapSelected > mapList->size())
+    while (mapSelected < 1 || mapSelected > mapList.size())
     {
-        cout << "Yikes! You have entered an invalid number, please try again.";
+        cerr << "\nYikes! You have entered an invalid number, please try again: ";
         cin >> mapSelected;
     }
 
-    cout << "Cool! You have selected map number: " << mapSelected << endl; // maybe add a map selector method
+    cout << "\nCool! You have selected map number: " << mapSelected << endl; // maybe add a map selector method
+
+    // Load selected map
+    MapLoader *mapLoader = new MapLoader();
+    Map *map = mapLoader->MapReader("../Maps/" + mapSelector(mapSelected) + ".map");
+
+    cout << "\nLet's see if the selected map is valid...\n\n";
+    map->validate();
 
     // Select the number of players in the game(2 - 5 players)
-    cout << "Please enter the number of players (2-5): \n"
-         << endl;
+    cout << "\nPlease enter the number of players (2-5): ";
 
     cin >> numPlayers;
 
-    while (mapSelected < 1 || mapSelected > mapList->size())
+    while (numPlayers < 1 || numPlayers > 5)
     {
-        cout << "Yikes! You have entered an invalid number. The minimum number of players is 2 and the maximum is 5. Please try again.";
-        cin >> mapSelected;
+        cerr << "Yikes! You have entered an invalid number. The minimum number of players is 2 and the maximum is 5. Please try again: ";
+        cin >> numPlayers;
     }
 
     cout << "The number of players is: " << numPlayers << endl;
 
     // Turn on/off any of the observers
     // TODO: implement part 5 first
-
-    // Load selected map
-    MapLoader *mapLoader = new MapLoader();
-    Map *map = mapLoader->MapReader("../Maps/" + mapSelector(mapSelected) + ".map");
-
-    map->validate();
 
     players[numPlayers];
 
@@ -98,6 +109,9 @@ void GameEngine::startGame()
     deck = new Deck();
     deck->initializeDeck(); //TODO: change intiailize method to have the right nb od
 
+    GamePhaseObserver phaseObserver;
+    //Observer statsObserver;
+
     // Creation of Players and adding them to the vector of players. Each player is given an id and an empty hand.
     for (int i = 0; i < numPlayers; i++)
     {
@@ -106,7 +120,47 @@ void GameEngine::startGame()
         Hand *playerHand = new Hand();
         p->setHand(playerHand);
         players.push_back(p);
+        cout << "Player " << p->getPlayerID() << " created!\n";
     }
+
+    // Select id Observers is on of off
+    cout << "\nWould you like to have Phase Observers on? Enter 1 for Yes and 0 for No: ";
+
+    cin >> phaseObserverOn;
+
+    while (0 > phaseObserverOn || phaseObserverOn > 1)
+    {
+        cerr << "Yikes! You have entered an invalid number. Please try again: ";
+        cin >> phaseObserverOn;
+    }
+
+    cout << "Observers status: " << phaseObserverOn << endl;
+
+    if(phaseObserverOn == 1) {
+        for(int h = 0; h < numPlayers; h++) {
+            phaseObserver = GamePhaseObserver(players[h]);
+        }
+        cout << "Phase Observer has been turned ON\n";
+    }
+
+    // Select id Observers is on of off
+    cout << "\nWould you like to have Game Statistics Observers on? Enter 1 for Yes and 0 for No: ";
+
+    cin >> statsObserverOn;
+
+    while (0 > statsObserverOn || statsObserverOn > 1)
+    {
+        cerr << "Yikes! You have entered an invalid number. Please try again: ";
+        cin >> statsObserverOn;
+    }
+
+    cout << "Observers status: " << statsObserverOn << endl;
+
+    if(statsObserverOn == 1){
+        //statsObserver = new GameStatisticsObserver(this);
+    }
+
+    startupPhase(map);
 }
 
 /**
@@ -114,14 +168,21 @@ void GameEngine::startGame()
  **/
 void GameEngine::getMaps()
 {
-
-    cout << "List of existing maps: \n"
-         << endl;
-
-    for (int i = 0; i < mapList->size(); i++)
+    for (int j = 0; j < mapList.size(); j++)
     {
-        cout << i + 1 + ": " << mapList[i] << endl;
+        int mapNb = j + 1;
+        cout << mapNb << ": " << mapList[j] << endl;
     }
+}
+
+vector<Player *> GameEngine::getPlayers()
+{
+    return players;
+};
+
+void GameEngine::setPlayers(vector<Player *> p)
+{
+    players = p;
 }
 
 /**
@@ -140,20 +201,65 @@ void GameEngine::setNumPlayers(int nbOfPlayers)
     numPlayers = nbOfPlayers;
 }
 
+void GameEngine::setMap(Map *map)
+{
+    map = map;
+}
+
+Map *GameEngine::getMap()
+{
+    return map;
+}
+
 /**
  * Getter for observers
  **/
-bool GameEngine::getObserversOn()
+bool GameEngine::getStatsObserverOn()
 {
-    return observersOn;
+    return statsObserverOn;
 }
 
 /**
  * Setter for observers
  **/
-void GameEngine::setObserversOn(bool observersOn)
+void GameEngine::setStatsObserverOn(bool gameStatsObserverOn)
 {
-    observersOn = observersOn;
+    gameStatsObserverOn = gameStatsObserverOn;
+}
+
+/**
+ * Getter for observers
+ **/
+bool GameEngine::getPhaseObserverOn()
+{
+    return phaseObserverOn;
+}
+
+/**
+ * Setter for observers
+ **/
+void GameEngine::setPhaseObserverOn(bool phaseObserverOn)
+{
+    phaseObserverOn = phaseObserverOn;
+}
+
+vector<int> GameEngine::getPlayerOrder()
+{
+    return playerOrder;
+}
+
+void GameEngine::setPlayerOrder(vector<int> pOrder)
+{
+    playerOrder = pOrder;
+}
+
+void GameEngine::setPlayerTurn(int pTurn)
+{
+    playerTurn = pTurn;
+}
+int GameEngine::getPlayerTurn()
+{
+    return playerTurn;
 }
 
 /**
@@ -162,4 +268,81 @@ void GameEngine::setObserversOn(bool observersOn)
 string GameEngine::mapSelector(int mapNumber)
 {
     return mapList[mapNumber - 1];
+}
+
+//+++++++++++++++++++++++++++++++
+//    Part 2: Startup Phase
+//+++++++++++++++++++++++++++++++
+
+void GameEngine::startupPhase(Map *map)
+{
+
+    setRandomPlayerOrder();
+    assignTerritories(map);
+
+    int A;
+
+    switch (numPlayers)
+    {
+    case 2:
+        A = 40;
+        break;
+    case 3:
+        A = 35;
+        break;
+    case 4:
+        A = 30;
+        break;
+    case 5:
+        A = 25;
+        break;
+    };
+
+    // set the number of armies
+    for (int p = 0; p < players.size(); p++)
+    {
+        (players[p])->setNumOfArmies(A);
+    }
+
+    cout << "\n************* PLAYER ARMY ASSIGNMENT ***************\n";
+    cout << "Each player has been assigned " << A << " armies";
+}
+
+/**
+ * Method that sets player orders randomly
+ **/
+void GameEngine::setRandomPlayerOrder()
+{
+    for (int n = 0; n < numPlayers; n++)
+    {
+        playerOrder.push_back(n + 1);
+    }
+    mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
+    shuffle(std::begin(playerOrder), std::end(playerOrder), rng);
+
+    cout << "\n************* PLAYER ORDER ***************\n";
+    cout << "\n\nThe order of players is the following: \n";
+    for (int k = 0; k < numPlayers; k++)
+    {
+        cout << playerOrder[k] << endl;
+    }
+}
+
+/**
+ * Method that assigns territories to players in a round-robin fashion
+ **/
+void GameEngine::assignTerritories(Map *map)
+{
+
+    Player *roundPlayer;
+
+    cout << "\n************* TERRITORY ASSIGNMENT ***************\n";
+
+    for (int t = 0; t < map->Territories.size(); t++)
+    {
+        roundPlayer = players[t % numPlayers];
+        roundPlayer->getTerritoryList().push_back(map->Territories[t]);
+
+        cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " was assigned to Player " << roundPlayer->getPlayerID() << endl;
+    }
 }

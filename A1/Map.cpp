@@ -72,15 +72,19 @@ std::string Map::getName()
 bool Map::validate()
 {
     // if the Continents or the Territories vectors are empty, the map is invalid
-    if(Continents.empty() || Territories.empty()) {
+    if (Continents.empty() || Territories.empty())
+    {
         cout << "\nSorry, your map is massively invalid!!!" << endl;
         return false;
     }
     // If Territories/Continents are not empty
-    else if(Continents.size() > 1 || Territories.size() > 1) {
-        for(int v=0; v < Territories.size(); v++) {
+    else if (Continents.size() > 1 || Territories.size() > 1)
+    {
+        for (int v = 0; v < Territories.size(); v++)
+        {
             // if the adjacentTerritories vector is empty
-            if(Territories[v]->adjTerritories.empty()) {
+            if (Territories[v]->adjTerritories.empty())
+            {
                 cout << "\nSorry, your map is massively invalid!!!" << endl;
                 return false;
             }
@@ -88,13 +92,16 @@ bool Map::validate()
     }
     if (uniqueContinentCheck() && isMapConnected())
     {
-        cout << "**************************************************"<<endl;
-        cout << "   \n          GREAT, YOUR MAP IS VALID!!!\n" << endl;
-        cout << "**************************************************\n"<<endl;
+        cout << "**************************************************" << endl;
+        cout << "   \n          GREAT, YOUR MAP IS VALID!!!\n"
+             << endl;
+        cout << "**************************************************\n"
+             << endl;
 
         return true;
     }
-    else{
+    else
+    {
         cout << "Sorry, your map is massively invalid!!!" << endl;
         return false;
     }
@@ -130,7 +137,6 @@ bool Map::uniqueContinentCheck()
     }
     return true;
 };
-
 
 /**
  * This boolean method checks if the map graph is connected by using DFS (depth-first search)
@@ -182,8 +188,10 @@ bool Map::isMapConnected()
 
         for (auto t : poppedTerritory->adjTerritories)
         {
-            for(int r=0; r < visitedTerritories.size(); r++) {
-                if (t == visitedTerritories[r].id && !visitedTerritories[r].visitedT) {
+            for (int r = 0; r < visitedTerritories.size(); r++)
+            {
+                if (t == visitedTerritories[r].id && !visitedTerritories[r].visitedT)
+                {
                     visitedTerritories[r].visitedT = true;
                     stackOfIds.push_back(t);
                 }
@@ -236,8 +244,10 @@ bool Map::isMapConnected()
             {
                 adjTerritory = getTerritoryById(b);
                 adjcontinentId = adjTerritory->getContinentId();
-                for (int g=0; g < visitedContinents.size(); g++) {
-                    if (adjcontinentId == visitedContinents[g].idC && !visitedContinents[g].visitedC) {
+                for (int g = 0; g < visitedContinents.size(); g++)
+                {
+                    if (adjcontinentId == visitedContinents[g].idC && !visitedContinents[g].visitedC)
+                    {
                         visitedContinents[g].visitedC = true;
                         stackOfContIds.push_back(adjcontinentId);
                     }
@@ -261,7 +271,7 @@ bool Map::isMapConnected()
  * @param territoryID
  * @return territory
  */
-Territory* Map::getTerritoryById(int territoryID)
+Territory *Map::getTerritoryById(int territoryID)
 {
     for (int i = 0; i < Territories.size(); i++)
     {
@@ -277,7 +287,7 @@ Territory* Map::getTerritoryById(int territoryID)
  * @param continentId
  * @return continent
  */
-Continent* Map::getContinentById(int continentId)
+Continent *Map::getContinentById(int continentId)
 {
     for (int i = 0; i < Continents.size(); i++)
     {
@@ -302,7 +312,7 @@ Territory::Territory()
     pPlayerID = new int(); // only one player can own a territory
     pTerritoryName = new string("");
     pContinentName = new string("");
-    pPlayerNumOfArmies = new int(0);
+    pNumOfArmies = new int(0);
 }
 
 //setting our Territory object with a country, continent and armies value
@@ -330,7 +340,7 @@ Territory::Territory(const Territory &orig)
     pTerritoryName = new string(*orig.pTerritoryName);
     pContinentName = new string(*orig.pContinentName);
     pPlayerID = new int(*orig.pPlayerID);
-    pPlayerNumOfArmies = new int(*orig.pPlayerNumOfArmies);
+    pNumOfArmies = new int(*orig.pNumOfArmies);
     for (auto adjTerritory : orig.adjTerritories)
     {
         adjTerritories.push_back(adjTerritory);
@@ -346,7 +356,7 @@ Territory::~Territory()
     delete pPlayerID; // only one player can own a territory
     delete pTerritoryName;
     delete pContinentName;
-    delete pPlayerNumOfArmies;
+    delete pNumOfArmies;
 
     for (auto adjTerritory : adjTerritories)
     {
@@ -451,7 +461,7 @@ int Territory::getContinentId()
  */
 void Territory::setNumOfArmies(int num)
 {
-    *pPlayerNumOfArmies = num;
+    *pNumOfArmies = num;
 }
 
 /**
@@ -460,7 +470,7 @@ void Territory::setNumOfArmies(int num)
  */
 int Territory::getNumOfArmies()
 {
-    return *pPlayerNumOfArmies;
+    return *pNumOfArmies;
 }
 
 /**
@@ -469,7 +479,7 @@ int Territory::getNumOfArmies()
 void Territory::displayTerritory()
 {
     cout << "Player: " << getTerritoryPlayerID() << endl;
-        cout << "Country: " << getTerritoryName() << endl;
+    cout << "Country: " << getTerritoryName() << endl;
     cout << "Continent : " << getContinent() << endl;
     cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
 }
