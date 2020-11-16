@@ -12,7 +12,7 @@ using namespace std;
  */
 Player::Player()
 {
-    playerID = int(0);
+    playerID;
 }
 
 /**

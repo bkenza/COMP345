@@ -26,10 +26,9 @@ Observer::Observer(const Observer &obj){
 /**
  * Assignment operator
  **/
-//Observer& Observer::operator=(const Observer &obj)
-//{
-//    //TODO:
-//}
+Observer& Observer::operator=(const Observer &obj)
+{
+}
 
 //********* Subject class ***********
 
@@ -59,10 +58,8 @@ Subject::Subject(const Subject &obj)
 /**
  * Assignment operator
  **/
-//Subject& Subject::operator=(const Subject &obj)
-//{
-//    //TODO:
-//}
+Subject& Subject::operator=(const Subject &obj)
+{}
 
 void Subject::TurnOn(Observer *obs)
 {
@@ -92,7 +89,7 @@ void Subject::Notify()
  * Default constructor
  **/
 GamePhaseObserver::GamePhaseObserver(){
-    //default
+    Player *player = new Player();
 };
 
 /**
@@ -136,7 +133,6 @@ void GamePhaseObserver::Update()
  * Default constructor
  **/
 GameStatisticsObserver::GameStatisticsObserver(){
-    //default
 };
 
 /**
@@ -146,7 +142,6 @@ GameStatisticsObserver::GameStatisticsObserver(GameEngine *g)
 {
     gameEngine = g;
     gameEngine->TurnOn(this);
-    Update();
 }
 
 /**

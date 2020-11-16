@@ -1,4 +1,4 @@
-#include "Player.h"
+//#include "Player.h"
 #include <iostream>
 #include <list>
 #include <string>
@@ -19,11 +19,11 @@ class GameStatisticsObserver;
 class Observer
 {
 public:
-    Observer();
-    Observer(const Observer &obj);
-    //Observer &operator=(const Observer &obj);
-    ~Observer();
-    virtual void Update() = 0;
+    Observer(); // default constructor 
+    Observer(const Observer &obj); // copy constructor 
+    Observer &operator=(const Observer &obj); // assignment operator
+    ~Observer(); // destructor 
+    virtual void Update() = 0;  // virtual update method
 };
 
 #endif
@@ -34,16 +34,16 @@ public:
 class Subject
 {
 public:
-    Subject();
-    ~Subject();
-    Subject(const Subject &obj);
-    //Subject &operator=(const Subject &obj);
-    virtual void TurnOn(Observer *gameObserver);
-    virtual void TurnOff(Observer *gameObserver);
-    virtual void Notify();
-
+    Subject(); // default constructor
+    ~Subject(); // destructor
+    Subject(const Subject &obj); // copy constructor
+    Subject &operator=(const Subject &obj); // assignment oprator 
+    virtual void TurnOn(Observer *gameObserver); // method that turns on game observer
+    virtual void TurnOff(Observer *gameObserver); // method that turns off game observer
+    virtual void Notify(); // method that notifies observers of updates
+    
 private:
-    vector<Observer *> observerList;
+    vector<Observer *> observerList; // vector that contains the current observers
 };
 
 #endif
@@ -54,15 +54,15 @@ private:
 class GamePhaseObserver : public Observer
 {
 public:
-    GamePhaseObserver();
-    GamePhaseObserver(Player *player);
-    GamePhaseObserver(const GamePhaseObserver &obj);
-    GamePhaseObserver &operator=(const GamePhaseObserver &obj);
-    ~GamePhaseObserver();
-    void Update();
+    GamePhaseObserver(); //default constructor 
+    GamePhaseObserver(Player *player); // parametrized constructor
+    GamePhaseObserver(const GamePhaseObserver &obj); // copy constructor
+    GamePhaseObserver &operator=(const GamePhaseObserver &obj); // assignment operator 
+    ~GamePhaseObserver(); // destructor
+    void Update(); // method that prints out phase updates
 
 private:
-    Player *player;
+    Player *player; 
 };
 
 #endif
@@ -75,12 +75,12 @@ private:
 class GameStatisticsObserver : public Observer
 {
 public:
-    GameStatisticsObserver();
-    GameStatisticsObserver(GameEngine *gameEngine);
-    GameStatisticsObserver(const GameStatisticsObserver &obj);
-    GameStatisticsObserver &operator=(const GameStatisticsObserver &obj);
-    ~GameStatisticsObserver();
-    void Update();
+    GameStatisticsObserver(); // default constructor 
+    GameStatisticsObserver(GameEngine *gameEngine); // parametrized constructor 
+    GameStatisticsObserver(const GameStatisticsObserver &obj); // copy constructor 
+    GameStatisticsObserver &operator=(const GameStatisticsObserver &obj); // assignment operator 
+    ~GameStatisticsObserver(); // destructor
+    void Update();             // method that prints out game stats updates
 
 private:
     GameEngine *gameEngine;

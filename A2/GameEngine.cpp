@@ -112,9 +112,6 @@ void GameEngine::startGame()
     deck = new Deck();
     deck->initializeDeck(); //TODO: change intiailize method to have the right nb od
 
-    GamePhaseObserver phaseObserver;
-    //Observer statsObserver;
-
     // Creation of Players and adding them to the vector of players. Each player is given an id and an empty hand.
     for (int i = 0; i < numPlayers; i++)
     {
@@ -140,10 +137,9 @@ void GameEngine::startGame()
     cout << "Observers status: " << phaseObserverOn << endl;
 
     if(phaseObserverOn == 1) {
-        for(int h = 0; h < numPlayers; h++) {
-            phaseObserver = GamePhaseObserver(players[h]);
+        for(int v = 0; v < numPlayers; v++) {
+            GamePhaseObserver *phaseObserver = new GamePhaseObserver(players[v]);
         }
-        cout << "Phase Observer has been turned ON\n";
     }
 
     // Select id Observers is on of off
@@ -160,7 +156,7 @@ void GameEngine::startGame()
     cout << "Observers status: " << statsObserverOn << endl;
 
     if(statsObserverOn == 1){
-        //statsObserver = new GameStatisticsObserver(this);
+        GameStatisticsObserver* gameStatisticsObserver =  new GameStatisticsObserver(&(*this));
     }
 
     startupPhase(map);
@@ -178,11 +174,17 @@ void GameEngine::getMaps()
     }
 }
 
+/**
+ * Getter for the current  players
+ **/
 vector<Player *> GameEngine::getPlayers()
 {
     return players;
 };
 
+/**
+ * setter for the current  players
+ **/
 void GameEngine::setPlayers(vector<Player *> p)
 {
     players = p;
@@ -204,11 +206,17 @@ void GameEngine::setNumPlayers(int nbOfPlayers)
     numPlayers = nbOfPlayers;
 }
 
+/**
+ * Setter for the chosen map
+ **/
 void GameEngine::setMap(Map *map)
 {
     map = map;
 }
 
+/**
+ * Getter for the chosen map
+ **/
 Map *GameEngine::getMap()
 {
     return map;
