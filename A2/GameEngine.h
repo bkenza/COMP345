@@ -2,6 +2,8 @@
 #include "Player.h"
 
 class Player;
+class Map;
+class Deck;
 
 class GameEngine : public Subject
 {

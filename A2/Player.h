@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <GameObservers.h>
 
 using std::vector;
 using std::string;
@@ -11,7 +12,6 @@ class Hand;
 class Deck;
 class Cards;
 class OrdersList;
-class Subject;
 
 class Player : public Subject
 {
@@ -25,6 +25,7 @@ class Player : public Subject
         vector<Territory*> defendList;
         Map* map;
         int phase;
+        vector<int> friendlyPlayers; // Player who you cannot attack for the remainder of the turn
 
     public:
         Player();
@@ -49,7 +50,8 @@ class Player : public Subject
         void setReinforcementPool(int n);
         int getReinforcementPool();
         bool ownAllTerritoryInContinent();
-        bool ownAllTerritoryInContinent();
         int getPhase();
         void setPhase(int ph);
+        void addFriendly(int);
+        bool canAttack(int);
 };

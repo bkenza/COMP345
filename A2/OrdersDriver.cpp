@@ -1,11 +1,11 @@
-#include "Orders.h"
+/*#include "Orders.h"
 
 using std::cout;
 using std::endl;
 
 int main()
 {
-    /*
+
     OrderFactory factory;
     OrdersList list;
 
@@ -44,10 +44,10 @@ int main()
     cout << a;
 
     cout << "\n********** EXECUTING ORDERS FROM LIST **********\n";
-    /*
 
-    /*list.executeOrders();*/
-    /*
+
+    list.executeOrders();
+
     cout << "\n********** PRINTING ALL THE LISTS **********\n";
 
     cout << "Printing the original list!:\n" << list << endl;
@@ -62,7 +62,6 @@ int main()
     cout << "Printing the original list!:\n" << list << endl;
     cout << "Printing the c'tor list!:\n" << ctorList << endl;
     cout << "Printing = operator list!:\n" << a << endl;
-    */
 
     return 0;
-}
+}*/

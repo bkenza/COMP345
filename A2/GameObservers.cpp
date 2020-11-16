@@ -1,4 +1,5 @@
 #include "GameObservers.h"
+#include "Map.h"
 using namespace std;
 #include <iostream>
 #include <algorithm>

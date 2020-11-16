@@ -66,10 +66,10 @@ void Player::setPlayerID(int playerId)
 }
 
 // Assign a list of territories to Player
-void Player::setTerritoryList(vector<Territory *> tList)
+/*void Player::setTerritoryList(vector<Territory *> tList)
 {
     territoryList = tList;
-}
+}*/
 
 void Player::setPhase(int ph)
 {
@@ -104,17 +104,6 @@ void Player::setOrderList(OrdersList* oList)
 {
 }
 
-// Set player's armies
-void Player::setNumOfArmies(int nbOfArmies)
-{
-    numArmies = nbOfArmies;
-}
-
-// Get player's armies
-int Player::getNumOfArmies()
-{
-    return numArmies;
-}
 
 // Get a Player's list of orders
 OrdersList* Player::getOrderList()
@@ -327,12 +316,22 @@ bool Player::ownAllTerritoryInContinent()
     return false;
 }
 
-int Player::getPlayerID()
+void Player::addFriendly(int targetPlayerID)
 {
-    return playerID;
+    friendlyPlayers.push_back(targetPlayerID);
 }
 
-void Player::setPlayerID(int id)
+bool Player::canAttack(int targetPlayerID)
 {
-    playerID = id;
+    int listSize = friendlyPlayers.size();
+
+    for(int i = 0; i < listSize; i++)
+    {
+        if (friendlyPlayers[i] == targetPlayerID)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

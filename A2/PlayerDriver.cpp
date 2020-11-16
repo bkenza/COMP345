@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-int pmain()
+/*int pmain()
 {
     cout << "\n***********************************************************" << endl;
     cout << "CREATING TERRITORIES" << endl;
@@ -123,4 +123,4 @@ int pmain()
     cout << "***********************************************************" << endl;
 
     return 0;
-}
+}*/

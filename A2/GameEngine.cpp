@@ -512,11 +512,11 @@ void GameEngine::startupPhase(Map *map)
     // set the number of armies
     for (int p = 0; p < players.size(); p++)
     {
-        (players[p])->setNumOfArmies(A);
+        (players[p])->setReinforcementPool(A);
     }
 
     cout << "\n************* PLAYER ARMY ASSIGNMENT ***************\n";
-    cout << "Each player has been assigned " << A << " armies";
+    cout << "Each player has been assigned " << A << " armies" << endl;
 }
 
 /**

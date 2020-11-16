@@ -1,4 +1,4 @@
-#include "Map.h"
+/*#include "Map.h"
 #include <iostream>
 
 using std::cin;
@@ -216,4 +216,4 @@ int mdmain()
     map3->validate();
 
     return 0;
-}
+}*/

@@ -609,6 +609,12 @@ void AdvanceOrder::advance::execute() const
 
         else // If you try to transfer on enemy territory, considered as attack.
         {
+            if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
+            {
+                cout << "You cannot attack this player!\n" << endl;
+                return;
+            }
+
             attackSimulation(source, target, currentPlayer, amount);
         }
 
@@ -620,6 +626,12 @@ void bomb::execute() const
 {
     if (validate())
     {
+        if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
+        {
+            cout << "You cannot attack this player!\n" << endl;
+            return;
+        }
+
         cout << "Bomb is being executed!\n" << endl;
         target->setNumOfArmies(target->getNumOfArmies() / 2);
         cout << "Bomb has finished executing!\n" << endl;
@@ -641,6 +653,12 @@ void airlift::execute() const
 {
     if (validate())
     {
+        if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
+        {
+            cout << "You cannot attack this player!\n" << endl;
+            return;
+        }
+
         cout << "Airlift is being executed!\n";
 
         if (source->getTerritoryPlayerID() == target->getTerritoryPlayerID()) // Transferring army to another territory
@@ -663,7 +681,11 @@ void negotiate::execute() const
     if (validate())
     {
         cout << "Negotiate is being executed!\n";
+        currentPlayer->addFriendly(targetPlayer->getPlayerID());
+        targetPlayer->addFriendly(currentPlayer->getPlayerID());
     }
+
+    cout << "Negotiate has finished executing!" << endl;
 }
 
 /**
