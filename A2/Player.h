@@ -11,8 +11,9 @@ class Hand;
 class Deck;
 class Cards;
 class OrdersList;
+class Subject;
 
-class Player
+class Player : public Subject
 {
     private:
         vector<Territory*> territoryList;
@@ -23,13 +24,13 @@ class Player
         vector<Territory*> attackList;
         vector<Territory*> defendList;
         Map* map;
+        int phase;
 
     public:
         Player();
         Player(vector<Territory*> tList, Hand* hand, OrdersList* oList);
         ~Player();
         Player(const Player& obj);
-        void setTerritoryList(vector<Territory*> tList);
         vector<Territory*> getTerritoryList();
         void setHand(Hand* hand);
         Hand *getHand();
@@ -48,4 +49,7 @@ class Player
         void setReinforcementPool(int n);
         int getReinforcementPool();
         bool ownAllTerritoryInContinent();
+        bool ownAllTerritoryInContinent();
+        int getPhase();
+        void setPhase(int ph);
 };

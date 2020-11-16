@@ -12,7 +12,7 @@ using namespace std;
  */
 Player::Player()
 {
-    playerID =  int(0);
+    playerID = int(0);
 }
 
 /**
@@ -41,7 +41,7 @@ Player::~Player()
     int tListSize = territoryList.size();
     for (int i = 0; i < tListSize; i++) // Delete memory for orders, which are always dynamically allocated.
         delete &territoryList[i];
-   territoryList.clear(); // Delete the memory for the vector itself.*/
+    territoryList.clear(); // Delete the memory for the vector itself.*/
 
     int cListSize = playerHand->HandCards.size();
     for (int i = 0; i < cListSize; i++) // Delete memory for orders, which are always dynamically allocated.
@@ -55,15 +55,34 @@ Player::~Player()
 
     delete &playerHand->HandCards; // Delete the memory for the vector itself.
 }
+int Player::getPlayerID()
+{
+    return playerID;
+}
+
+void Player::setPlayerID(int playerId)
+{
+    playerID = playerId;
+}
 
 // Assign a list of territories to Player
-void Player::setTerritoryList(vector<Territory*> tList)
+void Player::setTerritoryList(vector<Territory *> tList)
 {
     territoryList = tList;
 }
 
+void Player::setPhase(int ph)
+{
+    phase = ph;
+}
+
+int Player::getPhase()
+{
+    return phase;
+}
+
 // Get player's territories
-vector<Territory*> Player::getTerritoryList()
+vector<Territory *> Player::getTerritoryList()
 {
     return territoryList;
 }
@@ -75,14 +94,26 @@ void Player::setHand(Hand *hand)
 }
 
 // Get a Player's list of cards
-Hand* Player::getHand() {
+Hand *Player::getHand()
+{
     return playerHand;
 }
 
 // Assign a list of orders to a specified Player
 void Player::setOrderList(OrdersList* oList)
 {
-    orderList = oList;
+}
+
+// Set player's armies
+void Player::setNumOfArmies(int nbOfArmies)
+{
+    numArmies = nbOfArmies;
+}
+
+// Get player's armies
+int Player::getNumOfArmies()
+{
+    return numArmies;
 }
 
 // Get a Player's list of orders
@@ -91,9 +122,8 @@ OrdersList* Player::getOrderList()
     return orderList;
 }
 
-
 // List of territories that are going to be defended
-vector<Territory*> Player::toDefend()
+vector<Territory *> Player::toDefend()
 {
     return defendList;
 }
@@ -102,7 +132,7 @@ vector<Territory*> Player::toDefend()
 void Player::printDefendList()
 {
     // Declare and initialize defendList
-    vector<Territory*> defendList = toDefend();
+    vector<Territory *> defendList = toDefend();
     for (auto t : defendList)
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -114,7 +144,7 @@ void Player::printDefendList()
 }
 
 // Player's list of territories that are going to be attacked
-vector<Territory*> Player::toAttack()
+vector<Territory *> Player::toAttack()
 {
     return attackList;
 }
@@ -122,7 +152,7 @@ vector<Territory*> Player::toAttack()
 // Print function for Player's list of territories to be attacked
 void Player::printAttackList()
 {
-    vector<Territory*> attackList = toAttack();
+    vector<Territory *> attackList = toAttack();
     for (auto t : attackList)
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -132,7 +162,6 @@ void Player::printAttackList()
         std::cout << "Number of Armies: " << t->getNumOfArmies() << "\n";
     }
 }
-
 
 // Method to allow a Player to make an Order and add it to the orderList
 // Orders allowed are: deploy, advance, bomb, blockade, airlift, negotiate
@@ -215,8 +244,9 @@ void Player::issueOrder(string orderName)
 };
 
 // Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
-void Player::play(Deck *currentDeck, Cards *card) {
-// create an order & add it to player's order list
+void Player::play(Deck *currentDeck, Cards *card)
+{
+    // create an order & add it to player's order list
 
         issueOrder(card->getCardType());
 

@@ -62,7 +62,6 @@ public:
     int getNumOfArmies(); // getter for the number of armies
     void displayTerritory(); // method that displays territory info
     std::vector<int> adjTerritories; // vector containing ids of adjacent territories
-    bool isAdjacent(Territory* dest);
 };
 #endif
 

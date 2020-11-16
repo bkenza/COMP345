@@ -1,8 +1,9 @@
+#pragma once
 #include "Player.h"
-#ifndef A2_GAMEENGINE_H
-#define A2_GAMEENGINE_H
 
-class GameEngine
+class Player;
+
+class GameEngine : public Subject
 {
 public:
     GameEngine();
@@ -12,9 +13,22 @@ public:
     void getMaps();
     int getNumPlayers();
     void setNumPlayers(int nbOfPlayers);
-    bool getObserversOn();
-    void setObserversOn(bool observersOn);
+    bool getPhaseObserverOn();
+    void setPhaseObserverOn(bool phaseObserverOn);
+    bool getStatsObserverOn();
+    void setStatsObserverOn(bool statsObserverOn);
     string mapSelector(int mapNumber);
+    void startupPhase(Map *map);
+    vector<int> getPlayerOrder();
+    void setPlayerOrder(vector<int> pOrder);
+    void setPlayerTurn(int pTurn);
+    int getPlayerTurn();
+    void setRandomPlayerOrder();
+    void assignTerritories(Map *map);
+    void setMap(Map *map);
+    Map *getMap();
+    vector<Player *> getPlayers();
+    void setPlayers(vector<Player *> p);
     void mainGameLoop();
     void reinforcementPhase();
     void issueOrdersPhase();
@@ -22,10 +36,12 @@ public:
 
 private:
     int numPlayers;
-    bool observersOn;
-    string mapList[4] = {"caribbean", "LOTR2", "solar", "sudamerica"};
+    int phaseObserverOn;
+    int statsObserverOn;
+    vector<string> mapList = {"caribbean", "LOTR2", "solar", "sudamerica"};
     vector<Player *> players;
     Deck *deck;
+    vector<int> playerOrder;
+    int playerTurn;
+    Map *map;
 };
-
-#endif //A2_GAMEENGINE_H
