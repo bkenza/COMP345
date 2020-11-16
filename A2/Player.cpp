@@ -335,3 +335,8 @@ bool Player::canAttack(int targetPlayerID)
 
     return true;
 }
+
+void Player::clearFriends()
+{
+    friendlyPlayers.clear();
+}

@@ -54,4 +54,5 @@ class Player : public Subject
         void setPhase(int ph);
         void addFriendly(int);
         bool canAttack(int);
+        void clearFriends();
 };
