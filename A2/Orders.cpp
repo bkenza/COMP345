@@ -734,7 +734,7 @@ Order* negotiate::clone() const
  * @param orderType
  * @return
  */
-Order* OrderFactory::createOrder(const string& orderType, Territory* source, Territory* target,
+/*Order* OrderFactory::createOrder(const string& orderType, Territory* source, Territory* target,
                                  Player* currentPlayer, Player* targetPlayer, int* amount) const
 {
     if (orderType == "deploy")
@@ -751,7 +751,7 @@ Order* OrderFactory::createOrder(const string& orderType, Territory* source, Ter
         return new negotiate(*currentPlayer, *targetPlayer);
     else
         return nullptr;
-}
+}*/
 
 void attackSimulation(Territory* source, Territory* target, Player* currentPlayer, int* amount)
 {

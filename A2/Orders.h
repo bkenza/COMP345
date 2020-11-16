@@ -196,10 +196,10 @@ private:
 * Should be created at the beginning of the program.
 * Creates an order, the type depending on the user input.
 */
-class OrderFactory {
+/*class OrderFactory {
 public:
     Order *createOrder(const string&, Territory*, Territory*, Player*, Player*, int*) const;
-};
+};*/
 
 /**
 * Designed to hold a list of valid orders
