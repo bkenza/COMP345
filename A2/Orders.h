@@ -198,7 +198,7 @@ private:
 */
 class OrderFactory {
 public:
-    Order *createOrder(const string&) const;
+    Order *createOrder(const string&, Territory*, Territory*, Player*, Player*, int*) const;
 };
 
 /**

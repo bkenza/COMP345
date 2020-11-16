@@ -712,20 +712,21 @@ Order* negotiate::clone() const
  * @param orderType
  * @return
  */
-Order* OrderFactory::createOrder(const string& orderType) const
+Order* OrderFactory::createOrder(const string& orderType, Territory* source, Territory* target,
+                                 Player* currentPlayer, Player* targetPlayer, int* amount) const
 {
     if (orderType == "deploy")
-        return new deploy;
+        return new deploy(*target, *currentPlayer, *amount);
     else if (orderType == "advance")
-        return new AdvanceOrder::advance;
+        return new AdvanceOrder::advance(*source, *target, *currentPlayer, *amount);
     else if (orderType == "bomb")
-        return new bomb;
+        return new bomb(*target, *currentPlayer);
     else if (orderType == "blockade")
-        return new blockade;
+        return new blockade(*target, *currentPlayer);
     else if (orderType == "airlift")
-        return new airlift;
+        return new airlift(*source, *target, *currentPlayer, *amount);
     else if (orderType == "negotiate")
-        return new negotiate;
+        return new negotiate(*currentPlayer, *targetPlayer);
     else
         return nullptr;
 }

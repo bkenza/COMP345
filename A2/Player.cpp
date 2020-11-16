@@ -139,16 +139,7 @@ void Player::printAttackList()
 // Player uses one of the cards in their hand to issue an order that corresponds to the card in question
 void Player::issueOrder(string orderName)
 {
-    OrderFactory oFact; //Create OrderFactory to call createOrder method
-    //oFact.createOrder(orderName); //Create Order object
-
-    //Add to Player's orderList
-    if(oFact.createOrder(orderName) == nullptr)
-    {
-        cout << orderName << " Order does not exist, cannot be added to the orders list!" << endl;
-    }
-
-    else if(oFact.createOrder(orderName)->getLabel() == "deploy")
+    if(orderName == "deploy")
     {
         int id;
         cout << "Input a territory ID where you wish to deploy your armies!" << endl;
@@ -160,7 +151,7 @@ void Player::issueOrder(string orderName)
             if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
             {
                 defendList.push_back(gameMapTerritoryList[i]);
-                orderList->addOrder(oFact.createOrder(orderName));
+                orderList->addOrder(new deploy());
             }
             else
             {
@@ -169,7 +160,7 @@ void Player::issueOrder(string orderName)
         }
     }
 
-    else if(oFact.createOrder(orderName)->getLabel() == "advance")
+    else if(orderName == "advance")
     {
         int inputSourceID, inputDestID;
         cout << "Input a source by territory ID" << endl;
@@ -199,7 +190,7 @@ void Player::issueOrder(string orderName)
             {
                 dest = gameMapTerritoryList[i];
                 defendList.push_back(dest);
-                orderList->addOrder(oFact.createOrder(orderName));
+                orderList->addOrder(new AdvanceOrder::advance());
             }
 
             else if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
@@ -207,7 +198,7 @@ void Player::issueOrder(string orderName)
             {
                 dest = gameMapTerritoryList[i];
                 attackList.push_back(dest);
-                orderList->addOrder(oFact.createOrder(orderName));
+                orderList->addOrder(new AdvanceOrder::advance());
             }
 
             else
@@ -219,7 +210,7 @@ void Player::issueOrder(string orderName)
 
     else
     {
-        orderList->addOrder(oFact.createOrder(orderName));
+        //orderList->addOrder(oFact.createOrder(orderName));
     }
 };
 
