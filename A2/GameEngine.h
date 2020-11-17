@@ -28,7 +28,7 @@ public:
     void setRandomPlayerOrder(); // Method that sets the player order randomly
     void assignTerritories(Map *map); // Method that assigns territories to players
     void setMap(Map *map); // Setter for the map
-    Map *getMap(); // getter for the map
+    Map* getMap(); // getter for the map
     vector<Player *> getPlayers(); // Method that returns a vector of current players 
     void setPlayers(vector<Player *> p); // method that sets the current players
     void mainGameLoop();

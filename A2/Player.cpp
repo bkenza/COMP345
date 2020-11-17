@@ -87,11 +87,21 @@ vector<Territory *> Player::getTerritoryList()
     return territoryList;
 }
 
+/*void Player::setMap(Map *map)
+{
+    playerMap = map;
+}*/
+
 // Assign a list of cards to a specified Player
 void Player::setHand(Hand *hand)
 {
     playerHand = hand;
 }
+
+/*Map* Player::getMap()
+{
+    return playerMap;
+}*/
 
 // Get a Player's list of cards
 Hand *Player::getHand()
@@ -121,7 +131,7 @@ vector<Territory *> Player::toDefend()
 void Player::printDefendList()
 {
     // Declare and initialize defendList
-    vector<Territory *> defendList = toDefend();
+    //vector<Territory *> defendList = toDefend();
     for (auto t : defendList)
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -141,7 +151,7 @@ vector<Territory *> Player::toAttack()
 // Print function for Player's list of territories to be attacked
 void Player::printAttackList()
 {
-    vector<Territory *> attackList = toAttack();
+    //vector<Territory *> attackList = toAttack();
     for (auto t : attackList)
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -163,48 +173,25 @@ void Player::issueOrder(string orderName)
         cout << "Input a territory ID where you wish to deploy your armies!" << endl;
         cin >> id;
 
-        vector<Territory*> gameMapTerritoryList = map->Territories;
+        vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
+
         for(int i = 0; i < gameMapTerritoryList.size(); i++)
         {
-            if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
-            {
+            //if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+            //{
                 defendList.push_back(gameMapTerritoryList[i]);
+                cout << "Your defend list will now look like this" <<  endl;
+                printDefendList();
                 orderList->addOrder(new deploy());
-            }
-            else
-            {
-                cout << "The territory either does not exist or does not belong to you!" << endl;
-            }
+            //}
+            //else
+            //{
+                //cout << "The territory either does not exist or does not belong to you!" << endl;
+            //}
         }
     }
 
     else if(orderName == "advance")
-    {
-        cout << orderName << " Order does not exist, cannot be added to the orders list!" << endl;
-    }
-
-    else if(oFact.createOrder(orderName)->getLabel() == "deploy")
-    {
-        int id;
-        cout << "Input a territory ID where you wish to deploy your armies!" << endl;
-        cin >> id;
-
-        vector<Territory*> gameMapTerritoryList = map->Territories;
-        for(int i = 0; i < gameMapTerritoryList.size(); i++)
-        {
-            if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
-            {
-                defendList.push_back(gameMapTerritoryList[i]);
-                orderList.addOrder(oFact.createOrder(orderName));
-            }
-            else
-            {
-                cout << "The territory either does not exist or does not belong to you!" << endl;
-            }
-        }
-    }
-
-    else if(oFact.createOrder(orderName)->getLabel() == "advance")
     {
         int inputSourceID, inputDestID;
         cout << "Input a source by territory ID" << endl;
@@ -215,13 +202,13 @@ void Player::issueOrder(string orderName)
         Territory* source = new Territory();
         Territory* dest = new Territory();
 
-        vector<Territory*> gameMapTerritoryList = map->Territories;
+        vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
 
         // To find input source territory in the map, in a seperate loop incase the source happens to be last element in the list
         for(int i = 0; i < gameMapTerritoryList.size(); i++)
         {
             if(gameMapTerritoryList[i]->getTerritoryID() == inputSourceID
-            && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+               && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
             {
                 source = gameMapTerritoryList[i];
             }
@@ -230,7 +217,7 @@ void Player::issueOrder(string orderName)
         for(int i = 0; i < gameMapTerritoryList.size(); i++)
         {
             if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
-                    gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID && source->isAdjacent(dest))
+               gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID && source->isAdjacent(dest))
             {
                 dest = gameMapTerritoryList[i];
                 defendList.push_back(dest);
@@ -254,9 +241,9 @@ void Player::issueOrder(string orderName)
 
     else
     {
-        orderList.addOrder(oFact.createOrder(orderName));
+        //orderList->addOrder(oFact.createOrder(orderName));
     }
-};
+}
 
 // Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
 void Player::play(Deck *currentDeck, Cards *card)
@@ -321,14 +308,14 @@ int Player::getReinforcementPool()
  */
 bool Player::ownAllTerritoryInContinent()
 {
-    for(int i = 0; i < map->Continents.size(); i++)
+    for(int i = 0; i < gameEngine->getMap()->Continents.size(); i++)
     {
-        int numOfTerritoriesInContinentMap = map->Continents[i]->territories.size();
+        int numOfTerritoriesInContinentMap = gameEngine->getMap()->Continents[i]->territories.size();
         int playerTerritoryIsInContinentCount;
 
         for(int j = 0; j < territoryList.size(); j++)
         {
-            if(territoryList.at(j)->getContinent() == map->Continents[i]->getContinentName())
+            if(territoryList.at(j)->getContinent() == gameEngine->getMap()->Continents[i]->getContinentName())
             {
                 playerTerritoryIsInContinentCount++;
             }

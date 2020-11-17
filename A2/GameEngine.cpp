@@ -119,6 +119,7 @@ void GameEngine::startGame()
         p->setPlayerID(i + 1);
         Hand *playerHand = new Hand();
         p->setHand(playerHand);
+        //p->setMap(map);
         players.push_back(p);
         cout << "Player " << p->getPlayerID() << " created!\n";
     }
@@ -377,20 +378,20 @@ void GameEngine::issueOrdersPhase()
 
     for(int i = 0; i < players.size(); i++)
     {
-        Player* currentPlayer = players[i];
         int pID = players[i]->getPlayerID();
-        vector<Cards*> currentPlayerHandCards = currentPlayer->getHand()->HandCards;
+        vector<Cards*> currentPlayerHandCards = players[i]->getHand()->HandCards;
         string type;
         string answer;
 
-        while(answer != "y")
+        while(answer != "n")
         {
-            cout << "Player "<< pID << "it is now your turn to make a move! Make an order of your choice!"<< endl;
+            cout << "Player "<< pID << " it is now your turn to make a move! Make an order of your choice!"<< endl;
+            cout << "Input your desired order here: ";
             cin >> type;
 
             if(type == "advance" || type == "deploy")
             {
-                currentPlayer->issueOrder(type);
+                players[i]->issueOrder(type);
             }
 
             else
@@ -399,7 +400,7 @@ void GameEngine::issueOrdersPhase()
                 {
                     if(currentPlayerHandCards[j]->getCardType() == type)
                     {
-                        currentPlayer->play(deck, currentPlayerHandCards[j]);
+                        players[i]->play(deck, currentPlayerHandCards[j]);
                     }
 
                     else

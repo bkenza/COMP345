@@ -23,7 +23,7 @@ class Player : public Subject
         int reinforcementPool;
         vector<Territory*> attackList;
         vector<Territory*> defendList;
-        Map* map;
+        GameEngine* gameEngine;
         int phase;
         vector<int> friendlyPlayers; // Player who you cannot attack for the remainder of the turn
 
@@ -33,6 +33,8 @@ class Player : public Subject
         ~Player();
         Player(const Player& obj);
         vector<Territory*> getTerritoryList();
+        //void setMap(Map* map);
+        //Map *getMap();
         void setHand(Hand* hand);
         Hand *getHand();
         void play(Deck* currentDeck, Cards* card);
