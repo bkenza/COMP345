@@ -220,15 +220,12 @@ public:
     void moveOrder(int, int);
 
     void executeOrders(); // Executes orders and empties the list
-    OrdersList &operator=(const OrdersList &);
-
+    OrdersList& operator=(const OrdersList&);
     int getOrdersListSize();
-
-    Order *getOrder(int index);
+    Order* getOrder(int index);
 
 private:
-    vector<Order *> orders;
-
+    vector<Order*> orders;
     friend ostream& operator<<(ostream&, const OrdersList&);
 };
 

@@ -180,6 +180,32 @@ void Player::issueOrder(string orderName)
 
     else if(orderName == "advance")
     {
+        cout << orderName << " Order does not exist, cannot be added to the orders list!" << endl;
+    }
+
+    else if(oFact.createOrder(orderName)->getLabel() == "deploy")
+    {
+        int id;
+        cout << "Input a territory ID where you wish to deploy your armies!" << endl;
+        cin >> id;
+
+        vector<Territory*> gameMapTerritoryList = map->Territories;
+        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        {
+            if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+            {
+                defendList.push_back(gameMapTerritoryList[i]);
+                orderList.addOrder(oFact.createOrder(orderName));
+            }
+            else
+            {
+                cout << "The territory either does not exist or does not belong to you!" << endl;
+            }
+        }
+    }
+
+    else if(oFact.createOrder(orderName)->getLabel() == "advance")
+    {
         int inputSourceID, inputDestID;
         cout << "Input a source by territory ID" << endl;
         cin >> inputSourceID;
@@ -228,7 +254,7 @@ void Player::issueOrder(string orderName)
 
     else
     {
-        //orderList->addOrder(oFact.createOrder(orderName));
+        orderList.addOrder(oFact.createOrder(orderName));
     }
 };
 
