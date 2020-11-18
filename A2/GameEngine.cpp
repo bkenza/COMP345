@@ -355,21 +355,28 @@ void GameEngine::reinforcementPhase()
     {
         players[i]->setPhase("Reinforcement Phase");
         players[i]->Notify();
+        cout << "Player: " << players[i]->getPlayerID() << "'s old Reinforcement Pool: "<< players[i]->getReinforcementPool();
         // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
         if(((players[i]->getTerritoryList().size()) / 3) < 3) // removed round
         {
+            cout << "| Player: " << players[i]->getPlayerID() << "'s updated Reinforcement Pool: ";
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 3);
+            cout << players[i]->getReinforcementPool() << endl;
         }
 
         //check if players owned number of territories matches a continent that hold n amount of territories in order to gain control bonus
         else if(players[i]->ownAllTerritoryInContinent())
         {
+            cout << "| Player: " << players[i]->getPlayerID() << "'s updated Reinforcement Pool: ";
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 10);
+            cout << players[i]->getReinforcementPool() << endl;
         }
 
         else
         {
+            cout << "| Player: " << players[i]->getPlayerID() << "'s updated Reinforcement Pool: ";
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + ((players[i]->getTerritoryList().size()) / 3)); // removed round
+            cout << players[i]->getReinforcementPool() << endl;
         }
     }
 }
@@ -430,11 +437,6 @@ void GameEngine::issueOrdersPhase()
 
             cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
             cin >> answer;
-
-            /*if(ans == "y")
-            {
-                break;
-            }*/
         }
     }
 }
