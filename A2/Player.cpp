@@ -182,20 +182,23 @@ void Player::issueOrder(string orderName)
         cout << "Input a territory ID where you wish to deploy your armies!" << endl;
         cin >> id;
 
-        vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
+        //vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
 
-        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        for(int i = 0; i < territoryList.size(); i++)
         {
-            if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+            cout << territoryList[i]->getTerritoryID() << endl;
+
+            if(territoryList[i]->getTerritoryID() == id)
             {
-                defendList.push_back(gameMapTerritoryList[i]);
+                defendList.push_back(territoryList[i]);
                 cout << "Your defend list will now look like this" <<  endl;
                 printDefendList();
                 orderList->addOrder(new deploy());
             }
+
             else
             {
-                //cout << "The territory either does not exist or does not belong to you!" << endl;
+                cout << "The territory either does not exist or does not belong to you!" << endl;
             }
         }
     }

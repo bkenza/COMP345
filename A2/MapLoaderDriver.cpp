@@ -1,4 +1,4 @@
-/*#include "MapLoader.h"
+#include "MapLoader.h"
 #include <iostream>
 #include <regex>
 
@@ -36,4 +36,4 @@ int mlmain()
              << endl;
     }
     return 0;
-}*/
+}

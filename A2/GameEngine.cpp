@@ -27,6 +27,7 @@ GameEngine::GameEngine()
     statsObserverOn = false;
     playerTurn = int(0);
     playerOrder;
+    firstRound = true;
 }
 
 /**
@@ -284,6 +285,15 @@ int GameEngine::getPlayerTurn()
     return playerTurn;
 }
 
+void GameEngine::setRound(bool round)
+{
+    firstRound = round;
+}
+bool GameEngine::getRound()
+{
+    return firstRound;
+}
+
 /**
  * Method to select the right map depending on user input
  **/
@@ -303,11 +313,6 @@ void GameEngine::mainGameLoop()
     //loop continues until only one of the players owns all territories in map
     while(numPlayers != 1)
     {
-        if(numPlayers == 1)
-        {
-            winner = players[numPlayers];
-        }
-
         //If a players territoryList size is 0, he/she is removed from the game because he/she no longer controls at least 1 territory
         //Iterating through GameEngine's list of players
         for(int i = 0; i < players.size(); i++)
@@ -319,8 +324,11 @@ void GameEngine::mainGameLoop()
             }
         }
 
-        // Reinforcement Phase
-        reinforcementPhase();
+        if(!firstRound)
+        {
+            // Reinforcement Phase
+            reinforcementPhase();
+        }
 
         // Issuing Orders Phase
         issueOrdersPhase();
@@ -334,9 +342,16 @@ void GameEngine::mainGameLoop()
         {
             players[i]->clearFriends();
         }
+
+        firstRound = false;
     }
 
-    cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
+    if(numPlayers == 1)
+    {
+        winner = players[numPlayers];
+        cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
+        //TODO: Destructor;
+    }
 }
 
 /*
@@ -580,6 +595,6 @@ void GameEngine::assignTerritories(Map *map)
         roundPlayer = players[t % numPlayers];
         roundPlayer->getTerritoryList().push_back(map->Territories[t]);
 
-        cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " was assigned to Player " << roundPlayer->getPlayerID() << endl;
+        cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " (" << map->Territories[t]->getTerritoryID() << ") " <<" was assigned to Player " << roundPlayer->getPlayerID() << endl;
     }
 }

@@ -2,9 +2,9 @@
 #include "Map.h"
 #include "Cards.h"
 #include <iostream>
-using namespace std;
+/*using namespace std;
 
-/*int pmain()
+int pmain()
 {
     cout << "\n***********************************************************" << endl;
     cout << "CREATING TERRITORIES" << endl;

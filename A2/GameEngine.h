@@ -35,6 +35,8 @@ public:
     void reinforcementPhase();
     void issueOrdersPhase();
     void executeOrdersPhase();
+    void setRound(bool round);
+    bool getRound();
 
 private:
     int numPlayers;
@@ -46,4 +48,5 @@ private:
     vector<int> playerOrder;
     int playerTurn;
     Map *map;
+    bool firstRound;
 };
