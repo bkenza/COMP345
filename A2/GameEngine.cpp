@@ -75,6 +75,8 @@ void GameEngine::startGame()
 
     while (mapSelected < 1 || mapSelected > mapList.size())
     {
+        cin.clear();
+        cin.ignore();
         cerr << "\nYikes! You have entered an invalid number, please try again: ";
         cin >> mapSelected;
     }
@@ -93,8 +95,10 @@ void GameEngine::startGame()
 
     cin >> numPlayers;
 
-    while (numPlayers < 1 || numPlayers > 5)
+    while (numPlayers < 2 || numPlayers > 5)
     {
+        cin.clear();
+        cin.ignore();
         cerr << "Yikes! You have entered an invalid number. The minimum number of players is 2 and the maximum is 5. Please try again: ";
         cin >> numPlayers;
     }
@@ -125,19 +129,22 @@ void GameEngine::startGame()
     }
 
     // Select id Observers is on of off
-    cout << "\nWould you like to have Phase Observers on? Enter 1 for Yes and 0 for No: ";
+    cout << "\nWould you like to have Phase Observers on? Enter y for Yes and n for No: ";
 
-    cin >> phaseObserverOn;
+    string phaseObserverInput;
+    cin >> phaseObserverInput;
 
-    while (0 > phaseObserverOn || phaseObserverOn > 1)
+    while (!(phaseObserverInput == "y" || phaseObserverInput == "n"))
     {
+        cin.clear();
+        cin.ignore();
         cerr << "Yikes! You have entered an invalid number. Please try again: ";
-        cin >> phaseObserverOn;
+        cin >> phaseObserverInput;
     }
 
     cout << "Observers status: " << phaseObserverOn << endl;
 
-    if(phaseObserverOn == 1) {
+    if(phaseObserverInput == "y") {
         for(int v = 0; v < numPlayers; v++) {
             GamePhaseObserver *phaseObserver = new GamePhaseObserver(players[v]);
         }
@@ -146,17 +153,20 @@ void GameEngine::startGame()
     // Select id Observers is on of off
     cout << "\nWould you like to have Game Statistics Observers on? Enter 1 for Yes and 0 for No: ";
 
-    cin >> statsObserverOn;
+    string statsObserverInput;
+    cin >> statsObserverInput;
 
-    while (0 > statsObserverOn || statsObserverOn > 1)
+    while (!(statsObserverInput == "y" || statsObserverInput == "n"))
     {
+        cin.clear();
+        cin.ignore();
         cerr << "Yikes! You have entered an invalid number. Please try again: ";
-        cin >> statsObserverOn;
+        cin >> statsObserverInput;
     }
 
     cout << "Observers status: " << statsObserverOn << endl;
 
-    if(statsObserverOn == 1){
+    if(statsObserverInput == "y"){
         GameStatisticsObserver* gameStatisticsObserver =  new GameStatisticsObserver(&(*this));
     }
 

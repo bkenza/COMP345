@@ -38,8 +38,8 @@ public:
 
 private:
     int numPlayers;
-    int phaseObserverOn;
-    int statsObserverOn;
+    bool phaseObserverOn;
+    bool statsObserverOn;
     vector<string> mapList = {"caribbean", "LOTR2", "solar", "sudamerica"};
     vector<Player *> players;
     Deck *deck;
