@@ -32,6 +32,7 @@ public:
     void issueOrdersPhase();
     void executeOrdersPhase();
     void setRound(bool round);
+    Player* getPlayerByID(int id);
     bool getRound();
 
 private:

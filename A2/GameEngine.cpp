@@ -594,3 +594,18 @@ void GameEngine::assignTerritories(Map *map)
              << " was assigned to Player " << roundPlayer->getPlayerID() << endl;
     }
 }
+
+Player* GameEngine::getPlayerByID(int id)
+{
+    int listSize = players.size();
+
+    for (int i = 0; i < listSize; i++)
+    {
+        if (id == players[i]->getPlayerID()) {
+            return players[i];
+        }
+    }
+
+    cout << "Player not found!\n" << endl;
+    return nullptr;
+}
