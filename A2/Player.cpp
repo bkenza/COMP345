@@ -20,6 +20,7 @@ Player::Player(GameEngine* ge)
     playerID;
     gameEngine = ge;
     orderList = new OrdersList;
+    phase;
 }
 
 /**
@@ -80,12 +81,12 @@ void Player::setPlayerID(int playerId)
     territoryList = tList;
 }*/
 
-void Player::setPhase(int ph)
+void Player::setPhase(string ph)
 {
     phase = ph;
 }
 
-int Player::getPhase()
+string Player::getPhase()
 {
     return phase;
 }

@@ -24,7 +24,7 @@ class Player : public Subject
         vector<Territory*> attackList;
         vector<Territory*> defendList;
         GameEngine* gameEngine;
-        int phase;
+        string phase;
         vector<int> friendlyPlayers; // Player who you cannot attack for the remainder of the turn
 
     public:
@@ -53,8 +53,8 @@ class Player : public Subject
         void setReinforcementPool(int n);
         int getReinforcementPool();
         bool ownAllTerritoryInContinent();
-        int getPhase();
-        void setPhase(int ph);
+        string getPhase();
+        void setPhase(string ph);
         void addFriendly(int);
         bool canAttack(int);
         void clearFriends();

@@ -25,9 +25,7 @@ GameEngine::GameEngine()
     numPlayers = int(0);
     phaseObserverOn = false;
     statsObserverOn = false;
-    playerTurn = int(0);
     playerOrder;
-    firstRound = true;
 }
 
 /**
@@ -36,7 +34,6 @@ GameEngine::GameEngine()
 GameEngine::GameEngine(const GameEngine &obj)
 {
     playerOrder = obj.playerOrder;
-    playerTurn = obj.playerTurn;
     phaseObserverOn = obj.phaseObserverOn;
     statsObserverOn = obj.statsObserverOn;
     numPlayers = obj.numPlayers;
@@ -127,6 +124,16 @@ void GameEngine::startGame()
         //p->setMap(map);
         players.push_back(p);
         cout << "Player " << p->getPlayerID() << " created!\n";
+    }
+
+    mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
+    shuffle(std::begin(players), std::end(players), rng);
+
+    cout << "\n************* PLAYER ORDER ***************\n";
+    cout << "\n\nThe order of players is the following: \n";
+    for (int k = 0; k < players.size(); k++)
+    {
+        cout << players[k]->getPlayerID() << endl;
     }
 
     // Select id Observers is on of off
@@ -266,25 +273,6 @@ void GameEngine::setPhaseObserverOn(bool phaseObserverOn)
     phaseObserverOn = phaseObserverOn;
 }
 
-vector<int> GameEngine::getPlayerOrder()
-{
-    return playerOrder;
-}
-
-void GameEngine::setPlayerOrder(vector<int> pOrder)
-{
-    playerOrder = pOrder;
-}
-
-void GameEngine::setPlayerTurn(int pTurn)
-{
-    playerTurn = pTurn;
-}
-int GameEngine::getPlayerTurn()
-{
-    return playerTurn;
-}
-
 void GameEngine::setRound(bool round)
 {
     firstRound = round;
@@ -324,7 +312,7 @@ void GameEngine::mainGameLoop()
             }
         }
 
-        if(!firstRound)
+        if(!firstRound) 
         {
             // Reinforcement Phase
             reinforcementPhase();
@@ -365,6 +353,8 @@ void GameEngine::reinforcementPhase()
 {
     for(int i = 0; i < players.size(); i++)
     {
+        players[i]->setPhase("Reinforcement Phase");
+        players[i]->Notify();
         // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
         if(((players[i]->getTerritoryList().size()) / 3) < 3) // removed round
         {
@@ -403,6 +393,8 @@ void GameEngine::issueOrdersPhase()
 
     for(int i = 0; i < players.size(); i++)
     {
+        players[i]->setPhase("Issue Orders Phase");
+        players[i]->Notify();
         int pID = players[i]->getPlayerID();
         vector<Cards*> currentPlayerHandCards = players[i]->getHand()->HandCards;
         string type;
@@ -452,7 +444,9 @@ void GameEngine::executeOrdersPhase()
 {
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
     for(int i = 0; i < players.size(); i++)
-    {
+    {   
+        players[i]->setPhase("Execute Orders Phase");
+        players[i]->Notify();
         OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
 
         for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -529,7 +523,7 @@ void GameEngine::executeOrdersPhase()
 void GameEngine::startupPhase(Map *map)
 {
 
-    setRandomPlayerOrder();
+    //setRandomPlayerOrder();
     assignTerritories(map);
 
     int A;
