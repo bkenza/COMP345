@@ -1,9 +1,10 @@
-/*#include "Orders.h"
-
+#include "Orders.h"
+/*
 using std::cout;
 using std::endl;
 
-int main()
+
+int omain()
 {
 
     OrderFactory factory;
