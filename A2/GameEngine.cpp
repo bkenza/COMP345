@@ -83,7 +83,7 @@ void GameEngine::startGame()
 
     // Load selected map
     MapLoader *mapLoader = new MapLoader();
-    Map *map = mapLoader->MapReader("../Maps/" + mapSelector(mapSelected) + ".map");
+    map = mapLoader->MapReader("../Maps/" + mapSelector(mapSelected) + ".map");
 
     cout << "\nLet's see if the selected map is valid...\n\n";
     map->validate();
@@ -115,7 +115,7 @@ void GameEngine::startGame()
     // Creation of Players and adding them to the vector of players. Each player is given an id and an empty hand.
     for (int i = 0; i < numPlayers; i++)
     {
-        Player *p = new Player();
+        Player *p = new Player(this);
         p->setPlayerID(i + 1);
         Hand *playerHand = new Hand();
         p->setHand(playerHand);

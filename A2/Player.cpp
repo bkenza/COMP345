@@ -15,6 +15,13 @@ Player::Player()
     playerID;
 }
 
+Player::Player(GameEngine* ge)
+{
+    playerID;
+    gameEngine = ge;
+    orderList = new OrdersList;
+}
+
 /**
  * Constructor
  * @param tList
@@ -54,6 +61,8 @@ Player::~Player()
     delete playerHand;
 
     delete &playerHand->HandCards; // Delete the memory for the vector itself.
+
+    delete orderList;
 }
 int Player::getPlayerID()
 {
@@ -177,17 +186,17 @@ void Player::issueOrder(string orderName)
 
         for(int i = 0; i < gameMapTerritoryList.size(); i++)
         {
-            //if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
-            //{
+            if(gameMapTerritoryList[i]->getTerritoryID() == id && gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
+            {
                 defendList.push_back(gameMapTerritoryList[i]);
                 cout << "Your defend list will now look like this" <<  endl;
                 printDefendList();
                 orderList->addOrder(new deploy());
-            //}
-            //else
-            //{
+            }
+            else
+            {
                 //cout << "The territory either does not exist or does not belong to you!" << endl;
-            //}
+            }
         }
     }
 
@@ -239,8 +248,7 @@ void Player::issueOrder(string orderName)
         }
     }
 
-    else
-    {
+    else {
         //orderList->addOrder(oFact.createOrder(orderName));
     }
 }

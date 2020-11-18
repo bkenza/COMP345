@@ -29,6 +29,7 @@ class Player : public Subject
 
     public:
         Player();
+        Player(GameEngine*);
         Player(vector<Territory*> tList, Hand* hand, OrdersList* oList);
         ~Player();
         Player(const Player& obj);
