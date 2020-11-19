@@ -58,4 +58,5 @@ class Player : public Subject
         void addFriendly(int);
         bool canAttack(int);
         void clearFriends();
+        GameEngine* getGE();
 };

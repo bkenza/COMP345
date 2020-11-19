@@ -611,3 +611,8 @@ Player* GameEngine::getPlayerByID(int id)
     cout << "Player not found!\n" << endl;
     return nullptr;
 }
+
+Deck* GameEngine::getDeck()
+{
+    return deck;
+}

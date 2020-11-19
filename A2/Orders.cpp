@@ -3,6 +3,7 @@
 #include "Orders.h"
 #include "Map.h"
 #include "Player.h"
+#include "Cards.h"
 
 using std::ostream;
 using std::setw;
@@ -799,6 +800,7 @@ void attackSimulation(Territory* source, Territory* target, Player* currentPlaye
         cout << "Territory conquered! You have won this battle!\n" << endl;
         target->setTerritoryPlayerID(currentPlayer->getPlayerID()); // Current player now occupies territory
         target->setNumOfArmies(remainingAttackArmies); // Attackers advance to conquered territory
+        currentPlayer->getGE()->getDeck()->draw(currentPlayer->getHand());
     }
 
     else // Lose. A draw is considered a loss. If any, attackers retreat. If any, defenders retreat.

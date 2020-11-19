@@ -381,3 +381,8 @@ void Player::clearFriends()
 {
     friendlyPlayers.clear();
 }
+
+GameEngine* Player::getGE()
+{
+    return gameEngine;
+}

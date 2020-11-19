@@ -34,6 +34,7 @@ public:
     void setRound(bool round);
     Player* getPlayerByID(int id);
     bool getRound();
+    Deck* getDeck();
 
 private:
     int numPlayers;
