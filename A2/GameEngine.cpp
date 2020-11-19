@@ -184,6 +184,7 @@ void GameEngine::startGame()
     }
 
     startupPhase(map);
+    mainGameLoop();
 }
 
 /**
