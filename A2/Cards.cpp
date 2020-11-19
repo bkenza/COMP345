@@ -115,11 +115,12 @@ void Deck::draw(Hand *currentHand)
 void Deck::initializeDeck()
 {
     vector<string> types = {"bomb", "reinforcement", "blockade", "airlift", "diplomacy"};
-    for (int j = 0; j < types.size(); j++)
+    int numCards = 2 * types.size(); // we decided to put 50 cards in the deck since it was not specified in the project description
+    for (int j = 0; j < 6; j++)
     {
         Cards *card = new Cards();
         card->setCardType(types[j]);
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < numCards; i++)
         {
             DeckCards.push_back(card);
         }
