@@ -136,7 +136,7 @@ void GameEngine::startGame()
         cout << players[k]->getPlayerID() << endl;
     }
 
-    // Select id Observers is on of off
+    // Select if Observers is on of off
     cout << "\nWould you like to have Phase Observers on? Enter y for Yes and n for No: ";
 
     string phaseObserverInput;
@@ -152,14 +152,16 @@ void GameEngine::startGame()
 
     cout << "Observers status: " << phaseObserverOn << endl;
 
-    if(phaseObserverInput == "y") {
-        for(int v = 0; v < numPlayers; v++) {
+    if (phaseObserverInput == "y")
+    {
+        for (int v = 0; v < numPlayers; v++)
+        {
             GamePhaseObserver *phaseObserver = new GamePhaseObserver(players[v]);
         }
     }
 
     // Select id Observers is on of off
-    cout << "\nWould you like to have Game Statistics Observers on? Enter 1 for Yes and 0 for No: ";
+    cout << "\nWould you like to have Game Statistics Observers on? Enter y for Yes and n for No: ";
 
     string statsObserverInput;
     cin >> statsObserverInput;
@@ -174,8 +176,9 @@ void GameEngine::startGame()
 
     cout << "Observers status: " << statsObserverOn << endl;
 
-    if(statsObserverInput == "y"){
-        GameStatisticsObserver* gameStatisticsObserver =  new GameStatisticsObserver(&(*this));
+    if (statsObserverInput == "y")
+    {
+        GameStatisticsObserver *gameStatisticsObserver = new GameStatisticsObserver(&(*this));
     }
 
     startupPhase(map);
@@ -296,23 +299,23 @@ string GameEngine::mapSelector(int mapNumber)
 void GameEngine::mainGameLoop()
 {
     // Winner object is stored once game is over and we have a winner
-    Player* winner = NULL;
+    //Player* winner = NULL;
 
     //loop continues until only one of the players owns all territories in map
-    while(numPlayers != 1)
+    while (numPlayers != 1)
     {
         //If a players territoryList size is 0, he/she is removed from the game because he/she no longer controls at least 1 territory
         //Iterating through GameEngine's list of players
-        for(int i = 0; i < players.size(); i++)
+        for (int i = 0; i < players.size(); i++)
         {
             if(players[i]->getTerritoryList()->empty())
             {
-                players.erase(players.begin()+i);
+                players.erase(players.begin() + i);
                 numPlayers--;
             }
         }
 
-        if(!firstRound) 
+        if (!firstRound)
         {
             // Reinforcement Phase
             reinforcementPhase();
@@ -334,12 +337,11 @@ void GameEngine::mainGameLoop()
         firstRound = false;
     }
 
-    if(numPlayers == 1)
-    {
-        winner = players[numPlayers];
-        cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
-        //TODO: Destructor;
-    }
+    // if(numPlayers == 1)
+    // {
+    //     winner = players[numPlayers];
+    //     cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
+    // }
 }
 
 /*
@@ -351,9 +353,9 @@ void GameEngine::mainGameLoop()
  */
 void GameEngine::reinforcementPhase()
 {
-    for(int i = 0; i < players.size(); i++)
+    for (int i = 0; i < players.size(); i++)
     {
-        players[i]->setPhase("Reinforcement Phase");
+        players[i]->setPhase("Reinforcement");
         players[i]->Notify();
         // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
         if(((players[i]->getTerritoryList()->size()) / 3) < 3) // removed round
@@ -362,7 +364,7 @@ void GameEngine::reinforcementPhase()
         }
 
         //check if players owned number of territories matches a continent that hold n amount of territories in order to gain control bonus
-        else if(players[i]->ownAllTerritoryInContinent())
+        else if (players[i]->ownAllTerritoryInContinent())
         {
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 10);
         }
@@ -391,31 +393,31 @@ void GameEngine::issueOrdersPhase()
 
     //negotiate -> prevent attacks between current and another player until end of turn
 
-    for(int i = 0; i < players.size(); i++)
+    for (int i = 0; i < players.size(); i++)
     {
-        players[i]->setPhase("Issue Orders Phase");
+        players[i]->setPhase("Issue Orders");
         players[i]->Notify();
         int pID = players[i]->getPlayerID();
-        vector<Cards*> currentPlayerHandCards = players[i]->getHand()->HandCards;
+        vector<Cards *> currentPlayerHandCards = players[i]->getHand()->HandCards;
         string type;
         string answer;
 
-        while(answer != "n")
+        while (answer != "n")
         {
-            cout << "Player "<< pID << " it is now your turn to make a move! Make an order of your choice!"<< endl;
+            cout << "Player " << pID << " it is now your turn to make a move! Make an order of your choice!" << endl;
             cout << "Input your desired order here: ";
             cin >> type;
 
-            if(type == "advance" || type == "deploy")
+            if (type == "advance" || type == "deploy")
             {
                 players[i]->issueOrder(type);
             }
 
             else
             {
-                for(int j = 0; j < currentPlayerHandCards.size(); j++)
+                for (int j = 0; j < currentPlayerHandCards.size(); j++)
                 {
-                    if(currentPlayerHandCards[j]->getCardType() == type)
+                    if (currentPlayerHandCards[j]->getCardType() == type)
                     {
                         players[i]->play(deck, currentPlayerHandCards[j]);
                     }
@@ -426,7 +428,6 @@ void GameEngine::issueOrdersPhase()
                     }
                 }
             }
-
 
             cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
             cin >> answer;
@@ -443,15 +444,15 @@ void GameEngine::issueOrdersPhase()
 void GameEngine::executeOrdersPhase()
 {
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
-    for(int i = 0; i < players.size(); i++)
-    {   
-        players[i]->setPhase("Execute Orders Phase");
+    for (int i = 0; i < players.size(); i++)
+    {
+        players[i]->setPhase("Execute Orders");
         players[i]->Notify();
-        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
+        for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "deploy")
+            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "deploy")
             {
                 //execute deploy actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
@@ -460,13 +461,13 @@ void GameEngine::executeOrdersPhase()
     }
 
     // 2: airlift
-    for(int i = 0; i < players.size(); i++)
+    for (int i = 0; i < players.size(); i++)
     {
-        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
+        for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "airlift")
+            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "airlift")
             {
                 //execute airlift actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
@@ -475,13 +476,13 @@ void GameEngine::executeOrdersPhase()
     }
 
     // 3: blockade
-    for(int i = 0; i < players.size(); i++)
+    for (int i = 0; i < players.size(); i++)
     {
-        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
+        for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "blockade")
+            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "blockade")
             {
                 //execute blockade actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
@@ -490,25 +491,25 @@ void GameEngine::executeOrdersPhase()
     }
 
     // 4: rest of the orders executed in this block
-    for(int i = 0; i < players.size(); i++)
+    for (int i = 0; i < players.size(); i++)
     {
-        OrdersList* currentPlayerOrdersList = players[i]->getOrderList();
+        OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
-        for(int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
+        for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
-            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "advance")
+            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "advance")
             {
                 //execute advance actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
             }
 
-            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
+            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
             {
                 //execute bomb actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
             }
 
-            if(currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
+            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
             {
                 //execute negotiate actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
@@ -589,7 +590,8 @@ void GameEngine::assignTerritories(Map *map)
         roundPlayer = players[t % numPlayers];
         roundPlayer->getTerritoryList()->push_back(map->Territories[t]);
 
-        cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " (" << map->Territories[t]->getTerritoryID() << ") " <<" was assigned to Player " << roundPlayer->getPlayerID() << endl;
+        cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " (" << map->Territories[t]->getTerritoryID() << ") "
+             << " was assigned to Player " << roundPlayer->getPlayerID() << endl;
     }
 }
 
