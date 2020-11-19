@@ -21,6 +21,7 @@ Player::Player(GameEngine* ge)
     gameEngine = ge;
     orderList = new OrdersList;
     phase;
+    playerHand = new Hand;
 }
 
 /**
@@ -92,9 +93,9 @@ string Player::getPhase()
 }
 
 // Get player's territories
-vector<Territory *> Player::getTerritoryList()
+vector<Territory *>* Player::getTerritoryList()
 {
-    return territoryList;
+    return &territoryList;
 }
 
 /*void Player::setMap(Map *map)
@@ -287,7 +288,7 @@ void Player::play(Deck *currentDeck, Cards *card)
  * Print method for player's territory list
  */
 void Player::printTerritoryList() {
-    for (auto t : getTerritoryList())
+    for (auto t : *getTerritoryList())
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
         std::cout << "Territory ID: " << t->getTerritoryID() << " | ";
