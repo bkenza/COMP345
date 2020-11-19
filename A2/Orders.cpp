@@ -727,33 +727,6 @@ Order* negotiate::clone() const
     return new negotiate(*this);
 }
 
-/**
- * Creates an order based on user input. Only the strings below
- * are the possible orders in this game. If the user inputs a
- * string different than those listed, it returns a null pointer,
- * which is meant to be handled in OrdersList::addOrder().
- * @param orderType
- * @return
- */
-/*Order* OrderFactory::createOrder(const string& orderType, Territory* source, Territory* target,
-                                 Player* currentPlayer, Player* targetPlayer, int* amount) const
-{
-    if (orderType == "deploy")
-        return new deploy(*target, *currentPlayer, *amount);
-    else if (orderType == "advance")
-        return new AdvanceOrder::advance(*source, *target, *currentPlayer, *amount);
-    else if (orderType == "bomb")
-        return new bomb(*target, *currentPlayer);
-    else if (orderType == "blockade")
-        return new blockade(*target, *currentPlayer);
-    else if (orderType == "airlift")
-        return new airlift(*source, *target, *currentPlayer, *amount);
-    else if (orderType == "negotiate")
-        return new negotiate(*currentPlayer, *targetPlayer);
-    else
-        return nullptr;
-}*/
-
 void attackSimulation(Territory* source, Territory* target, Player* currentPlayer, int* amount)
 {
     source->setNumOfArmies(source->getNumOfArmies() - *amount); // Attackers leave home territory
@@ -800,7 +773,6 @@ void attackSimulation(Territory* source, Territory* target, Player* currentPlaye
         cout << "Territory conquered! You have won this battle!\n" << endl;
         target->setTerritoryPlayerID(currentPlayer->getPlayerID()); // Current player now occupies territory
         target->setNumOfArmies(remainingAttackArmies); // Attackers advance to conquered territory
-        currentPlayer->getGE()->getDeck()->draw(currentPlayer->getHand());
     }
 
     else // Lose. A draw is considered a loss. If any, attackers retreat. If any, defenders retreat.

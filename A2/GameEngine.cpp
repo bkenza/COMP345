@@ -458,11 +458,14 @@ void GameEngine::issueOrdersPhase()
 // Executing orders for each player in a round robin fashion based on the order priority 1:deploy, 2:airlift, 3:blockade, 4: all others
 void GameEngine::executeOrdersPhase()
 {
+    int beforeTerritoryListSize;
+    int afterTerritoryListSize;
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
     for (int i = 0; i < players.size(); i++)
     {
         players[i]->setPhase("Execute Orders DEPLOY (1st priority)");
         players[i]->Notify();
+        beforeTerritoryListSize = players[i]->getTerritoryList()->size();
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -472,6 +475,10 @@ void GameEngine::executeOrdersPhase()
                 //execute deploy actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
             }
+        }
+        afterTerritoryListSize = players[i]->getTerritoryList()->size();
+        if(afterTerritoryListSize - beforeTerritoryListSize){ // if the player conquered at least one territory, they can draw a card
+            deck->draw(players[i]->getHand());
         }
     }
 
