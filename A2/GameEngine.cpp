@@ -26,6 +26,8 @@ GameEngine::GameEngine()
     phaseObserverOn = false;
     statsObserverOn = false;
     playerOrder;
+    map = new Map();
+    deck = new Deck();
     firstRound = true;
 }
 
@@ -39,6 +41,8 @@ GameEngine::GameEngine(const GameEngine &obj)
     statsObserverOn = obj.statsObserverOn;
     numPlayers = obj.numPlayers;
     firstRound = true;
+    map = obj.map;
+    deck = obj.deck;
 }
 
 /**
@@ -391,11 +395,11 @@ void GameEngine::issueOrdersPhase()
 {
     //deploy -> put armies in a territory
 
-    /*advance -> moves a specified number of armies between adjacent territories, if its a player territory, armies get transfered
+    /*advance -> moves a specified number of armies between adjacent territories, if its a player territory, armies get transferred
      *           to that territory, if its an enemy territory, an attack happens between the 2 territories
     */
 
-    //bomb -> destory half of the armies located on an opponent's territory that is adjacent to one of player's territory
+    //bomb -> destroy half of the armies located on an opponent's territory that is adjacent to one of player's territory
 
     //blockade -> triple number of armies on one of player's current territory and make it a neutral territory (cannot be attacked?)
 
@@ -605,6 +609,7 @@ void GameEngine::assignTerritories(Map *map)
     for (int t = 0; t < map->Territories.size(); t++)
     {
         roundPlayer = players[t % numPlayers];
+        map->Territories[t]->setTerritoryPlayerID(roundPlayer->getPlayerID());
         roundPlayer->getTerritoryList()->push_back(map->Territories[t]);
 
         cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " (" << map->Territories[t]->getTerritoryID() << ") "
