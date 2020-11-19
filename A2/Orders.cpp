@@ -772,7 +772,9 @@ void attackSimulation(Territory* source, Territory* target, Player* currentPlaye
     {
         cout << "Territory conquered! You have won this battle!\n" << endl;
         target->setTerritoryPlayerID(currentPlayer->getPlayerID()); // Current player now occupies territory
+        currentPlayer->getTerritoryList()->push_back(target);// territory added to player list
         target->setNumOfArmies(remainingAttackArmies); // Attackers advance to conquered territory
+        currentPlayer->getGE()->Notify(); // Notify stats observer since a player conquered a territory
     }
 
     else // Lose. A draw is considered a loss. If any, attackers retreat. If any, defenders retreat.

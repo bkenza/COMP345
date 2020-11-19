@@ -213,7 +213,8 @@ void GameStatisticsObserver::Update()
         if (conqueredTerritories == 0)
         {
             cout << "Player " << gameEngine->getPlayers()[p]->getPlayerID() << " has been ejected from the game!";
-            (gameEngine->getPlayers()).erase((gameEngine->getPlayers().begin() + p)); // remove ejected player from t
+            (gameEngine->getPlayers()).erase((gameEngine->getPlayers().begin() + p)); // remove ejected player from players list
+            gameEngine->setNumPlayers(gameEngine->getNumPlayers() -1);
         }
 
         cout << gameEngine->getPlayers()[p]->getPlayerID() << "      " << territoryRatio << "%\n";

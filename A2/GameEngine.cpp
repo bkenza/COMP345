@@ -109,16 +109,13 @@ void GameEngine::startGame()
 
     cout << "The number of players is: " << numPlayers << endl;
 
-    // Turn on/off any of the observers
-    // TODO: implement part 5 first
-
     players[numPlayers];
 
     // Create all the players, assign a set of battle orders, create a deck of cards,and assign an empty hand of cards to each player.
 
     // Create a deck of cards
     deck = new Deck();
-    deck->initializeDeck(); //TODO: change intiailize method to have the right nb od
+    deck->initializeDeck();
 
     // Creation of Players and adding them to the vector of players. Each player is given an id and an empty hand.
     for (int i = 0; i < numPlayers; i++)
@@ -317,12 +314,11 @@ void GameEngine::mainGameLoop()
         {
             if(players[i]->getTerritoryList()->empty())
             {
-                players.erase(players.begin() + i);
-                numPlayers--;
+                Notify();// Notify that player is eliminated and remove from view. Removal of player from list is taken care of by the observer
             }
         }
 
-        if (!firstRound)
+        if (!firstRound)// reinforcement phase is skipped during the first round
         {
             // Reinforcement Phase
             reinforcementPhase();
@@ -418,7 +414,7 @@ void GameEngine::issueOrdersPhase()
 
         while (answer != "n")
         {
-            cout << "Player " << pID << " it is now your turn to make a move! Make an order of your choice!" << endl;
+            cout << "Player " << pID << ", it is your turn to make a move! Make an order of your choice!\n" << endl;
             cout << "Input your desired order here: ";
             cin >> type;
 
