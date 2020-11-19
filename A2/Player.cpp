@@ -185,23 +185,26 @@ void Player::issueOrder(string orderName)
 
         //vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
 
-        for(int i = 0; i < territoryList.size(); i++)
-        {
-            cout << territoryList[i]->getTerritoryID() << endl;
+        //for(int i = 0; i < territoryList.size(); i++)
+        //{
+            //cout << territoryList[i]->getTerritoryID() << endl;
 
-            if(territoryList[i]->getTerritoryID() == id)
-            {
-                defendList.push_back(territoryList[i]);
-                cout << "Your defend list will now look like this" <<  endl;
+            //if(territoryList[id]->getTerritoryID() == id)
+            //{
+                cout << territoryList.size();
+                cout << "Adding territory " << id << " to defendList" << endl;
+                defendList.push_back(territoryList[id]);
+                //cout << "Your defend list will now look like this" <<  endl;
                 printDefendList();
+                cout << "Adding order to order list" << endl;
                 orderList->addOrder(new deploy());
-            }
+            //}
 
-            else
-            {
-                cout << "The territory either does not exist or does not belong to you!" << endl;
-            }
-        }
+            //else
+            //{
+                //cout << "The territory either does not exist or does not belong to you!" << endl;
+            //}
+        //}
     }
 
     else if(orderName == "advance")
@@ -252,8 +255,21 @@ void Player::issueOrder(string orderName)
         }
     }
 
-    else {
-        //orderList->addOrder(oFact.createOrder(orderName));
+    else if(orderName == "blockade"){
+        orderList->addOrder(new blockade());
+    }
+
+    else if(orderName == "airlift"){
+        orderList->addOrder(new airlift());
+    }
+
+    else if(orderName == "negotiate"){
+        orderList->addOrder(new negotiate());
+    }
+
+    else if(orderName == "bomb")
+    {
+        orderList->addOrder(new bomb());
     }
 }
 

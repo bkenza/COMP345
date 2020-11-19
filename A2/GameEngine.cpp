@@ -308,7 +308,7 @@ void GameEngine::mainGameLoop()
         //Iterating through GameEngine's list of players
         for (int i = 0; i < players.size(); i++)
         {
-            if (players[i]->getTerritoryList().empty())
+            if(players[i]->getTerritoryList()->empty())
             {
                 players.erase(players.begin() + i);
                 numPlayers--;
@@ -359,7 +359,7 @@ void GameEngine::reinforcementPhase()
         players[i]->Notify();
         cout << "Player: " << players[i]->getPlayerID() << "'s old Reinforcement Pool: "<< players[i]->getReinforcementPool();
         // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
-        if (((players[i]->getTerritoryList().size()) / 3) < 3) // removed round
+        if(((players[i]->getTerritoryList()->size()) / 3) < 3) // removed round
         {
             cout << "| Player: " << players[i]->getPlayerID() << "'s updated Reinforcement Pool: ";
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 3);
@@ -377,7 +377,7 @@ void GameEngine::reinforcementPhase()
         else
         {
             cout << "| Player: " << players[i]->getPlayerID() << "'s updated Reinforcement Pool: ";
-            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + ((players[i]->getTerritoryList().size()) / 3)); // removed round
+            players[i]->setReinforcementPool(players[i]->getReinforcementPool() + ((players[i]->getTerritoryList()->size()) / 3)); // removed round
             cout << players[i]->getReinforcementPool() << endl;
         }
     }
@@ -590,7 +590,7 @@ void GameEngine::assignTerritories(Map *map)
     for (int t = 0; t < map->Territories.size(); t++)
     {
         roundPlayer = players[t % numPlayers];
-        roundPlayer->getTerritoryList().push_back(map->Territories[t]);
+        roundPlayer->getTerritoryList()->push_back(map->Territories[t]);
 
         cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " (" << map->Territories[t]->getTerritoryID() << ") "
              << " was assigned to Player " << roundPlayer->getPlayerID() << endl;

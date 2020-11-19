@@ -33,7 +33,7 @@ class Player : public Subject
         Player(vector<Territory*> tList, Hand* hand, OrdersList* oList);
         ~Player();
         Player(const Player& obj);
-        vector<Territory*> getTerritoryList();
+        vector<Territory*>* getTerritoryList();
         //void setMap(Map* map);
         //Map *getMap();
         void setHand(Hand* hand);

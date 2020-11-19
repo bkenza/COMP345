@@ -206,7 +206,7 @@ void GameStatisticsObserver::Update()
     cout << "--------------------------------\n";
     for (int p = 0; p < gameEngine->getPlayers().size(); p++)
     {
-        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList().size();
+        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList()->size();
         float territoryRatio = float(conqueredTerritories) / totalNumTerritories;
 
         // check if any player has 0 territories
@@ -223,7 +223,7 @@ void GameStatisticsObserver::Update()
     // Check if any player has conquered the whole map. If so, announce player as winner and terminate game.
     for (int p = 0; p < gameEngine->getPlayers().size(); p++)
     {
-        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList().size();
+        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList()->size();
         if (conqueredTerritories = totalNumTerritories)
         {
             cout << "Player " << gameEngine->getPlayers()[p]->getPlayerID() << " has won the game!" << endl;
