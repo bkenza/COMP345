@@ -92,9 +92,9 @@ string Player::getPhase()
 }
 
 // Get player's territories
-vector<Territory *> Player::getTerritoryList()
+vector<Territory *>* Player::getTerritoryList()
 {
-    return territoryList;
+    return &territoryList;
 }
 
 /*void Player::setMap(Map *map)
@@ -185,26 +185,21 @@ void Player::issueOrder(string orderName)
 
         //vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
 
-        //for(int i = 0; i < territoryList.size(); i++)
-        //{
+        for(int i = 0; i < territoryList.size(); i++)
+        {
             //cout << territoryList[i]->getTerritoryID() << endl;
 
-            //if(territoryList[id]->getTerritoryID() == id)
-            //{
-                cout << territoryList.size();
-                cout << "Adding territory " << id << " to defendList" << endl;
-                defendList.push_back(territoryList[id]);
-                //cout << "Your defend list will now look like this" <<  endl;
+            if(territoryList[i]->getTerritoryID() == id)
+            {
+                cout << "Adding territory "<< territoryList[i]->getTerritoryName() <<
+                " (" << territoryList[i]->getTerritoryID() << ") "<< "to defendList" << endl;
+                defendList.push_back(territoryList[i]);
+                cout << "\nYour defend list will now look like this" <<  endl;
                 printDefendList();
-                cout << "Adding order to order list" << endl;
+                cout << "\nAdding order to order list" << endl;
                 orderList->addOrder(new deploy());
-            //}
-
-            //else
-            //{
-                //cout << "The territory either does not exist or does not belong to you!" << endl;
-            //}
-        //}
+            }
+        }
     }
 
     else if(orderName == "advance")
@@ -303,7 +298,7 @@ void Player::play(Deck *currentDeck, Cards *card)
  * Print method for player's territory list
  */
 void Player::printTerritoryList() {
-    for (auto t : getTerritoryList())
+    for (auto t : *getTerritoryList())
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
         std::cout << "Territory ID: " << t->getTerritoryID() << " | ";

@@ -26,6 +26,7 @@ GameEngine::GameEngine()
     phaseObserverOn = false;
     statsObserverOn = false;
     playerOrder;
+    firstRound = true;
 }
 
 /**
@@ -37,6 +38,7 @@ GameEngine::GameEngine(const GameEngine &obj)
     phaseObserverOn = obj.phaseObserverOn;
     statsObserverOn = obj.statsObserverOn;
     numPlayers = obj.numPlayers;
+    firstRound = true;
 }
 
 /**
@@ -420,7 +422,7 @@ void GameEngine::issueOrdersPhase()
                 players[i]->issueOrder(type);
             }
 
-            else
+            else if(type == "bomb" || type == "blockade" || type == "airlift" || type == "negotiate")
             {
                 for (int j = 0; j < currentPlayerHandCards.size(); j++)
                 {
@@ -436,8 +438,14 @@ void GameEngine::issueOrdersPhase()
                 }
             }
 
+            else
+            {
+                cout << "Invalid order!" << endl;
+            }
+
             cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
             cin >> answer;
+            cout << "\n" << endl;
         }
     }
 }
@@ -448,7 +456,7 @@ void GameEngine::executeOrdersPhase()
     // 1:deploy NEED TO CHECK IF REINFORCEMENT POOL IS EMPTY OTHERWISE CANNOT EXECUTE OTHER ORDERS
     for (int i = 0; i < players.size(); i++)
     {
-        players[i]->setPhase("Execute Orders");
+        players[i]->setPhase("Execute Orders DEPLOY (1st priority)");
         players[i]->Notify();
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
@@ -465,6 +473,8 @@ void GameEngine::executeOrdersPhase()
     // 2: airlift
     for (int i = 0; i < players.size(); i++)
     {
+        players[i]->setPhase("Execute Orders: AIRLIFT (2nd priority)");
+        players[i]->Notify();
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -480,6 +490,8 @@ void GameEngine::executeOrdersPhase()
     // 3: blockade
     for (int i = 0; i < players.size(); i++)
     {
+        players[i]->setPhase("Execute Orders: BLOCKADE (3rd priority)");
+        players[i]->Notify();
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -495,6 +507,8 @@ void GameEngine::executeOrdersPhase()
     // 4: rest of the orders executed in this block
     for (int i = 0; i < players.size(); i++)
     {
+        players[i]->setPhase("Execute Orders: executing the rest according to their order in the list");
+        players[i]->Notify();
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
