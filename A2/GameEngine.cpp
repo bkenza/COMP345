@@ -390,7 +390,7 @@ void GameEngine::reinforcementPhase()
     }
 }
 
-// each player make orders and place them in their orderlist
+// each player make orders and place them in their order list, if an order is a card it calls play method that will play a  card from hand
 void GameEngine::issueOrdersPhase()
 {
     //deploy -> put armies in a territory
@@ -422,13 +422,25 @@ void GameEngine::issueOrdersPhase()
             cout << "Input your desired order here: ";
             cin >> type;
 
+            // If input is advance or deploy it calls issueOrder
             if (type == "advance" || type == "deploy")
             {
                 players[i]->issueOrder(type);
             }
 
+            // If input is any of these it will loop through player's hands to see if card exists and play it as well as add it
+            // to orders list
             else if(type == "bomb" || type == "blockade" || type == "airlift" || type == "negotiate")
             {
+                cout << currentPlayerHandCards.size() << endl;
+
+                // If hand is empty output error message
+                if(currentPlayerHandCards.size() == 0)
+                {
+                    cout << "Invalid order! Your hand is empty!!" << endl;
+                }
+
+                // looping through player's hand to find appropriate card
                 for (int j = 0; j < currentPlayerHandCards.size(); j++)
                 {
                     if (currentPlayerHandCards[j]->getCardType() == type)
@@ -448,8 +460,13 @@ void GameEngine::issueOrdersPhase()
                 cout << "Invalid order!" << endl;
             }
 
+            // asks user if he/she desires to issue a new order, if no, his or her turn ends and goes to next player in queue
             cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
             cin >> answer;
+            if(answer == "no")
+            {
+                break;
+            }
             cout << "\n" << endl;
         }
     }
@@ -468,6 +485,14 @@ void GameEngine::executeOrdersPhase()
         beforeTerritoryListSize = players[i]->getTerritoryList()->size();
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
+        // If player's order list is empty do not display
+        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        {
+            players[i]->setPhase("Execute Orders DEPLOY (1st priority)");
+            players[i]->Notify();
+        }
+
+        // looping through player's order list
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
         {
             if (currentPlayerOrdersList->getOrder(j)->getLabel() == "deploy")
@@ -485,8 +510,12 @@ void GameEngine::executeOrdersPhase()
     // 2: airlift
     for (int i = 0; i < players.size(); i++)
     {
-        players[i]->setPhase("Execute Orders: AIRLIFT (2nd priority)");
-        players[i]->Notify();
+        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        {
+            players[i]->setPhase("Execute Orders: AIRLIFT (2nd priority)");
+            players[i]->Notify();
+        }
+
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -502,8 +531,12 @@ void GameEngine::executeOrdersPhase()
     // 3: blockade
     for (int i = 0; i < players.size(); i++)
     {
-        players[i]->setPhase("Execute Orders: BLOCKADE (3rd priority)");
-        players[i]->Notify();
+        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        {
+            players[i]->setPhase("Execute Orders: BLOCKADE (3rd priority)");
+            players[i]->Notify();
+        }
+
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -519,8 +552,12 @@ void GameEngine::executeOrdersPhase()
     // 4: rest of the orders executed in this block
     for (int i = 0; i < players.size(); i++)
     {
-        players[i]->setPhase("Execute Orders: executing the rest according to their order in the list");
-        players[i]->Notify();
+        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        {
+            players[i]->setPhase("Execute Orders: executing the rest according to their order in the list");
+            players[i]->Notify();
+        }
+
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         for (int j = 0; j < currentPlayerOrdersList->getOrdersListSize(); j++)
@@ -549,6 +586,9 @@ void GameEngine::executeOrdersPhase()
 //    Part 2: Startup Phase
 //+++++++++++++++++++++++++++++++
 
+/**
+ * Method that assigns number of armies at the beginning of the game depending on the amount of players in the game
+ */
 void GameEngine::startupPhase(Map *map)
 {
 
@@ -624,6 +664,11 @@ void GameEngine::assignTerritories(Map *map)
     }
 }
 
+/**
+ * Getter for player ID
+ * @param id
+ * @return
+ */
 Player* GameEngine::getPlayerByID(int id)
 {
     int listSize = players.size();
@@ -639,6 +684,10 @@ Player* GameEngine::getPlayerByID(int id)
     return nullptr;
 }
 
+/**
+ * Getting for deck
+ * @return deck
+ */
 Deck* GameEngine::getDeck()
 {
     return deck;
