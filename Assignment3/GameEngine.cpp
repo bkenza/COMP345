@@ -568,14 +568,14 @@ void GameEngine::executeOrdersPhase()
                 currentPlayerOrdersList->deleteOrder(j + 1);
             }
 
-            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
+            else if (currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
             {
                 //execute bomb actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
                 currentPlayerOrdersList->deleteOrder(j + 1);
             }
 
-            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
+            else if (currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
             {
                 //execute negotiate actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
