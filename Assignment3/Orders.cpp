@@ -465,17 +465,6 @@ bool deploy::validate() const
         return false;
     }
 
-    else if (*amount > currentPlayer->getReinforcementPool())
-    {
-        cout << "You do not have this many armies in the reinforcement pool!\n" << endl;
-        return false;
-    }
-
-    else if (*amount < 1)
-    {
-        cout << "Please enter a value that is at least 1 for this order\n" << endl;
-    }
-
     cout << "Your order has been validated!\n" << endl;
 
     return true;
@@ -495,17 +484,6 @@ bool AdvanceOrder::advance::validate() const
     {
         cout << "The target territory is not adjacent to the source territory!\n" << endl;
         return false;
-    }
-
-    else if (*amount > source->getNumOfArmies())
-    {
-        cout << "You do not have this many armies in this territory!\n" << endl;
-        return false;
-    }
-
-    else if (*amount < 1)
-    {
-        cout << "Please enter a value that is at least 1 for this order\n" << endl;
     }
 
     cout << "Your order has been validated!\n" << endl;
@@ -551,16 +529,6 @@ bool airlift::validate() const
     {
         cout << "The source territory is not your own!\n" << endl;
         return false;
-    }
-
-    else if (*amount > source->getNumOfArmies())
-    {
-        cout << "You do not have this many armies in this territory!\n" << endl;
-    }
-
-    else if (*amount < 1)
-    {
-        cout << "Please enter a value that is at least 1 for this order\n" << endl;
     }
 
     cout << "Your order has been validated!\n" << endl;
