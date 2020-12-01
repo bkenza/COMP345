@@ -474,6 +474,34 @@ void Territory::displayTerritory()
     cout << "Number of armies in this territory: " << getNumOfArmies() << endl;
 }
 
+bool Territory::isAdjacent(Territory *dest)
+{
+    bool srcAdjToDest;
+    bool destAdjToSrc;
+
+    for (int v = 0; v < this->adjTerritories.size(); v++)
+    {
+        if(this->adjTerritories[v] == dest->getTerritoryID())
+        {
+            srcAdjToDest = true;
+        }
+    }
+
+    for (int v = 0; v < dest->adjTerritories.size(); v++)
+    {
+        if(dest->adjTerritories[v] == this->getTerritoryID())
+        {
+            destAdjToSrc = true;
+        }
+    }
+
+    if(srcAdjToDest == true && destAdjToSrc == true)
+    {
+        return true;
+    }
+    return false;
+}
+
 //==========================
 //        CONTINENT
 //==========================

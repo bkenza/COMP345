@@ -1,4 +1,5 @@
 #include "GameObservers.h"
+#include "Map.h"
 using namespace std;
 #include <iostream>
 #include <algorithm>
@@ -18,14 +19,14 @@ Observer::~Observer(){};
 /**
  * Copy construcor
  **/
-Observer::Observer(const Observer &obj){
-    
+Observer::Observer(const Observer &obj)
+{
 }
 
 /**
  * Assignment operator
  **/
-Observer& Observer::operator=(const Observer &obj)
+Observer &Observer::operator=(const Observer &obj)
 {
 }
 
@@ -34,13 +35,13 @@ Observer& Observer::operator=(const Observer &obj)
 /**
  * Default constructor
  **/
-Subject::Subject(){
-};
+Subject::Subject(){};
 
 /**
  * Destructor
  **/
-Subject::~Subject(){
+Subject::~Subject()
+{
     for (auto q : observerList)
     {
         delete q;
@@ -51,14 +52,14 @@ Subject::~Subject(){
 /**
  * Copy construcor
  **/
-Subject::Subject(const Subject &obj)
-{};
+Subject::Subject(const Subject &obj){};
 
 /**
  * Assignment operator
  **/
-Subject& Subject::operator=(const Subject &obj)
-{}
+Subject &Subject::operator=(const Subject &obj)
+{
+}
 
 void Subject::TurnOn(Observer *obs)
 {
@@ -74,37 +75,38 @@ void Subject::TurnOff(Observer *obs)
 
 void Subject::Notify()
 {
-    cout << "Notify was called!" << endl;
-    for (int i = 0; i < observerList.size(); i++)
+    for (int x = 0; x < observerList.size(); x++)
     {
-        observerList[i]->Update();
+        observerList[x]->Update();
     }
 }
-
 
 //************ Phase Observer *******************
 
 /**
  * Default constructor
  **/
-GamePhaseObserver::GamePhaseObserver(){
+GamePhaseObserver::GamePhaseObserver()
+{
     Player *player = new Player();
 };
 
 /**
  * Parametrized constructor
  **/
-GamePhaseObserver::GamePhaseObserver(Player *p) {
+GamePhaseObserver::GamePhaseObserver(Player *p)
+{
     player = p;
     player->TurnOn(this);
 }
 
-GamePhaseObserver::GamePhaseObserver(const GamePhaseObserver& orig)
+GamePhaseObserver::GamePhaseObserver(const GamePhaseObserver &orig)
 {
     player = new Player(*orig.player);
 }
 
-GamePhaseObserver& GamePhaseObserver::operator=(const GamePhaseObserver &obj) {
+GamePhaseObserver &GamePhaseObserver::operator=(const GamePhaseObserver &obj)
+{
     if (this != &obj)
     {
         delete player;
@@ -123,7 +125,7 @@ void GamePhaseObserver::Update()
 {
     cout << "\n********************** PHASE OBSERVER **************************************\n";
     cout << "Player " << player->getPlayerID() << ":  " << player->getPhase() << " phase\n";
-    cout << "****************************************************************************\n";
+    cout << "****************************************************************************\n\n";
 }
 
 //********** Game Stats Observer ************
@@ -131,8 +133,7 @@ void GamePhaseObserver::Update()
 /**
  * Default constructor
  **/
-GameStatisticsObserver::GameStatisticsObserver(){
-};
+GameStatisticsObserver::GameStatisticsObserver(){};
 
 /**
  * Parametrized constructor
@@ -205,14 +206,15 @@ void GameStatisticsObserver::Update()
     cout << "--------------------------------\n";
     for (int p = 0; p < gameEngine->getPlayers().size(); p++)
     {
-        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList().size();
+        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList()->size();
         float territoryRatio = float(conqueredTerritories) / totalNumTerritories;
 
         // check if any player has 0 territories
         if (conqueredTerritories == 0)
         {
             cout << "Player " << gameEngine->getPlayers()[p]->getPlayerID() << " has been ejected from the game!";
-            (gameEngine->getPlayers()).erase((gameEngine->getPlayers().begin() + p)); // remove ejected player from t
+            (gameEngine->getPlayers()).erase((gameEngine->getPlayers().begin() + p)); // remove ejected player from players list
+            gameEngine->setNumPlayers(gameEngine->getNumPlayers() -1);
         }
 
         cout << gameEngine->getPlayers()[p]->getPlayerID() << "      " << territoryRatio << "%\n";
@@ -222,7 +224,7 @@ void GameStatisticsObserver::Update()
     // Check if any player has conquered the whole map. If so, announce player as winner and terminate game.
     for (int p = 0; p < gameEngine->getPlayers().size(); p++)
     {
-        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList().size();
+        conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList()->size();
         if (conqueredTerritories = totalNumTerritories)
         {
             cout << "Player " << gameEngine->getPlayers()[p]->getPlayerID() << " has won the game!" << endl;

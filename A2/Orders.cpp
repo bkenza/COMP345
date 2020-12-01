@@ -1,14 +1,26 @@
+#include <iomanip> // To format output.
+#include <cstdlib>
 #include "Orders.h"
+#include "Map.h"
+#include "Player.h"
+#include "Cards.h"
+
+using std::ostream;
+using std::setw;
+using std::setfill;
+using std::left;
+using std::cout;
+using std::endl;
 
 /**
  *  The labels of the orders, which are constant and static.
  */
-const string deploy::label = "Deploy";
-const string advance::label = "Advance";
-const string bomb::label = "Bomb";
-const string blockade::label = "Blockade";
-const string airlift::label = "Airlift";
-const string negotiate::label = "Negotiate";
+const string deploy::label = "deploy";
+const string AdvanceOrder::advance::label = "advance";
+const string bomb::label = "bomb";
+const string blockade::label = "blockade";
+const string airlift::label = "airlift";
+const string negotiate::label = "negotiate";
 
 /**
  * Default constructor
@@ -43,25 +55,83 @@ OrdersList::OrdersList(const OrdersList& oldList)
     cout << "The list has been copied!" << endl;
 }
 
+Order::Order()
+{
+    currentPlayer = nullptr;
+    enabled = true;
+}
+
+Order::Order(Player& currentPlayer)
+{
+    this->currentPlayer = &currentPlayer;
+    enabled = true;
+}
+
 /**
  * Destructor
  */
 Order::~Order()
 {
+    currentPlayer = nullptr;
 }
 
 /**
  * Destructor
  */
+
+deploy::deploy() : Order()
+{
+    target = nullptr;
+    amount = nullptr;
+}
+
+deploy::deploy(Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+{
+    this->target = &target;
+    int* copiedAmount = new int(amount); // Because our data member is an int pointer.
+    this->amount = copiedAmount;
+}
+
 deploy::~deploy()
 {
+    target = nullptr;
+    currentPlayer = nullptr;
+    delete amount;
+}
+
+AdvanceOrder::advance::advance() : Order()
+{
+    source = nullptr;
+    target = nullptr;
+    amount = nullptr;
+}
+
+AdvanceOrder::advance::advance(Territory& source, Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+{
+    this->source = &source;
+    this->target = &target;
+    int* copiedAmount = new int(amount);
+    this->amount = copiedAmount;
 }
 
 /**
  * Destructor
  */
-advance::~advance()
+AdvanceOrder::advance::~advance()
 {
+    source = nullptr;
+    target = nullptr;
+    delete amount;
+}
+
+bomb::bomb() : Order()
+{
+    target = nullptr;
+}
+
+bomb::bomb(Territory& target, Player& currentPlayer) : Order(currentPlayer)
+{
+    this->target = &target;
 }
 
 /**
@@ -69,6 +139,17 @@ advance::~advance()
  */
 bomb::~bomb()
 {
+    target = nullptr;
+}
+
+blockade::blockade() : Order()
+{
+    target = nullptr;
+}
+
+blockade::blockade(Territory& target, Player& currentPlayer) : Order(currentPlayer)
+{
+    this->target = &target;
 }
 
 /**
@@ -76,7 +157,22 @@ bomb::~bomb()
  */
 blockade::~blockade()
 {
+    target = nullptr;
+}
 
+airlift::airlift() : Order()
+{
+    source = nullptr;
+    target = nullptr;
+    amount = nullptr;
+}
+
+airlift::airlift(Territory& source, Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+{
+    this->source = &source;
+    this->target = &target;
+    int* copiedAmount = new int(amount);
+    this->amount = copiedAmount;
 }
 
 /**
@@ -84,15 +180,27 @@ blockade::~blockade()
  */
 airlift::~airlift()
 {
-
+    source = nullptr;
+    target = nullptr;
+    delete amount;
 }
 
 /**
  * Destructor
  */
+negotiate::negotiate() : Order()
+{
+    targetPlayer = nullptr;
+}
+
+negotiate::negotiate(Player& targetPlayer, Player& currentPlayer) : Order(currentPlayer)
+{
+    this->targetPlayer = &targetPlayer;
+}
+
 negotiate::~negotiate()
 {
-
+    targetPlayer = nullptr;
 }
 
 /**
@@ -203,6 +311,20 @@ OrdersList& OrdersList::operator=(const OrdersList& rhsList) // Releases resourc
     return *this;
 }
 
+int OrdersList::getOrdersListSize()
+{
+    return orders.size();
+}
+
+Order* OrdersList::getOrder(int index)
+{
+    if(index < orders.size() && index >= 0)
+    {
+        return orders[index];
+    }
+    return nullptr;
+}
+
 /**
  * Prints the list using cout.
  * @param strm
@@ -241,7 +363,7 @@ string deploy::getLabel() const
  * Returns the label of the order.
  * @return
  */
-string advance::getLabel() const
+string AdvanceOrder::advance::getLabel() const
 {
     return label;
 }
@@ -304,7 +426,7 @@ ostream& deploy::printOrder(ostream& out) const
     return out << "This is a deploy order!";
 }
 
-ostream& advance::printOrder(ostream& out) const
+ostream& AdvanceOrder::advance::printOrder(ostream& out) const
 {
     return out << "This is an advance order!";
 }
@@ -336,36 +458,128 @@ ostream& negotiate::printOrder(ostream& out) const
 bool deploy::validate() const
 {
     cout << "Validating Deploy...\n";
+
+    if (target->getTerritoryPlayerID() != currentPlayer->getPlayerID())
+    {
+        cout << "You do not own this territory!\n" << endl;
+        return false;
+    }
+
+    else if (*amount > currentPlayer->getReinforcementPool())
+    {
+        cout << "You do not have this many armies in the reinforcement pool!\n" << endl;
+        return false;
+    }
+
+    else if (*amount < 1)
+    {
+        cout << "Please enter a value that is at least 1 for this order\n" << endl;
+    }
+
+    cout << "Your order has been validated!\n" << endl;
+
     return true;
 }
 
-bool advance::validate() const
+bool AdvanceOrder::advance::validate() const
 {
     cout << "Validating Advance...\n";
+
+    if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID())
+    {
+        cout << "The source territory is not your own!\n" << endl;
+        return false;
+    }
+
+    else if (!source->isAdjacent(target))
+    {
+        cout << "The target territory is not adjacent to the source territory!\n" << endl;
+        return false;
+    }
+
+    else if (*amount > source->getNumOfArmies())
+    {
+        cout << "You do not have this many armies in this territory!\n" << endl;
+        return false;
+    }
+
+    else if (*amount < 1)
+    {
+        cout << "Please enter a value that is at least 1 for this order\n" << endl;
+    }
+
+    cout << "Your order has been validated!\n" << endl;
+
     return true;
 }
 
 bool bomb::validate() const
 {
     cout << "Validating Bomb...\n";
+
+    if(target->getTerritoryPlayerID() == currentPlayer->getPlayerID())
+    {
+        cout << "This territory is your own!\n" << endl;
+        return false;
+    }
+
+    cout << "Your order has been validated!\n" << endl;
+
     return true;
 }
 
 bool blockade::validate() const
 {
     cout << "Validating Blockade...\n";
+
+    if(target->getTerritoryPlayerID() != currentPlayer->getPlayerID())
+    {
+        cout << "This is not your territory! This order can only be played on your own territory!\n" << endl;
+        return false;
+    }
+
+    cout << "Your order has been validated!\n" << endl;
+
     return true;
 }
 
 bool airlift::validate() const
 {
     cout << "Validating Airlift...\n";
+
+    if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID())
+    {
+        cout << "The source territory is not your own!\n" << endl;
+        return false;
+    }
+
+    else if (*amount > source->getNumOfArmies())
+    {
+        cout << "You do not have this many armies in this territory!\n" << endl;
+    }
+
+    else if (*amount < 1)
+    {
+        cout << "Please enter a value that is at least 1 for this order\n" << endl;
+    }
+
+    cout << "Your order has been validated!\n" << endl;
+
     return true;
 }
 
 bool negotiate::validate() const
 {
     cout << "Validating Negotiate...\n";
+
+    if(targetPlayer->getPlayerID() == currentPlayer->getPlayerID())
+    {
+        cout << "You cannot negotiate with yourself!\n" << endl;
+        return false;
+    }
+
+    cout << "Your order has been validated!\n" << endl;
+
     return true;
 }
 
@@ -375,37 +589,104 @@ bool negotiate::validate() const
 void deploy::execute() const
 {
     if (validate())
-        cout << "Deploy is being executed!/n";
+    {
+        cout << "Deploy is being executed!\n";
+        target->setNumOfArmies(*amount + target->getNumOfArmies());
+        cout << "Deploy has finished executing!\n" << endl;
+    }
 }
 
-void advance::execute() const
+void AdvanceOrder::advance::execute() const
 {
     if (validate())
+    {
         cout << "Advance is being executed!\n";
+
+        if (source->getTerritoryPlayerID() == target->getTerritoryPlayerID()) // Transferring army to another territory
+        {
+            source->setNumOfArmies(source->getNumOfArmies() - *amount);
+            target->setNumOfArmies(target->getNumOfArmies() + *amount);
+        }
+
+        else // If you try to transfer on enemy territory, considered as attack.
+        {
+            if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
+            {
+                cout << "You cannot attack this player!\n" << endl;
+                return;
+            }
+
+            attackSimulation(source, target, currentPlayer, amount);
+        }
+
+        cout << "Advance has finished executing!\n" << endl;
+    }
 }
 
 void bomb::execute() const
 {
     if (validate())
-        cout << "Bomb is being executed!\n";
+    {
+        if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
+        {
+            cout << "You cannot attack this player!\n" << endl;
+            return;
+        }
+
+        cout << "Bomb is being executed!\n" << endl;
+        target->setNumOfArmies(target->getNumOfArmies() / 2);
+        cout << "Bomb has finished executing!\n" << endl;
+    }
 }
 
 void blockade::execute() const
 {
     if (validate())
+    {
         cout << "Blockade is being executed!\n";
+
+        target->setNumOfArmies(target->getNumOfArmies() * 2);
+        target->setTerritoryPlayerID(-1); // Transfer to neutral player.
+    }
 }
 
 void airlift::execute() const
 {
     if (validate())
+    {
+        if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
+        {
+            cout << "You cannot attack this player!\n" << endl;
+            return;
+        }
+
         cout << "Airlift is being executed!\n";
+
+        if (source->getTerritoryPlayerID() == target->getTerritoryPlayerID()) // Transferring army to another territory
+        {
+            source->setNumOfArmies(source->getNumOfArmies() - *amount);
+            target->setNumOfArmies(target->getNumOfArmies() + *amount);
+        }
+
+        else // If you try to airlift on enemy territory, considered as attack.
+        {
+            attackSimulation(source, target, currentPlayer, amount);
+        }
+
+        cout << "Advance has finished executing!\n" << endl;
+    }
 }
 
 void negotiate::execute() const
 {
     if (validate())
+    {
         cout << "Negotiate is being executed!\n";
+        currentPlayer->addFriendly(targetPlayer->getPlayerID());
+        targetPlayer->addFriendly(currentPlayer->getPlayerID());
+    }
+
+    cout << "Negotiate has finished executing!" << endl;
 }
 
 /**
@@ -421,7 +702,7 @@ Order* deploy::clone() const
     return new deploy(*this);
 }
 
-Order* advance::clone() const
+Order* AdvanceOrder::advance::clone() const
 {
     return new advance(*this);
 }
@@ -446,28 +727,73 @@ Order* negotiate::clone() const
     return new negotiate(*this);
 }
 
-/**
- * Creates an order based on user input. Only the strings below
- * are the possible orders in this game. If the user inputs a
- * string different than those listed, it returns a null pointer,
- * which is meant to be handled in OrdersList::addOrder().
- * @param orderType
- * @return
- */
-Order* OrderFactory::createOrder(string orderType) const
+void attackSimulation(Territory* source, Territory* target, Player* currentPlayer, int* amount)
 {
-    if (orderType == "deploy")
-        return new deploy;
-    else if (orderType == "advance")
-        return new advance;
-    else if (orderType == "bomb")
-        return new bomb;
-    else if (orderType == "blockade")
-        return new blockade;
-    else if (orderType == "airlift")
-        return new airlift;
-    else if (orderType == "negotiate")
-        return new negotiate;
-    else
-        return nullptr;
+    source->setNumOfArmies(source->getNumOfArmies() - *amount); // Attackers leave home territory
+
+    srand(time(NULL));
+    int successAttack = 0;
+    int successDefend = 0;
+
+    for (int i = 1; i <= *amount; i++) // Attacking Phase
+    {
+        int roll = rand() % 100 + 1;
+
+        if (roll <= 60)
+        {
+            successAttack++;
+        }
+    }
+
+    for (int i = 1; i <= target->getNumOfArmies(); i++) // Defending Phase
+    {
+        int roll = rand() % 100 + 1;
+
+        if (roll <= 70)
+        {
+            successDefend++;
+        }
+    }
+
+    int remainingAttackArmies = *amount - successDefend;
+    int remainingDefendArmies = target->getNumOfArmies() - successAttack;
+
+    if (remainingAttackArmies < 0) // Possible if for example 1 attacker vs 70 defenders
+    {
+        remainingAttackArmies = 0;
+    }
+
+    if (remainingDefendArmies < 0) // Possible if for example 1 defender vs 70 attackers
+    {
+        remainingDefendArmies = 0;
+    }
+
+    if (remainingAttackArmies > 0 && remainingDefendArmies == 0) // Win
+    {
+        cout << "Territory conquered! You have won this battle!\n" << endl;
+        target->setTerritoryPlayerID(currentPlayer->getPlayerID()); // Current player now occupies territory
+        currentPlayer->getTerritoryList()->push_back(target);// territory added to player list
+        target->setNumOfArmies(remainingAttackArmies); // Attackers advance to conquered territory
+        currentPlayer->getGE()->Notify(); // Notify stats observer since a player conquered a territory
+    }
+
+    else // Lose. A draw is considered a loss. If any, attackers retreat. If any, defenders retreat.
+    {
+        cout << "Territory has not been conquered. You have lost this battle!\n" << endl;
+        source->setNumOfArmies(source->getNumOfArmies() + remainingAttackArmies); // Attackers retreat
+        target->setNumOfArmies(remainingDefendArmies);
+    }
+
+    if (source->getNumOfArmies() == 0)
+    {
+        cout << "The attacker has lost his territory in the process!\n" << endl;
+        source->setTerritoryPlayerID(-1);
+    }
+
+    if (target->getNumOfArmies() == 0)
+    {
+        cout << "The defender has lost his territory in the process!\n" << endl;
+        target->setTerritoryPlayerID(-1);
+    }
 }
+

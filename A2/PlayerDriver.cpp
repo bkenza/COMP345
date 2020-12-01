@@ -1,5 +1,8 @@
 #include "Player.h"
-using namespace std;
+#include "Map.h"
+#include "Cards.h"
+#include <iostream>
+/*using namespace std;
 
 int pmain()
 {
@@ -120,4 +123,4 @@ int pmain()
     cout << "***********************************************************" << endl;
 
     return 0;
-}
+}*/

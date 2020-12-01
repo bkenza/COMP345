@@ -30,4 +30,4 @@ add_executable(A2
         OrdersDriver.cpp
         Player.cpp
         Player.h
-        PlayerDriver.cpp)
+        PlayerDriver.cpp mainGameLoopDriver.cpp)
