@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.17)
-project(A3)
+project(A2)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 include_directories(.)
 include_directories(Maps)
 
-add_executable(A3
+add_executable(A2
         Maps/caribbean.map
         Maps/LOTR2.map
         Maps/solar.map
@@ -30,4 +30,4 @@ add_executable(A3
         OrdersDriver.cpp
         Player.cpp
         Player.h
-        PlayerDriver.cpp)
+        PlayerDriver.cpp mainGameLoopDriver.cpp)
