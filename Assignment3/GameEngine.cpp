@@ -495,6 +495,7 @@ void GameEngine::executeOrdersPhase()
             {
                 //execute deploy actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
+                currentPlayerOrdersList->deleteOrder(j + 1);
             }
         }
         afterTerritoryListSize = players[i]->getTerritoryList()->size();
@@ -520,6 +521,7 @@ void GameEngine::executeOrdersPhase()
             {
                 //execute airlift actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
+                currentPlayerOrdersList->deleteOrder(j + 1);
             }
         }
     }
@@ -541,6 +543,7 @@ void GameEngine::executeOrdersPhase()
             {
                 //execute blockade actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
+                currentPlayerOrdersList->deleteOrder(j + 1);
             }
         }
     }
@@ -562,18 +565,21 @@ void GameEngine::executeOrdersPhase()
             {
                 //execute advance actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
+                currentPlayerOrdersList->deleteOrder(j + 1);
             }
 
-            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
+            else if (currentPlayerOrdersList->getOrder(j)->getLabel() == "bomb")
             {
                 //execute bomb actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
+                currentPlayerOrdersList->deleteOrder(j + 1);
             }
 
-            if (currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
+            else if (currentPlayerOrdersList->getOrder(j)->getLabel() == "negotiate")
             {
                 //execute negotiate actions here
                 currentPlayerOrdersList->getOrder(j)->execute();
+                currentPlayerOrdersList->deleteOrder(j + 1);
             }
         }
     }

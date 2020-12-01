@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.17)
-project(A2)
+project(Assignment3)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
-include_directories(Maps)
 
-add_executable(A2
-        Maps/caribbean.map
-        Maps/LOTR2.map
-        Maps/solar.map
-        Maps/sudamerica.map
+add_executable(Assignment3
         Cards.cpp
         Cards.h
         CardsDriver.cpp
@@ -19,6 +14,7 @@ add_executable(A2
         GameEngineDriver.cpp
         GameObservers.cpp
         GameObservers.h
+        mainGameLoopDriver.cpp
         Map.cpp
         Map.h
         MapDriver.cpp
@@ -30,4 +26,4 @@ add_executable(A2
         OrdersDriver.cpp
         Player.cpp
         Player.h
-        PlayerDriver.cpp mainGameLoopDriver.cpp)
+        PlayerDriver.cpp)

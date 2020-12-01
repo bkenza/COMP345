@@ -476,29 +476,17 @@ void Territory::displayTerritory()
 
 bool Territory::isAdjacent(Territory *dest)
 {
-    bool srcAdjToDest;
-    bool destAdjToSrc;
+    int destID = dest->getTerritoryID();
+    int adjTerritorySize = adjTerritories.size();
 
-    for (int v = 0; v < this->adjTerritories.size(); v++)
+    for (int v = 0; v < adjTerritorySize; v++)
     {
-        if(this->adjTerritories[v] == dest->getTerritoryID())
+        if (adjTerritories[v] == destID)
         {
-            srcAdjToDest = true;
+            return true;
         }
     }
 
-    for (int v = 0; v < dest->adjTerritories.size(); v++)
-    {
-        if(dest->adjTerritories[v] == this->getTerritoryID())
-        {
-            destAdjToSrc = true;
-        }
-    }
-
-    if(srcAdjToDest == true && destAdjToSrc == true)
-    {
-        return true;
-    }
     return false;
 }
 

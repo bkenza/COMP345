@@ -177,136 +177,123 @@ void Player::printAttackList()
 // Player uses one of the cards in their hand to issue an order that corresponds to the card in question
 void Player::issueOrder(string orderName)
 {
-    int id, amount, sourceID, destID, pID;
-
-    if(orderName == "deploy")
+    if (orderName != "deploy" && reinforcementPool > 0)
     {
-
-        cout << "Input a territory ID where you wish to deploy your armies!" << endl;
-        cin >> id;
-
-
-        cout << "Input the number of armies you want to deploy" << endl;
-        cin >> amount;
-
-        //vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
-
-        for(int i = 0; i < territoryList.size(); i++)
-        {
-            //cout << territoryList[i]->getTerritoryID() << endl;
-            if(territoryList[i]->getTerritoryID() == id)
-            {
-                cout << "Adding territory "<< territoryList[i]->getTerritoryName() <<
-                " (" << territoryList[i]->getTerritoryID() << ") "<< "to defendList" << endl;
-                defendList.push_back(territoryList[i]);
-                cout << "\nYour defend list will now look like this" <<  endl;
-                printDefendList();
-                cout << "\nAdding order to order list" << endl;
-                orderList->addOrder(new deploy());
-            }
-        }
+        cout << "Invalid Order! You can select orders other than deploy only when you have"
+             << " no armies in the reinforcement pool!" << endl;
     }
 
-    else if(orderName == "advance")
+    while (reinforcementPool > 0)
     {
-        int inputSourceID, inputDestID;
-        cout << "Input a source by territory ID" << endl;
-        cin >> inputSourceID;
-        cout << "Input a destination by territory ID" << endl;
-        cin >> inputDestID;
+        cout << "\nDeployment phase!" << endl;
 
-        //Territory* source = new Territory();
-        Territory* dest;
+        int targetTerritoryID;
+        int amount;
 
-        vector<Territory*> gameMapTerritoryList = gameEngine->getMap()->Territories;
+        cout << "\nInput a territory ID where you wish to deploy your armies!" << endl;
+        cin >> targetTerritoryID;
 
-        // To find input source territory in the map, in a seperate loop incase the source happens to be last element in the list
-        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        do
         {
-            //if(gameMapTerritoryList[i]->getTerritoryID() == inputSourceID
-               //&& gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID)
-            //{
-                //cout << "found source!" << endl;
-                //source = gameMapTerritoryList[i];
-            //}
-        }
+            cout << "\nInput the number of armies you want to deploy!" << endl;
+            cin.clear();
+            cin.ignore();
+            cin >> amount;
+        } while (amount > reinforcementPool || amount < 1);
 
-        for(int i = 0; i < gameMapTerritoryList.size(); i++)
+        reinforcementPool -= amount;
+
+        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
+
+        orderList->addOrder(new deploy(*targetTerritory, *this, amount));
+
+        return;
+    }
+
+    if (orderName == "advance")
+    {
+        int sourceTerritoryID;
+        int targetTerritoryID;
+        int amount;
+
+        cout << "\nInput a source territory by territory ID" << endl;
+        cin >> sourceTerritoryID;
+        cout << "\nInput a destination territory by territory ID" << endl;
+        cin >> targetTerritoryID;
+
+        Territory* sourceTerritory = gameEngine->getMap()->getTerritoryById(sourceTerritoryID);
+        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
+
+        do
         {
-            //if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
-               //gameMapTerritoryList[i]->getTerritoryPlayerID() == playerID && source->isAdjacent(dest))
-            //{
-                dest = gameMapTerritoryList[i];
-                cout << "Adding territory "<< gameMapTerritoryList[i]->getTerritoryName() <<
-                     " (" << gameMapTerritoryList[i]->getTerritoryID() << ") "<< "to defendList" << endl;
-                defendList.push_back(dest);
-                cout << "\nYour defend list will now look like this" <<  endl;
-                printDefendList();
-                cout << "\nAdding order to order list" << endl;
-                orderList->addOrder(new AdvanceOrder::advance());
+            cout << "\nInput the number of armies you want to advance!" << endl;
+            cin >> amount;
 
-            //}
+        } while (amount > sourceTerritory->getNumOfArmies() || amount < 1);
 
-            //else if(gameMapTerritoryList[i]->getTerritoryID() == inputDestID &&
-                    //gameMapTerritoryList[i]->getTerritoryPlayerID() != playerID && source->isAdjacent(dest))
-            //{
-                /*dest = gameMapTerritoryList[i];
-                cout << "Adding territory "<< gameMapTerritoryList[i]->getTerritoryName() <<
-                     " (" << gameMapTerritoryList[i]->getTerritoryID() << ") "<< "to attackList" << endl;
-                attackList.push_back(dest);
-                cout << "\nYour attack list will now look like this" <<  endl;
-                printAttackList();
-                cout << "\nAdding order to order list" << endl;
-                orderList->addOrder(new AdvanceOrder::advance());*/
-            //}
-
-            /*else
-            {
-                cout << "Invalid choice! Territory does not belong to you or Source and Destination are not adjacent" << endl;
-            }*/
-        }
+        sourceTerritory->setNumOfArmies(sourceTerritory->getNumOfArmies() - amount);
+        orderList->addOrder(new AdvanceOrder::advance(*sourceTerritory, *targetTerritory, *this, amount));
     }
 
-    else if(orderName == "blockade"){
-        cout << "Please enter territory ID:" << endl;
-        cin >> id;
+    else if (orderName == "blockade")
+    {
+        int targetTerritoryID;
 
-        cout << "\nAdding order to order list" << endl;
-        orderList->addOrder(new blockade(*territoryList[id-1],*this));
+        cout << "\nPlease enter territory ID:" << endl;
+        cin >> targetTerritoryID;
+
+        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
+        orderList->addOrder(new blockade(*targetTerritory,*this));
     }
 
-    else if(orderName == "airlift"){
-        cout << "Please enter source territory ID:" << endl;
-        cin >> sourceID;
+    else if(orderName == "airlift")
+    {
+        int sourceTerritoryID;
+        int targetTerritoryID;
+        int amount;
 
-        cout << "Please enter destination territory ID:" << endl;
-        cin >> destID;
+        cout << "\nPlease enter source territory ID:" << endl;
+        cin >> sourceTerritoryID;
 
-        cout << "Please enter amount:" << endl;
-        cin >> amount;
+        cout << "\nPlease enter destination territory ID:" << endl;
+        cin >> targetTerritoryID;
 
-        cout << "\nAdding order to order list" << endl;
-        orderList->addOrder(new airlift(*territoryList[sourceID-1], *territoryList[destID-1], *this, amount));
+        Territory* sourceTerritory = gameEngine->getMap()->getTerritoryById(sourceTerritoryID);
+        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
+
+        do
+        {
+            cout << "\nPlease enter amount:" << endl;
+            cin >> amount;
+
+        } while (amount > sourceTerritory->getNumOfArmies() || amount < 1);
+
+        sourceTerritory->setNumOfArmies(sourceTerritory->getNumOfArmies() - amount);
+        orderList->addOrder(new airlift(*sourceTerritory, *targetTerritory, *this, amount));
     }
 
-    else if(orderName == "negotiate"){
+    else if(orderName == "negotiate")
+    {
+        int targetPlayerID;
+
         cout << "Please enter a player's ID that you want to negotiate with: " << endl;
-        cin >> pID;
+        cin >> targetPlayerID;
 
-        cout << "\nAdding order to order list" << endl;
-        orderList->addOrder(new negotiate(*this, *gameEngine->getPlayers()[pID]));
+        Player* targetPlayer = gameEngine->getPlayerByID(targetPlayerID);
+
+        orderList->addOrder(new negotiate(*targetPlayer, *this));
     }
 
     else if(orderName == "bomb")
     {
+        int targetTerritoryID;
+
         cout << "Please enter target territory ID:" << endl;
-        cin >> id;
+        cin >> targetTerritoryID;
 
-        cout << "Please enter target player ID:" << endl;
-        cin >> pID;
+        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
 
-        cout << "\nAdding order to order list" << endl;
-        orderList->addOrder(new bomb(*territoryList[id-1], *gameEngine->getPlayers()[pID]));
+        orderList->addOrder(new bomb(*targetTerritory, *this));
     }
 }
 
