@@ -3,7 +3,9 @@
 
 #include "Map.h"	
 
-std::vector<string> splitString(string line);	
+std::vector<string> splitString(string line);
+int nthOccurrence(string line, char ch, int n);
+int amountOccurence(string line, char ch);
 
 class MapLoader
 {	
@@ -33,7 +35,7 @@ private:
 
 public:
     ConquestFileReaderAdapter();
-    ~ConquestFileReaderAdapter();
+    ~ConquestFileReaderAdapter() override;
     ConquestFileReaderAdapter(const ConquestFileReader& orig);
     ConquestFileReaderAdapter(ConquestFileReader* reader);
     Map* MapReader(std::string filename) override;
