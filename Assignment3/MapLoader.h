@@ -5,16 +5,38 @@
 
 std::vector<string> splitString(string line);	
 
-class MapLoader	
+class MapLoader
 {	
 public:	
     MapLoader();                          // default constructor	
     MapLoader(const MapLoader &orig);     // copy constructor	
-    ~MapLoader();                         // destructor	
-    Map *MapReader(std::string filename); // Function that creates a map object	
+    virtual ~MapLoader();                         // destructor
+    virtual Map *MapReader(std::string filename); // Function that creates a map object
 
 private:	
     // no private attributes for now	
-};	
+};
+
+class ConquestFileReader
+{
+public:
+    ConquestFileReader();
+    ConquestFileReader(const ConquestFileReader& orig);
+    ~ConquestFileReader();
+    Map* MapReader(std::string filename);
+};
+
+class ConquestFileReaderAdapter : public MapLoader
+{
+private:
+    ConquestFileReader* reader;
+
+public:
+    ConquestFileReaderAdapter();
+    ~ConquestFileReaderAdapter();
+    ConquestFileReaderAdapter(const ConquestFileReader& orig);
+    ConquestFileReaderAdapter(ConquestFileReader* reader);
+    Map* MapReader(std::string filename) override;
+};
 
 #endif 	

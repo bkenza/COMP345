@@ -165,3 +165,66 @@ Map *MapLoader::MapReader(string fileName)
     };
     return map;
 }
+
+ConquestFileReader::ConquestFileReader()
+{
+
+}
+
+ConquestFileReader::~ConquestFileReader()
+{
+
+}
+
+ConquestFileReader::ConquestFileReader(const ConquestFileReader &orig)
+{
+
+}
+
+Map* ConquestFileReader::MapReader(std::string filename)
+{
+    bool mapIsValid = true;
+    ifstream inputFile(filename);
+    string line;
+
+    Map* map = new Map();
+
+    for (; getline(inputFile, line);)
+    {
+        if (!mapIsValid)
+        {
+            std::cerr << "The map provided is invalid, please try again";
+        }
+        // if wantedString exists in the line we are currently on,
+        if (line.substr(0, 5) == "image")
+        {
+            map->setName(line.substr(6, line.length() - 4));
+            continue;
+        }
+    }
+}
+
+ConquestFileReaderAdapter::ConquestFileReaderAdapter()
+{
+
+}
+
+ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReader *newReader)
+{
+    reader = newReader;
+}
+
+ConquestFileReaderAdapter::~ConquestFileReaderAdapter() noexcept
+{
+
+}
+
+ConquestFileReaderAdapter::ConquestFileReaderAdapter(const ConquestFileReader &orig)
+{
+
+}
+
+Map* ConquestFileReaderAdapter::MapReader(std::string filename)
+{
+    return reader->MapReader(filename);
+}
