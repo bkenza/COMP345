@@ -6,11 +6,12 @@ using std::cin;
 using std::cout;
 using std::istringstream;
 
-int mlmain()
+int main()
 {
     // Create a Map & MapLoader objects
-    MapLoader *mapLoader = new MapLoader();
-    Map *map = mapLoader->MapReader("../Maps/solar.map");
+    ConquestFileReader* conreader = new ConquestFileReader();
+    MapLoader *mapLoader = new ConquestFileReaderAdapter(conreader);
+    Map *map = mapLoader->MapReader("../Maps/Montreal.map");
 
     // Check if the map is valid:
     // 1. Check that continents are connected
@@ -35,5 +36,6 @@ int mlmain()
         cout << "\n"
              << endl;
     }
+
     return 0;
 }
