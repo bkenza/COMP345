@@ -26,6 +26,9 @@ public:
     std::string getName();           // get the name of a given map
     Territory *getTerritoryById(int territoryID); // get a territory by id
     Continent *getContinentById(int continentId); // get a continent by id
+    int getContIDByName(string name);
+    Territory* getTerrByName(string name);
+    int getTerrIDByName(string name);
 };
 
 #endif
@@ -62,6 +65,7 @@ public:
     int getNumOfArmies(); // getter for the number of armies
     void displayTerritory(); // method that displays territory info
     std::vector<int> adjTerritories; // vector containing ids of adjacent territories
+    std::vector<string> adjTerrNames;
     bool isAdjacent(Territory* dest);
 };
 #endif

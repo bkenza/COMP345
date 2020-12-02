@@ -270,6 +270,8 @@ Territory* Map::getTerritoryById(int territoryID)
             return Territories[i];
         }
     }
+
+    return nullptr;
 }
 
 /**
@@ -286,6 +288,8 @@ Continent* Map::getContinentById(int continentId)
             return Continents[i];
         }
     }
+
+    return nullptr;
 }
 
 //==========================
@@ -297,7 +301,7 @@ Continent* Map::getContinentById(int continentId)
  */
 Territory::Territory()
 {
-    pTerritoryID = new int(1);
+    pTerritoryID = new int(0);
     pTerritoryName = new string("");
     pPlayerID = new int(); // only one player can own a territory
     pTerritoryName = new string("");
@@ -581,4 +585,34 @@ bool Continent::isInContinent(Territory *territory)
         return false;
     }
     return false;
+}
+
+Territory* Map::getTerrByName(string name)
+{
+    int listSize = Territories.size();
+
+    for (int i = 0; i < listSize; i++)
+    {
+        if (name == Territories[i]->getTerritoryName())
+        {
+            return Territories[i];
+        }
+    }
+
+    return nullptr;
+}
+
+int Map::getTerrIDByName(string name)
+{
+    int listSize = Territories.size();
+
+    for (int i = 0; i < listSize; i++)
+    {
+        if (name == Territories[i]->getTerritoryName())
+        {
+            return Territories[i]->getTerritoryID();
+        }
+    }
+
+    return -1;
 }
