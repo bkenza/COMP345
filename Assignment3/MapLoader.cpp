@@ -332,6 +332,9 @@ Map* ConquestFileReader::MapReader(std::string filename)
             terr->setContinentName(contName);
 
             map->Territories.push_back(terr);
+
+            Continent* currTerrCont = map->getContinentById(contID);
+            currTerrCont->territories.push_back(terr);
         }
     }
 
