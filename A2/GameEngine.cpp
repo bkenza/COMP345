@@ -13,10 +13,6 @@ using namespace std;
 //     GAME ENGINE
 //#########################
 
-//TODO: type checking ??
-//TODO: check number of cards in deck
-//TODO: each class must have an assignment operator
-
 /**
  * Default constructor
  **/

@@ -225,7 +225,7 @@ void GameStatisticsObserver::Update()
     for (int p = 0; p < gameEngine->getPlayers().size(); p++)
     {
         conqueredTerritories = gameEngine->getPlayers()[p]->getTerritoryList()->size();
-        if (conqueredTerritories = totalNumTerritories)
+        if (conqueredTerritories == totalNumTerritories)
         {
             cout << "Player " << gameEngine->getPlayers()[p]->getPlayerID() << " has won the game!" << endl;
             cout << "Thank you for playing Warzone (comp345 edition)!" << endl;

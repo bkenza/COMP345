@@ -6,7 +6,7 @@ using std::cin;
 using std::cout;
 using std::istringstream;
 
-int main()
+int kmain()
 {
     // Create a Map & MapLoader objects
     ConquestFileReader* conreader = new ConquestFileReader();

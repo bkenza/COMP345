@@ -1,4 +1,4 @@
-/*#include "GameEngine.h"
+#include "GameEngine.h"
 
 int main()
 {
@@ -10,4 +10,4 @@ int main()
     game->mainGameLoop();
 
     return 0;
-}*/
+}

@@ -771,8 +771,7 @@ void attackSimulation(Territory *source, Territory *target, Player *currentPlaye
         adversaryId = currentPlayer->getGE()->getMap()->getTerritoryById(target->getTerritoryID())->getTerritoryPlayerID();
         adversaryTerritories = *currentPlayer->getGE()->getPlayerByID(adversaryId)->getTerritoryList();
         adversaryTerritories.erase(remove(adversaryTerritories.begin(), adversaryTerritories.end(), target), adversaryTerritories.end()); // removed from territoryList of adversary
-        adversaryDefendList = *currentPlayer->getGE()->getPlayerByID(adversaryId)->getDefendList();
-        adversaryDefendList.erase(remove(adversaryDefendList.begin(), adversaryDefendList.end(), target), adversaryDefendList.end()); // remove from defendList of adversary
+        currentPlayer->getGE()->getPlayerByID(adversaryId)->setTerritoryList(adversaryTerritories);
         target->setNumOfArmies(remainingAttackArmies);                                                                                // Attackers advance to conquered territory
         currentPlayer->getGE()->Notify();                                                                                             // Notify stats observer since a player conquered a territory
     }

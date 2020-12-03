@@ -99,6 +99,10 @@ vector<Territory *> *Player::getTerritoryList()
     return &territoryList;
 }
 
+void Player::setTerritoryList(vector<Territory*> terrList){
+    territoryList = terrList;
+}
+
 /*void Player::setMap(Map *map)
 {
     playerMap = map;

@@ -376,18 +376,21 @@ void GameEngine::mainGameLoop()
                     {
                     case 1:
                         currentPlayer->setStrategy(new HumanPlayerStrategy());
+                        break;
                     case 2:
                         currentPlayer->setStrategy(new AggressivePlayerStrategy());
+                        break;
                     case 3:
                         currentPlayer->setStrategy(new BenevolentPlayerStrategy());
+                        break;
                     case 4:
                         currentPlayer->setStrategy(new NeutralPlayerStrategy());
                     }
                 }
-
-                // Reinforcement Phase
-                reinforcementPhase();
             }
+
+            // Reinforcement Phase
+            reinforcementPhase();
         }
 
         // Issuing Orders Phase
@@ -405,12 +408,6 @@ void GameEngine::mainGameLoop()
 
         firstRound = false;
     }
-
-    // if(numPlayers == 1)
-    // {
-    //     winner = players[numPlayers];
-    //     cout << "THE WINNER IS PLAYER"<< winner->getPlayerID() << endl;
-    // }
 }
 
 /*
@@ -538,7 +535,7 @@ void GameEngine::issueOrdersPhase()
                      << endl;
             }
         }
-        else
+        else if(!isHuman)
         {
             cout << "Computer Player is trying to deploy" << endl;
             players[i]->issueOrder("deploy"); // issue deploy order

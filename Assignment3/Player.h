@@ -36,6 +36,7 @@ public:
     ~Player();
     Player(const Player &obj);
     vector<Territory *> *getTerritoryList();
+    void setTerritoryList(vector<Territory*> terrList);
     //void setMap(Map* map);
     //Map *getMap();
     void setHand(Hand *hand);

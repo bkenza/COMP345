@@ -33,34 +33,31 @@ void HumanPlayerStrategy::issueOrder(Player *player, string orderName)
              << " no armies in the reinforcement pool!" << endl;
     }
 
-    if (orderName == "deploy")
+    while (player->getReinforcementPool() > 0)
     {
-        while (player->getReinforcementPool() > 0)
+        cout << "\nDeployment phase!" << endl;
+
+        int targetTerritoryID;
+        int amount;
+
+        cout << "\nInput a territory ID where you wish to deploy your armies!" << endl;
+        cin >> targetTerritoryID;
+
+        do
         {
-            cout << "\nDeployment phase!" << endl;
+            cout << "\nInput the number of armies you want to deploy!" << endl;
+            cin.clear();
+            cin.ignore();
+            cin >> amount;
+        } while (amount > player->getReinforcementPool() || amount < 1);
 
-            int targetTerritoryID;
-            int amount;
+        player->setReinforcementPool(player->getReinforcementPool() - amount);
 
-            cout << "\nInput a territory ID where you wish to deploy your armies!" << endl;
-            cin >> targetTerritoryID;
+        Territory *targetTerritory = player->getGE()->getMap()->getTerritoryById(targetTerritoryID);
 
-            do
-            {
-                cout << "\nInput the number of armies you want to deploy!" << endl;
-                cin.clear();
-                cin.ignore();
-                cin >> amount;
-            } while (amount > player->getReinforcementPool() || amount < 1);
+        player->getOrderList()->addOrder(new deploy(*targetTerritory, *player, amount));
 
-            player->setReinforcementPool(player->getReinforcementPool() - amount);
-
-            Territory *targetTerritory = player->getGE()->getMap()->getTerritoryById(targetTerritoryID);
-
-            player->getOrderList()->addOrder(new deploy(*targetTerritory, *player, amount));
-
-            return;
-        }
+        return;
     }
 
     if (orderName == "advance")
@@ -183,25 +180,23 @@ void AggressivePlayerStrategy::issueOrder(Player *player, string orderName)
     int numArmies = player->getReinforcementPool();
     vector<Territory *> newDefendList;
 
+    cout << "\nDeployment phase!" << endl;
+
+    // find the strongest territory
+    for (int z = 0; z < player->getTerritoryList()->size(); z++)
+    {
+        territory = (*player->getTerritoryList())[z];
+        if (territory->getNumOfArmies() > maxTerritories)
+        {
+            maxTerritories = territory->getNumOfArmies();
+            strongestTerr = territory;
+        }
+    }
+
     if (orderName == "deploy")
     {
-
-        cout << "\nDeployment phase!" << endl;
-
-        // find the strongest territory
-        for (int z = 0; z < player->getTerritoryList()->size(); z++)
-        {
-            territory = (*player->getTerritoryList())[z];
-            if (territory->getNumOfArmies() > maxTerritories)
-            {
-                maxTerritories = territory->getNumOfArmies();
-                strongestTerr = territory;
-            }
-        }
-
         if (firstRound)
         {
-            //assign rest of armies to random strongest territory
             if (numArmies > 0)
             {
                 randomTerritoryId = rand() % ((player->getTerritoryList()->size()));
@@ -214,38 +209,39 @@ void AggressivePlayerStrategy::issueOrder(Player *player, string orderName)
         player->getOrderList()->addOrder(new deploy(*strongestTerr, *player, numArmies)); // add deployment order
         cout << "\nYou are tyring to deploy  " << numArmies << " armies on your strongest Territory " << strongestTerr->getTerritoryName() << endl;
 
-        if (orderName == "advance")
-        {
-            if (strongestTerr->getNumOfArmies() <= 1)
-            {
-                cout << "Sorry, your strongest territory does not have enough armies to advance. Better luck next time!" << endl;
-            }
-            else
-            {
-                //look for an adjacent territory to our strongest
-                vector<int>(adjTerritories) = (*player->getGE()->getMap()->getTerritoryById(strongestTerr->getTerritoryID())).adjTerritories;
-                adjTerrToAttack = player->getGE()->getMap()->getTerritoryById(adjTerritories[0]);
-                bool hasAdjacent = false;
-                for (int i = 0; i < adjTerritories.size(); i++)
-                {
-                    if ((player->getGE()->getMap()->getTerritoryById(adjTerritories[i])->getTerritoryPlayerID()) != player->getPlayerID())
-                    {
-                        hasAdjacent = true;
-                        adjTerrToAttack = player->getGE()->getMap()->getTerritoryById(adjTerritories[i]);
-                        break;
-                    }
-                    if (!hasAdjacent)
-                    {
-                        cout << "Sorry, there are no territories to attack!" << endl;
-                        return;
-                    }
-                    cout << "Currently attacking " << adjTerrToAttack->getTerritoryName() << " using "
-                         << player->getGE()->getMap()->getTerritoryById(strongestTerr->getTerritoryID())->getNumOfArmies() - 1 << "armies" << endl;
-                }
+    }
 
-                strongestTerr->setNumOfArmies(1);
-                player->getOrderList()->addOrder(new AdvanceOrder::advance(*strongestTerr, *adjTerrToAttack, *player, adjTerrToAttack->getNumOfArmies() - 1));
+    else if (orderName == "advance")
+    {
+        if (strongestTerr->getNumOfArmies() <= 1)
+        {
+            cout << "Sorry, your strongest territory does not have enough armies to advance. Better luck next time!" << endl;
+        }
+        else
+        {
+            //look for an adjacent territory to our strongest
+            vector<int>(adjTerritories) = (*player->getGE()->getMap()->getTerritoryById(strongestTerr->getTerritoryID())).adjTerritories;
+            adjTerrToAttack = player->getGE()->getMap()->getTerritoryById(adjTerritories[0]);
+            bool hasAdjacent = false;
+            for (int i = 0; i < adjTerritories.size(); i++)
+            {
+                if ((player->getGE()->getMap()->getTerritoryById(adjTerritories[i])->getTerritoryPlayerID()) != player->getPlayerID())
+                {
+                    hasAdjacent = true;
+                    adjTerrToAttack = player->getGE()->getMap()->getTerritoryById(adjTerritories[i]);
+                    break;
+                }
+                if (!hasAdjacent)
+                {
+                    cout << "Sorry, there are no territories to attack!" << endl;
+                    return;
+                }
+                cout << "Currently attacking " << adjTerrToAttack->getTerritoryName() << " using "
+                     << player->getGE()->getMap()->getTerritoryById(strongestTerr->getTerritoryID())->getNumOfArmies() - 1 << "armies" << endl;
             }
+
+            strongestTerr->setNumOfArmies(0);
+            player->getOrderList()->addOrder(new AdvanceOrder::advance(*strongestTerr, *adjTerrToAttack, *player, adjTerrToAttack->getNumOfArmies()));
         }
     }
 
@@ -407,5 +403,5 @@ vector<Territory *> NeutralPlayerStrategy::toAttack(Player *player)
 
 void NeutralPlayerStrategy::issueOrder(Player *player, string orderName)
 {
-    cout << "You are a neutral player, you cannot issue a(n) " << orderName << "order" << endl;
+    cout << "You are a neutral player, you cannot issue a(n) " << orderName << " order" << endl;
 }

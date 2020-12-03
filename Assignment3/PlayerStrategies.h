@@ -11,8 +11,8 @@ class Player;
 class PlayerStrategy
 {
 public:
-    virtual vector<Territory *> toAttack(Player *player) = 0;
-    virtual vector<Territory *> toDefend(Player *player) = 0;
+    virtual vector<Territory *> toAttack(Player *player) = 0; // Method that returns the toAttack list
+    virtual vector<Territory *> toDefend(Player *player) = 0; // 
     virtual void issueOrder(Player *player, string orderName) = 0;
     virtual string getStrategyType() = 0;
 };
