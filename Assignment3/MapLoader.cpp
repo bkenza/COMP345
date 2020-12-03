@@ -233,7 +233,7 @@ Map* ConquestFileReader::MapReader(std::string filename)
 
     for (; getline(inputFile, line);)
     {
-        if (line.length() == 1)
+        if (line.length() == 1) // If empty line, which is \n
         {
             continue;
         }
@@ -351,43 +351,6 @@ Map* ConquestFileReader::MapReader(std::string filename)
             currTerr->adjTerritories.push_back(map->getTerrIDByName(currTerr->adjTerrNames[j]));
         }
     }
-
-    // TESTING //
-    Territory* temp;
-    Continent* temp2;
-    int listSize1 = map->Territories.size();
-    int listSize2 = map->Continents.size();
-
-    for (int i = 0; i < listSize1; i++)
-    {
-        temp = map->Territories[i];
-        /*cout << "\nTerritory Name: " << temp->getTerritoryName() << " with length " << temp->getTerritoryName().length() << endl;
-        cout << "Territory ID: " << temp->getTerritoryID() << endl;
-        cout << "Territory Continent Name: " << temp->getContinent() << " with length " << temp->getContinent().length() << endl;
-        cout << "Territory Continent ID: " << temp->getContinentId() << endl;
-        cout << "Territory has " << temp->adjTerritories.size() << " adjacent territories" << endl;*/
-
-        int adjTerritoriesSize = temp->adjTerritories.size();
-        int adjTerrNameSize = temp->adjTerrNames.size();
-
-        for (int j = 0; j < adjTerritoriesSize; j++)
-        {
-            //cout << temp->adjTerritories.size() << endl;
-            //cout << "Territory ID [ " << temp->adjTerritories[i] << " ] has the name : " << map->getTerritoryById(temp->adjTerritories[j]) << endl;
-            //cout << temp->getTerritoryName() << " has adjacent IDs: ";
-            //cout << temp->adjTerritories[j] << "," << endl;
-        }
-
-        cout << endl;
-    }
-
-    /*for (int i = 0; i < listSize2; i++)
-    {
-        temp2 = map->Continents[i];
-        cout << "Continent Name: " << temp2->getContinentName() << " with length " << temp2->getContinentName().length() << endl;
-        cout << "Continent ID: " << temp2->getContinentID() << endl << endl;
-    }*/
-    // END TESTING //
 
     return map;
 }
