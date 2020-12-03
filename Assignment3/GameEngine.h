@@ -40,7 +40,12 @@ private:
     int numPlayers;
     bool phaseObserverOn;
     bool statsObserverOn;
-    vector<string> mapList = {"caribbean", "LOTR2", "solar", "sudamerica"};
+    vector<string> mapList = {"caribbean",
+                              "LOTR2",
+                              "solar",
+                              "sudamerica",
+                              "Earth Alternate",
+                              "Montreal"};
     vector<Player *> players;
     Deck *deck;
     vector<int> playerOrder;
