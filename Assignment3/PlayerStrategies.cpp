@@ -4,6 +4,11 @@
 //   Human Player Strategy
 //++++++++++++++++++++++++++++
 
+string HumanPlayerStrategy::getStrategyType()
+{
+    return "human";
+}
+
 /**
  * Method that returns a vector containing the defend list of the current player
  * */
@@ -151,6 +156,11 @@ void HumanPlayerStrategy::issueOrder(Player *player, string orderName)
 //   Aggressive Player Strategy
 //+++++++++++++++++++++++++++++++++
 
+string AggressivePlayerStrategy::getStrategyType()
+{
+    return "aggressive";
+}
+
 vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player)
 {
     return *(player->getDefendList()); // holds only the strongest territory
@@ -276,6 +286,10 @@ void AggressivePlayerStrategy::issueOrder(Player *player, string orderName)
 //+++++++++++++++++++++++++++++++++
 //   Benevolent Player Strategy
 //+++++++++++++++++++++++++++++++++
+string BenevolentPlayerStrategy::getStrategyType()
+{
+    return "benevolent";
+}
 
 vector<Territory *> BenevolentPlayerStrategy::toAttack(Player *player)
 {
@@ -376,6 +390,11 @@ void BenevolentPlayerStrategy::issueOrder(Player *player, string orderName)
 //   Neutral Player Strategy
 //+++++++++++++++++++++++++++++++++
 
+string NeutralPlayerStrategy::getStrategyType()
+{
+    return "neutral";
+}
+
 vector<Territory *> NeutralPlayerStrategy::toDefend(Player *player)
 {
     return *(player->getDefendList());
@@ -388,5 +407,5 @@ vector<Territory *> NeutralPlayerStrategy::toAttack(Player *player)
 
 void NeutralPlayerStrategy::issueOrder(Player *player, string orderName)
 {
-    cout << "You are a neutral player, you cannot issue a(n) " << orderName << "order";
+    cout << "You are a neutral player, you cannot issue a(n) " << orderName << "order" << endl;
 }

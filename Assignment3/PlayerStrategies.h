@@ -14,7 +14,7 @@ public:
     virtual vector<Territory *> toAttack(Player *player) = 0;
     virtual vector<Territory *> toDefend(Player *player) = 0;
     virtual void issueOrder(Player *player, string orderName) = 0;
-    //    virtual void getStrategyType() = 0;
+    virtual string getStrategyType() = 0;
 };
 
 class HumanPlayerStrategy : public PlayerStrategy
@@ -23,7 +23,7 @@ public:
     vector<Territory *> toAttack(Player *player);
     vector<Territory *> toDefend(Player *player);
     void issueOrder(Player *player, string orderName);
-    //    void getStrategyType();
+    string getStrategyType();
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy
@@ -32,7 +32,7 @@ public:
     vector<Territory *> toAttack(Player *player);
     vector<Territory *> toDefend(Player *player);
     void issueOrder(Player *player, string orderName);
-    //    void getStrategyType();
+    string getStrategyType();
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy
@@ -41,7 +41,7 @@ public:
     vector<Territory *> toAttack(Player *player);
     vector<Territory *> toDefend(Player *player);
     void issueOrder(Player *player, string orderName);
-    //    void getStrategyType();
+    string getStrategyType();
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy
@@ -50,7 +50,7 @@ public:
     vector<Territory *> toAttack(Player *player);
     vector<Territory *> toDefend(Player *player);
     void issueOrder(Player *player, string orderName);
-    //    void getStrategyType() { cout << "Neutral Player Strategy"; };
+    string getStrategyType();
 };
 
 #endif //ASSIGNMENT3_PLAYERSTRATEGIES_H

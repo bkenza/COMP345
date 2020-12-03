@@ -14,10 +14,6 @@ using namespace std;
 //     GAME ENGINE
 //#########################
 
-//TODO: type checking ??
-//TODO: check number of cards in deck
-//TODO: each class must have an assignment operator
-
 /**
  * Default constructor
  **/
@@ -125,7 +121,7 @@ void GameEngine::startGame()
         Player *p = new Player(this);
         p->setPlayerID(i + 1);
 
-        cout << "What stategy would you like to use for player " << p->getPlayerID() << endl;
+        cout << "What strategy would you like to use for player " << p->getPlayerID() << endl;
         cout << "\n1. Human Player Strategy\n2. Aggressive Player Strategy\n3. Benevolent Player Strategy \n4. Neutral Player Strategy\n";
 
         cout << "Please enter the desired strategy: ";
@@ -470,7 +466,7 @@ void GameEngine::issueOrdersPhase()
         vector<Cards *> currentPlayerHandCards = players[i]->getHand()->HandCards;
         string type;
         string answer;
-        bool isHuman = (players[i]->getStrategy() == new HumanPlayerStrategy()); // TODO: not sure about this
+        bool isHuman = (players[i]->getStrategy()->getStrategyType() == "human");
 
         if (isHuman)
         {
@@ -532,7 +528,10 @@ void GameEngine::issueOrdersPhase()
         }
         else
         {
-            players[i]->issueOrder("deploy");  // issue deploy order
+            cout << "Computer Player is trying to deploy" << endl;
+            players[i]->issueOrder("deploy"); // issue deploy order
+
+            cout << "Computer Player is trying to advance" << endl;
             players[i]->issueOrder("advance"); // issue advance order
 
             int count = 0;
