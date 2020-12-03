@@ -87,8 +87,20 @@ void GameEngine::startGame()
 
     cout << "\nCool! You have selected map number: " << mapSelected << endl; // maybe add a map selector method
 
-    // Load selected map
-    MapLoader *mapLoader = new MapLoader();
+    MapLoader* mapLoader;
+
+    if (mapSelected <= 4) // Domination
+    {
+        // Load selected map
+        mapLoader = new MapLoader();
+    }
+
+    else // Conquest
+    {
+        ConquestFileReader* conreader = new ConquestFileReader();
+        mapLoader = new ConquestFileReaderAdapter(conreader);
+    }
+
     map = mapLoader->MapReader("../Maps/" + mapSelector(mapSelected) + ".map");
 
     cout << "\nLet's see if the selected map is valid...\n\n";
