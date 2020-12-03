@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Cards.h"
 #include "Orders.h"
+#include "PlayerStrategies.h"
 
 using namespace std;
 /**
@@ -15,12 +16,13 @@ Player::Player()
     playerID;
 }
 
-Player::Player(GameEngine* ge)
+Player::Player(GameEngine *ge)
 {
     playerID;
     gameEngine = ge;
     orderList = new OrdersList;
     phase;
+    playerStrategy = new HumanPlayerStrategy();
 }
 
 /**
@@ -29,7 +31,7 @@ Player::Player(GameEngine* ge)
  * @param hand
  * @param oList
  */
-Player::Player(vector<Territory*> tList, Hand* hand, OrdersList* oList)
+Player::Player(vector<Territory *> tList, Hand *hand, OrdersList *oList)
 {
     territoryList = tList;
     playerHand = hand;
@@ -92,7 +94,7 @@ string Player::getPhase()
 }
 
 // Get player's territories
-vector<Territory *>* Player::getTerritoryList()
+vector<Territory *> *Player::getTerritoryList()
 {
     return &territoryList;
 }
@@ -120,21 +122,50 @@ Hand *Player::getHand()
 }
 
 // Assign a list of orders to a specified Player
-void Player::setOrderList(OrdersList* oList)
+void Player::setOrderList(OrdersList *oList)
 {
 }
 
-
 // Get a Player's list of orders
-OrdersList* Player::getOrderList()
+OrdersList *Player::getOrderList()
 {
     return orderList;
+}
+
+void Player::setDefendList(vector<Territory *> dList)
+{
+    defendList = defendList;
+}
+
+vector<Territory *> *Player::getDefendList()
+{
+    return &defendList;
+}
+
+void Player::setAttackList(vector<Territory *> aList)
+{
+    attackList = aList;
+}
+
+vector<Territory *> *Player::getAttackList()
+{
+    return &attackList;
+}
+
+void Player::setStrategy(PlayerStrategy *newStrategy)
+{
+    playerStrategy = newStrategy;
+}
+
+PlayerStrategy *Player::getStrategy()
+{
+    return playerStrategy;
 }
 
 // List of territories that are going to be defended
 vector<Territory *> Player::toDefend()
 {
-    return defendList;
+    return playerStrategy->toDefend(this);
 }
 
 //Print function for Player's list of territories to be defended
@@ -155,7 +186,7 @@ void Player::printDefendList()
 // Player's list of territories that are going to be attacked
 vector<Territory *> Player::toAttack()
 {
-    return attackList;
+    return playerStrategy->toAttack(this);
 }
 
 // Print function for Player's list of territories to be attacked
@@ -177,124 +208,7 @@ void Player::printAttackList()
 // Player uses one of the cards in their hand to issue an order that corresponds to the card in question
 void Player::issueOrder(string orderName)
 {
-    if (orderName != "deploy" && reinforcementPool > 0)
-    {
-        cout << "Invalid Order! You can select orders other than deploy only when you have"
-             << " no armies in the reinforcement pool!" << endl;
-    }
-
-    while (reinforcementPool > 0)
-    {
-        cout << "\nDeployment phase!" << endl;
-
-        int targetTerritoryID;
-        int amount;
-
-        cout << "\nInput a territory ID where you wish to deploy your armies!" << endl;
-        cin >> targetTerritoryID;
-
-        do
-        {
-            cout << "\nInput the number of armies you want to deploy!" << endl;
-            cin.clear();
-            cin.ignore();
-            cin >> amount;
-        } while (amount > reinforcementPool || amount < 1);
-
-        reinforcementPool -= amount;
-
-        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
-
-        orderList->addOrder(new deploy(*targetTerritory, *this, amount));
-
-        return;
-    }
-
-    if (orderName == "advance")
-    {
-        int sourceTerritoryID;
-        int targetTerritoryID;
-        int amount;
-
-        cout << "\nInput a source territory by territory ID" << endl;
-        cin >> sourceTerritoryID;
-        cout << "\nInput a destination territory by territory ID" << endl;
-        cin >> targetTerritoryID;
-
-        Territory* sourceTerritory = gameEngine->getMap()->getTerritoryById(sourceTerritoryID);
-        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
-
-        do
-        {
-            cout << "\nInput the number of armies you want to advance!" << endl;
-            cin >> amount;
-
-        } while (amount > sourceTerritory->getNumOfArmies() || amount < 1);
-
-        sourceTerritory->setNumOfArmies(sourceTerritory->getNumOfArmies() - amount);
-        orderList->addOrder(new AdvanceOrder::advance(*sourceTerritory, *targetTerritory, *this, amount));
-    }
-
-    else if (orderName == "blockade")
-    {
-        int targetTerritoryID;
-
-        cout << "\nPlease enter territory ID:" << endl;
-        cin >> targetTerritoryID;
-
-        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
-        orderList->addOrder(new blockade(*targetTerritory,*this));
-    }
-
-    else if(orderName == "airlift")
-    {
-        int sourceTerritoryID;
-        int targetTerritoryID;
-        int amount;
-
-        cout << "\nPlease enter source territory ID:" << endl;
-        cin >> sourceTerritoryID;
-
-        cout << "\nPlease enter destination territory ID:" << endl;
-        cin >> targetTerritoryID;
-
-        Territory* sourceTerritory = gameEngine->getMap()->getTerritoryById(sourceTerritoryID);
-        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
-
-        do
-        {
-            cout << "\nPlease enter amount:" << endl;
-            cin >> amount;
-
-        } while (amount > sourceTerritory->getNumOfArmies() || amount < 1);
-
-        sourceTerritory->setNumOfArmies(sourceTerritory->getNumOfArmies() - amount);
-        orderList->addOrder(new airlift(*sourceTerritory, *targetTerritory, *this, amount));
-    }
-
-    else if(orderName == "negotiate")
-    {
-        int targetPlayerID;
-
-        cout << "Please enter a player's ID that you want to negotiate with: " << endl;
-        cin >> targetPlayerID;
-
-        Player* targetPlayer = gameEngine->getPlayerByID(targetPlayerID);
-
-        orderList->addOrder(new negotiate(*targetPlayer, *this));
-    }
-
-    else if(orderName == "bomb")
-    {
-        int targetTerritoryID;
-
-        cout << "Please enter target territory ID:" << endl;
-        cin >> targetTerritoryID;
-
-        Territory* targetTerritory = gameEngine->getMap()->getTerritoryById(targetTerritoryID);
-
-        orderList->addOrder(new bomb(*targetTerritory, *this));
-    }
+    playerStrategy->issueOrder(this, orderName);
 }
 
 // Method that creates an order and adds it to the player’s list of orders and then returns the card to the deck
@@ -302,31 +216,34 @@ void Player::play(Deck *currentDeck, Cards *card)
 {
     // create an order & add it to player's order list
 
-        issueOrder(card->getCardType());
+    issueOrder(card->getCardType());
 
-        int removalCounter = 0;
-        Cards usedCard;
+    int removalCounter = 0;
+    Cards usedCard;
 
-        // Remove card from current hand
-        for (int p =0; p < playerHand->HandCards.size(); p++) {
-            if (playerHand->HandCards[p]->getCardType() == card->getCardType() && removalCounter == 0) {
-                usedCard = *playerHand->HandCards[p];
-                playerHand->HandCards.erase(playerHand->HandCards.begin() + p);
-                removalCounter++;
-            }
+    // Remove card from current hand
+    for (int p = 0; p < playerHand->HandCards.size(); p++)
+    {
+        if (playerHand->HandCards[p]->getCardType() == card->getCardType() && removalCounter == 0)
+        {
+            usedCard = *playerHand->HandCards[p];
+            playerHand->HandCards.erase(playerHand->HandCards.begin() + p);
+            removalCounter++;
         }
+    }
 
-        // Return current card to the deck & shuffle it
-        currentDeck->DeckCards.push_back(&usedCard);
-        currentDeck->shuffleDeck();
+    // Return current card to the deck & shuffle it
+    currentDeck->DeckCards.push_back(&usedCard);
+    currentDeck->shuffleDeck();
 
-        cout << "Your" << usedCard.getCardType() << "card has been used and sent to deck" << endl;
+    cout << "Your" << usedCard.getCardType() << "card has been used and sent to deck" << endl;
 };
 
 /*
  * Print method for player's territory list
  */
-void Player::printTerritoryList() {
+void Player::printTerritoryList()
+{
     for (auto t : *getTerritoryList())
     {
         std::cout << "Player ID: " << t->getTerritoryPlayerID() << " | ";
@@ -360,20 +277,20 @@ int Player::getReinforcementPool()
  */
 bool Player::ownAllTerritoryInContinent()
 {
-    for(int i = 0; i < gameEngine->getMap()->Continents.size(); i++)
+    for (int i = 0; i < gameEngine->getMap()->Continents.size(); i++)
     {
         int numOfTerritoriesInContinentMap = gameEngine->getMap()->Continents[i]->territories.size();
         int playerTerritoryIsInContinentCount;
 
-        for(int j = 0; j < territoryList.size(); j++)
+        for (int j = 0; j < territoryList.size(); j++)
         {
-            if(territoryList.at(j)->getContinent() == gameEngine->getMap()->Continents[i]->getContinentName())
+            if (territoryList.at(j)->getContinent() == gameEngine->getMap()->Continents[i]->getContinentName())
             {
                 playerTerritoryIsInContinentCount++;
             }
         }
 
-        if(playerTerritoryIsInContinentCount == numOfTerritoriesInContinentMap)
+        if (playerTerritoryIsInContinentCount == numOfTerritoriesInContinentMap)
         {
             return true;
         }
@@ -390,7 +307,7 @@ bool Player::canAttack(int targetPlayerID)
 {
     int listSize = friendlyPlayers.size();
 
-    for(int i = 0; i < listSize; i++)
+    for (int i = 0; i < listSize; i++)
     {
         if (friendlyPlayers[i] == targetPlayerID)
         {
@@ -406,7 +323,7 @@ void Player::clearFriends()
     friendlyPlayers.clear();
 }
 
-GameEngine* Player::getGE()
+GameEngine *Player::getGE()
 {
     return gameEngine;
 }

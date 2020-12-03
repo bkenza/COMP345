@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(.)
 
 add_executable(Assignment3
+        Maps/caribbean.map
+        Maps/LOTR2.map
+        Maps/solar.map
+        Maps/sudamerica.map
         Cards.cpp
         Cards.h
         CardsDriver.cpp
@@ -26,4 +30,4 @@ add_executable(Assignment3
         OrdersDriver.cpp
         Player.cpp
         Player.h
-        PlayerDriver.cpp)
+        PlayerDriver.cpp PlayerStrategies.cpp PlayerStrategies.h)

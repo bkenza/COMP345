@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "MapLoader.h"
+#include "PlayerStrategies.h"
 #include "Map.h"
 #include "Orders.h"
 #include "Cards.h"
@@ -12,10 +13,6 @@ using namespace std;
 //#########################
 //     GAME ENGINE
 //#########################
-
-//TODO: type checking ??
-//TODO: check number of cards in deck
-//TODO: each class must have an assignment operator
 
 /**
  * Default constructor
@@ -128,12 +125,36 @@ void GameEngine::startGame()
     // Create a deck of cards
     deck = new Deck();
     deck->initializeDeck();
+    int strategyType;
 
     // Creation of Players and adding them to the vector of players. Each player is given an id and an empty hand.
     for (int i = 0; i < numPlayers; i++)
     {
         Player *p = new Player(this);
         p->setPlayerID(i + 1);
+
+        cout << "What strategy would you like to use for player " << p->getPlayerID() << endl;
+        cout << "\n1. Human Player Strategy\n2. Aggressive Player Strategy\n3. Benevolent Player Strategy \n4. Neutral Player Strategy\n";
+
+        cout << "Please enter the desired strategy: ";
+        cin >> strategyType;
+
+        // set player strategy type
+        switch (strategyType)
+        {
+        case 1:
+            p->setStrategy(new HumanPlayerStrategy());
+            break;
+        case 2:
+            p->setStrategy(new AggressivePlayerStrategy());
+            break;
+        case 3:
+            p->setStrategy(new BenevolentPlayerStrategy());
+            break;
+        case 4:
+            p->setStrategy(new NeutralPlayerStrategy());
+        }
+
         Hand *playerHand = new Hand();
         p->setHand(playerHand);
         //p->setMap(map);
@@ -314,6 +335,9 @@ string GameEngine::mapSelector(int mapNumber)
  */
 void GameEngine::mainGameLoop()
 {
+    int strategyType;
+    bool changeStrategy;
+    Player *currentPlayer;
     // Winner object is stored once game is over and we have a winner
     //Player* winner = NULL;
 
@@ -324,16 +348,46 @@ void GameEngine::mainGameLoop()
         //Iterating through GameEngine's list of players
         for (int i = 0; i < players.size(); i++)
         {
-            if(players[i]->getTerritoryList()->empty())
+            if (players[i]->getTerritoryList()->empty())
             {
-                Notify();// Notify that player is eliminated and remove from view. Removal of player from list is taken care of by the observer
+                Notify(); // Notify that player is eliminated and remove from view. Removal of player from list is taken care of by the observer
             }
         }
 
-        if (!firstRound)// reinforcement phase is skipped during the first round
+        if (!firstRound) // reinforcement phase is skipped during the first round
         {
-            // Reinforcement Phase
-            reinforcementPhase();
+            cout << "Would you like to change player strategies? [0/1]";
+            cin >> changeStrategy;
+
+            if (changeStrategy)
+            {
+                for (int i = 0; i < numPlayers; i++)
+                {
+                    currentPlayer = players[i];
+
+                    cout << "Select the appropriate strategy for player" << currentPlayer->getPlayerID() << endl;
+                    cout
+                        << "1. Human Player Strategy\n 2. Aggressive Player Strategy\n 3. Benevolent Player Strategy \n 4. Neutral Player Strategy";
+
+                    cin >> strategyType;
+
+                    // set player strategy type
+                    switch (strategyType)
+                    {
+                    case 1:
+                        currentPlayer->setStrategy(new HumanPlayerStrategy());
+                    case 2:
+                        currentPlayer->setStrategy(new AggressivePlayerStrategy());
+                    case 3:
+                        currentPlayer->setStrategy(new BenevolentPlayerStrategy());
+                    case 4:
+                        currentPlayer->setStrategy(new NeutralPlayerStrategy());
+                    }
+                }
+
+                // Reinforcement Phase
+                reinforcementPhase();
+            }
         }
 
         // Issuing Orders Phase
@@ -370,11 +424,12 @@ void GameEngine::reinforcementPhase()
 {
     for (int i = 0; i < players.size(); i++)
     {
+
         players[i]->setPhase("Reinforcement");
         players[i]->Notify();
-        cout << "Player: " << players[i]->getPlayerID() << "'s old Reinforcement Pool: "<< players[i]->getReinforcementPool();
+        cout << "Player: " << players[i]->getPlayerID() << "'s old Reinforcement Pool: " << players[i]->getReinforcementPool();
         // if (number of territories owned) / 3 is less than 3, assigns 3 to the player reinforcement pool
-        if(((players[i]->getTerritoryList()->size()) / 3) < 3) // removed round
+        if (((players[i]->getTerritoryList()->size()) / 3) < 3) // removed round
         {
             cout << "| Player: " << players[i]->getPlayerID() << "'s updated Reinforcement Pool: ";
             players[i]->setReinforcementPool(players[i]->getReinforcementPool() + 3);
@@ -411,7 +466,7 @@ void GameEngine::issueOrdersPhase()
 
     //blockade -> triple number of armies on one of player's current territory and make it a neutral territory (cannot be attacked?)
 
-    //airlift ->
+    //airlift -> advance armies from user territory to any other territory
 
     //negotiate -> prevent attacks between current and another player until end of turn
 
@@ -423,59 +478,79 @@ void GameEngine::issueOrdersPhase()
         vector<Cards *> currentPlayerHandCards = players[i]->getHand()->HandCards;
         string type;
         string answer;
+        bool isHuman = (players[i]->getStrategy()->getStrategyType() == "human");
 
-        while (answer != "n")
+        if (isHuman)
         {
-            cout << "Player " << pID << ", it is your turn to make a move! Make an order of your choice!\n" << endl;
-            cout << "Input your desired order here: ";
-            cin >> type;
-
-            // If input is advance or deploy it calls issueOrder
-            if (type == "advance" || type == "deploy")
+            while (answer != "n")
             {
-                players[i]->issueOrder(type);
-            }
+                cout << "Player " << pID << ", it is your turn to make a move! Make an order of your choice!\n"
+                     << endl;
+                cout << "Input your desired order here: ";
+                cin >> type;
 
-            // If input is any of these it will loop through player's hands to see if card exists and play it as well as add it
-            // to orders list
-            else if(type == "bomb" || type == "blockade" || type == "airlift" || type == "negotiate")
-            {
-                cout << currentPlayerHandCards.size() << endl;
-
-                // If hand is empty output error message
-                if(currentPlayerHandCards.size() == 0)
+                // If input is advance or deploy it calls issueOrder
+                if (type == "advance" || type == "deploy")
                 {
-                    cout << "Invalid order! Your hand is empty!!" << endl;
+                    players[i]->issueOrder(type);
                 }
 
-                // looping through player's hand to find appropriate card
-                for (int j = 0; j < currentPlayerHandCards.size(); j++)
+                // If input is any of these it will loop through player's hands to see if card exists and play it as well as add it
+                // to orders list
+                else if (type == "bomb" || type == "blockade" || type == "airlift" || type == "negotiate")
                 {
-                    if (currentPlayerHandCards[j]->getCardType() == type)
+                    cout << currentPlayerHandCards.size() << endl;
+
+                    // If hand is empty output error message
+                    if (currentPlayerHandCards.size() == 0)
                     {
-                        players[i]->play(deck, currentPlayerHandCards[j]);
+                        cout << "Invalid order! Your hand is empty!!" << endl;
                     }
 
-                    else
+                    // looping through player's hand to find appropriate card
+                    for (int j = 0; j < currentPlayerHandCards.size(); j++)
                     {
-                        cout << "Such a card does not exist in your deck!" << endl;
+                        if (currentPlayerHandCards[j]->getCardType() == type)
+                        {
+                            players[i]->play(deck, currentPlayerHandCards[j]);
+                        }
+
+                        else
+                        {
+                            cout << "Such a card does not exist in your hand!" << endl;
+                        }
                     }
                 }
-            }
 
-            else
-            {
-                cout << "Invalid order!" << endl;
-            }
+                else
+                {
+                    cout << "Invalid order!" << endl;
+                }
 
-            // asks user if he/she desires to issue a new order, if no, his or her turn ends and goes to next player in queue
-            cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
-            cin >> answer;
-            if(answer == "no")
-            {
-                break;
+                // asks user if he/she desires to issue a new order, if no, his or her turn ends and goes to next player in queue
+                cout << "Would you like to issue another order? Type y for YES or n for NO" << endl;
+                cin >> answer;
+                if (answer == "no")
+                {
+                    break;
+                }
+                cout << "\n"
+                     << endl;
             }
-            cout << "\n" << endl;
+        }
+        else
+        {
+            cout << "Computer Player is trying to deploy" << endl;
+            players[i]->issueOrder("deploy"); // issue deploy order
+
+            cout << "Computer Player is trying to advance" << endl;
+            players[i]->issueOrder("advance"); // issue advance order
+
+            int count = 0;
+            while (currentPlayerHandCards.size() > 0 && count < 3) // for all computer players, we will play two cards from hand
+            {
+                players[i]->play(deck, currentPlayerHandCards[i]);
+            }
         }
     }
 }
@@ -494,7 +569,7 @@ void GameEngine::executeOrdersPhase()
         OrdersList *currentPlayerOrdersList = players[i]->getOrderList();
 
         // If player's order list is empty do not display
-        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        if (players[i]->getOrderList()->getOrdersListSize() != 0)
         {
             players[i]->setPhase("Execute Orders DEPLOY (1st priority)");
             players[i]->Notify();
@@ -511,7 +586,8 @@ void GameEngine::executeOrdersPhase()
             }
         }
         afterTerritoryListSize = players[i]->getTerritoryList()->size();
-        if(afterTerritoryListSize - beforeTerritoryListSize){ // if the player conquered at least one territory, they can draw a card
+        if (afterTerritoryListSize - beforeTerritoryListSize)
+        { // if the player conquered at least one territory, they can draw a card
             deck->draw(players[i]->getHand());
         }
     }
@@ -519,7 +595,7 @@ void GameEngine::executeOrdersPhase()
     // 2: airlift
     for (int i = 0; i < players.size(); i++)
     {
-        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        if (players[i]->getOrderList()->getOrdersListSize() != 0)
         {
             players[i]->setPhase("Execute Orders: AIRLIFT (2nd priority)");
             players[i]->Notify();
@@ -541,7 +617,7 @@ void GameEngine::executeOrdersPhase()
     // 3: blockade
     for (int i = 0; i < players.size(); i++)
     {
-        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        if (players[i]->getOrderList()->getOrdersListSize() != 0)
         {
             players[i]->setPhase("Execute Orders: BLOCKADE (3rd priority)");
             players[i]->Notify();
@@ -563,7 +639,7 @@ void GameEngine::executeOrdersPhase()
     // 4: rest of the orders executed in this block
     for (int i = 0; i < players.size(); i++)
     {
-        if(players[i]->getOrderList()->getOrdersListSize() != 0)
+        if (players[i]->getOrderList()->getOrdersListSize() != 0)
         {
             players[i]->setPhase("Execute Orders: executing the rest according to their order in the list");
             players[i]->Notify();
@@ -664,6 +740,8 @@ void GameEngine::assignTerritories(Map *map)
 {
 
     Player *roundPlayer;
+    vector<int> AdjTerritories;
+    Territory *adjTerritory;
 
     cout << "\n************* TERRITORY ASSIGNMENT ***************\n";
 
@@ -672,9 +750,29 @@ void GameEngine::assignTerritories(Map *map)
         roundPlayer = players[t % numPlayers];
         map->Territories[t]->setTerritoryPlayerID(roundPlayer->getPlayerID());
         roundPlayer->getTerritoryList()->push_back(map->Territories[t]);
+        roundPlayer->getDefendList()->push_back(map->Territories[t]); // add territories to defendList
 
         cout << "\nTerritory " << map->Territories[t]->getTerritoryName() << " (" << map->Territories[t]->getTerritoryID() << ") "
              << " was assigned to Player " << roundPlayer->getPlayerID() << endl;
+    }
+
+    for (int c = 0; c < players.size(); c++)
+    {
+        for (int d = 0; d < players[c]->getTerritoryList()->size(); d++)
+        {
+            vector<int> AdjTerritories = map->getTerritoryById((*players[c]->getTerritoryList())[d]->getTerritoryID())->adjTerritories;
+
+            for (int x = 0; x < AdjTerritories.size(); x++)
+            {
+
+                adjTerritory = map->getTerritoryById(AdjTerritories[x]);
+
+                if (adjTerritory->getTerritoryPlayerID() != players[c]->getPlayerID())
+                {
+                    players[c]->getAttackList()->push_back(adjTerritory);
+                }
+            }
+        }
     }
 }
 
@@ -683,18 +781,20 @@ void GameEngine::assignTerritories(Map *map)
  * @param id
  * @return
  */
-Player* GameEngine::getPlayerByID(int id)
+Player *GameEngine::getPlayerByID(int id)
 {
     int listSize = players.size();
 
     for (int i = 0; i < listSize; i++)
     {
-        if (id == players[i]->getPlayerID()) {
+        if (id == players[i]->getPlayerID())
+        {
             return players[i];
         }
     }
 
-    cout << "Player not found!\n" << endl;
+    cout << "Player not found!\n"
+         << endl;
     return nullptr;
 }
 
@@ -702,7 +802,7 @@ Player* GameEngine::getPlayerByID(int id)
  * Getting for deck
  * @return deck
  */
-Deck* GameEngine::getDeck()
+Deck *GameEngine::getDeck()
 {
     return deck;
 }
