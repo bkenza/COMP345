@@ -4,6 +4,9 @@
 //   Human Player Strategy
 //++++++++++++++++++++++++++++
 
+/**
+ * Method that returns the name of the strategy used
+ * */
 string HumanPlayerStrategy::getStrategyType()
 {
     return "human";
@@ -153,21 +156,33 @@ void HumanPlayerStrategy::issueOrder(Player *player, string orderName)
 //   Aggressive Player Strategy
 //+++++++++++++++++++++++++++++++++
 
+/**
+ * Method that returns the name of the strategy used
+ * */
 string AggressivePlayerStrategy::getStrategyType()
 {
     return "aggressive";
 }
 
+/**
+ * Method that returns a vector containing the defend list of the current player
+ * */
 vector<Territory *> AggressivePlayerStrategy::toDefend(Player *player)
 {
     return *(player->getDefendList()); // holds only the strongest territory
 }
 
+/**
+ * Method that returns a vector containing the attack list of the current player
+ * */
 vector<Territory *> AggressivePlayerStrategy::toAttack(Player *player)
 {
     return *(player->getAttackList());
 }
 
+/**
+ * Method that issues different 'attack' orders
+ * */
 void AggressivePlayerStrategy::issueOrder(Player *player, string orderName)
 {
 
@@ -282,21 +297,34 @@ void AggressivePlayerStrategy::issueOrder(Player *player, string orderName)
 //+++++++++++++++++++++++++++++++++
 //   Benevolent Player Strategy
 //+++++++++++++++++++++++++++++++++
+
+/**
+ * Method that returns the name of the the strategy used
+ * */
 string BenevolentPlayerStrategy::getStrategyType()
 {
     return "benevolent";
 }
 
+/**
+ * Method that returns a vector containing the attack list of the current player
+ * */
 vector<Territory *> BenevolentPlayerStrategy::toAttack(Player *player)
 {
     return *(player->getAttackList());
 }
 
+/**
+ * Method that returns a vector containing the defend list of the current player
+ * */
 vector<Territory *> BenevolentPlayerStrategy::toDefend(Player *player)
 {
     return *(player->getDefendList());
 }
 
+/**
+ * Method that allows a player to issue an order, since this is a computer player, it takes no user input
+ * */
 void BenevolentPlayerStrategy::issueOrder(Player *player, string orderName)
 {
     Territory *territory;
@@ -386,22 +414,35 @@ void BenevolentPlayerStrategy::issueOrder(Player *player, string orderName)
 //   Neutral Player Strategy
 //+++++++++++++++++++++++++++++++++
 
+/**
+ * Method that returns the name of the strategy used
+ * */
 string NeutralPlayerStrategy::getStrategyType()
 {
     return "neutral";
 }
 
+/**
+ * Method that returns a vector containing the defend list of the current player
+ * */
 vector<Territory *> NeutralPlayerStrategy::toDefend(Player *player)
 {
     return *(player->getDefendList());
 }
 
+/**
+ * Method that returns a vector containing the attack list of the current player
+ * */
 vector<Territory *> NeutralPlayerStrategy::toAttack(Player *player)
 {
     return *(player->getAttackList());
 }
 
+/**
+ * Method that issues no orders as it is neutral
+ * */
 void NeutralPlayerStrategy::issueOrder(Player *player, string orderName)
 {
     cout << "You are a neutral player, you cannot issue a(n) " << orderName << " order" << endl;
 }
+
