@@ -5,12 +5,12 @@
 #include "Player.h"
 #include "Cards.h"
 
-using std::ostream;
-using std::setw;
-using std::setfill;
-using std::left;
 using std::cout;
 using std::endl;
+using std::left;
+using std::ostream;
+using std::setfill;
+using std::setw;
 
 /**
  *  The labels of the orders, which are constant and static.
@@ -44,10 +44,10 @@ OrdersList::~OrdersList()
  * Copy constructor: makes a deep copy of a list
  * @param oldList
  */
-OrdersList::OrdersList(const OrdersList& oldList)
+OrdersList::OrdersList(const OrdersList &oldList)
 {
     int listSize = oldList.orders.size();
-    orders = vector<Order*>(listSize);
+    orders = vector<Order *>(listSize);
 
     for (int i = 0; i < listSize; i++) // Same objects, but in different memory locations.
         orders[i] = oldList.orders[i]->clone();
@@ -61,7 +61,7 @@ Order::Order()
     enabled = true;
 }
 
-Order::Order(Player& currentPlayer)
+Order::Order(Player &currentPlayer)
 {
     this->currentPlayer = &currentPlayer;
     enabled = true;
@@ -85,10 +85,10 @@ deploy::deploy() : Order()
     amount = nullptr;
 }
 
-deploy::deploy(Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+deploy::deploy(Territory &target, Player &currentPlayer, int amount) : Order(currentPlayer)
 {
     this->target = &target;
-    int* copiedAmount = new int(amount); // Because our data member is an int pointer.
+    int *copiedAmount = new int(amount); // Because our data member is an int pointer.
     this->amount = copiedAmount;
 }
 
@@ -106,11 +106,11 @@ AdvanceOrder::advance::advance() : Order()
     amount = nullptr;
 }
 
-AdvanceOrder::advance::advance(Territory& source, Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+AdvanceOrder::advance::advance(Territory &source, Territory &target, Player &currentPlayer, int amount) : Order(currentPlayer)
 {
     this->source = &source;
     this->target = &target;
-    int* copiedAmount = new int(amount);
+    int *copiedAmount = new int(amount);
     this->amount = copiedAmount;
 }
 
@@ -129,7 +129,7 @@ bomb::bomb() : Order()
     target = nullptr;
 }
 
-bomb::bomb(Territory& target, Player& currentPlayer) : Order(currentPlayer)
+bomb::bomb(Territory &target, Player &currentPlayer) : Order(currentPlayer)
 {
     this->target = &target;
 }
@@ -147,7 +147,7 @@ blockade::blockade() : Order()
     target = nullptr;
 }
 
-blockade::blockade(Territory& target, Player& currentPlayer) : Order(currentPlayer)
+blockade::blockade(Territory &target, Player &currentPlayer) : Order(currentPlayer)
 {
     this->target = &target;
 }
@@ -167,11 +167,11 @@ airlift::airlift() : Order()
     amount = nullptr;
 }
 
-airlift::airlift(Territory& source, Territory& target, Player& currentPlayer, int amount) : Order(currentPlayer)
+airlift::airlift(Territory &source, Territory &target, Player &currentPlayer, int amount) : Order(currentPlayer)
 {
     this->source = &source;
     this->target = &target;
-    int* copiedAmount = new int(amount);
+    int *copiedAmount = new int(amount);
     this->amount = copiedAmount;
 }
 
@@ -193,7 +193,7 @@ negotiate::negotiate() : Order()
     targetPlayer = nullptr;
 }
 
-negotiate::negotiate(Player& targetPlayer, Player& currentPlayer) : Order(currentPlayer)
+negotiate::negotiate(Player &targetPlayer, Player &currentPlayer) : Order(currentPlayer)
 {
     this->targetPlayer = &targetPlayer;
 }
@@ -207,7 +207,7 @@ negotiate::~negotiate()
  * Method that adds an order to the orders vector
  * @param o
  */
-void OrdersList::addOrder(Order* o)
+void OrdersList::addOrder(Order *o)
 {
     if (o == nullptr) // See OrdersFactory.
         cout << "This is a null pointer! Adding operation failed!" << endl;
@@ -233,7 +233,7 @@ void OrdersList::deleteOrder(int pos)
         cout << "Please select a valid position!" << endl;
     else
     {
-        delete orders[pos - 1]; // Order objects are dynamically allocated, so frees memory.
+        delete orders[pos - 1];                 // Order objects are dynamically allocated, so frees memory.
         orders.erase(orders.begin() + pos - 1); // Once memory freed, delete actual pointer from list.
         cout << "Erase at position " << pos << " successful! Your list now looks like: \n";
         cout << *this << endl;
@@ -257,7 +257,7 @@ void OrdersList::moveOrder(int pos1, int pos2)
         cout << "One or both of your positions are invalid!" << endl;
     else
     {
-        Order* temp = orders[pos1 - 1]; // Swap pointers. Address of actual object unchanged.
+        Order *temp = orders[pos1 - 1]; // Swap pointers. Address of actual object unchanged.
         orders[pos1 - 1] = orders[pos2 - 1];
         orders[pos2 - 1] = temp;
         cout << "Order " << pos1 << " and Order " << pos2 << " have been swapped! Your list now looks like: \n";
@@ -292,9 +292,9 @@ void OrdersList::executeOrders()
  * @param rhsList
  * @return
  */
-OrdersList& OrdersList::operator=(const OrdersList& rhsList) // Releases resources by LHS and deep-copy
+OrdersList &OrdersList::operator=(const OrdersList &rhsList) // Releases resources by LHS and deep-copy
 {                                                            // to RHS
-    if (&rhsList == this) // Checks for self assignment
+    if (&rhsList == this)                                    // Checks for self assignment
         return *this;
 
     int lhsListSize = orders.size();
@@ -303,9 +303,9 @@ OrdersList& OrdersList::operator=(const OrdersList& rhsList) // Releases resourc
     for (int i = 0; i < lhsListSize; i++)
         delete orders[i];
 
-    orders = vector<Order*>(rhsListSize); // Reallocate memory for vector of size RHS
+    orders = vector<Order *>(rhsListSize); // Reallocate memory for vector of size RHS
 
-    for(int i = 0; i < rhsListSize; i++)
+    for (int i = 0; i < rhsListSize; i++)
         orders[i] = rhsList.orders[i]->clone(); // Clone RHS element into LHS
 
     return *this;
@@ -316,9 +316,9 @@ int OrdersList::getOrdersListSize()
     return orders.size();
 }
 
-Order* OrdersList::getOrder(int index)
+Order *OrdersList::getOrder(int index)
 {
-    if(index < orders.size() && index >= 0)
+    if (index < orders.size() && index >= 0)
     {
         return orders[index];
     }
@@ -331,11 +331,11 @@ Order* OrdersList::getOrder(int index)
  * @param ol
  * @return
  */
-ostream& operator<<(ostream& strm, const OrdersList& ol)
+ostream &operator<<(ostream &strm, const OrdersList &ol)
 {
     int listSize = ol.orders.size(); // For iteration
-    const int MAX_WIDTH = 9; // To force the amount of space a string takes.
-    const char separator = ' '; // If string.length() < 9, fill with empty spaces.
+    const int MAX_WIDTH = 9;         // To force the amount of space a string takes.
+    const char separator = ' ';      // If string.length() < 9, fill with empty spaces.
 
     for (int i = 0; i < listSize; i++)
         strm << left << setw(MAX_WIDTH) << setfill(separator) << i + 1 << " | "; // Left formatted
@@ -411,7 +411,7 @@ string negotiate::getLabel() const
  * @param o
  * @return
  */
-ostream& operator<<(ostream& strm, const Order& o)
+ostream &operator<<(ostream &strm, const Order &o)
 {
     return o.printOrder(strm);
 }
@@ -421,32 +421,32 @@ ostream& operator<<(ostream& strm, const Order& o)
  * @param out
  * @return
  */
-ostream& deploy::printOrder(ostream& out) const
+ostream &deploy::printOrder(ostream &out) const
 {
     return out << "This is a deploy order!";
 }
 
-ostream& AdvanceOrder::advance::printOrder(ostream& out) const
+ostream &AdvanceOrder::advance::printOrder(ostream &out) const
 {
     return out << "This is an advance order!";
 }
 
-ostream& bomb::printOrder(ostream& out) const
+ostream &bomb::printOrder(ostream &out) const
 {
     return out << "This is a bomb order!";
 }
 
-ostream& blockade::printOrder(ostream& out) const
+ostream &blockade::printOrder(ostream &out) const
 {
     return out << "This is a blockade order!";
 }
 
-ostream& airlift::printOrder(ostream& out) const
+ostream &airlift::printOrder(ostream &out) const
 {
     return out << "This is an airlift order!";
 }
 
-ostream& negotiate::printOrder(ostream& out) const
+ostream &negotiate::printOrder(ostream &out) const
 {
     return out << "This is a negotiate order!";
 }
@@ -461,11 +461,13 @@ bool deploy::validate() const
 
     if (target->getTerritoryPlayerID() != currentPlayer->getPlayerID())
     {
-        cout << "You do not own this territory!\n" << endl;
+        cout << "You do not own this territory!\n"
+             << endl;
         return false;
     }
 
-    cout << "Your order has been validated!\n" << endl;
+    cout << "Your order has been validated!\n"
+         << endl;
 
     return true;
 }
@@ -476,17 +478,20 @@ bool AdvanceOrder::advance::validate() const
 
     if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID())
     {
-        cout << "The source territory is not your own!\n" << endl;
+        cout << "The source territory is not your own!\n"
+             << endl;
         return false;
     }
 
     else if (!source->isAdjacent(target))
     {
-        cout << "The target territory is not adjacent to the source territory!\n" << endl;
+        cout << "The target territory is not adjacent to the source territory!\n"
+             << endl;
         return false;
     }
 
-    cout << "Your order has been validated!\n" << endl;
+    cout << "Your order has been validated!\n"
+         << endl;
 
     return true;
 }
@@ -495,13 +500,15 @@ bool bomb::validate() const
 {
     cout << "Validating Bomb...\n";
 
-    if(target->getTerritoryPlayerID() == currentPlayer->getPlayerID())
+    if (target->getTerritoryPlayerID() == currentPlayer->getPlayerID())
     {
-        cout << "This territory is your own!\n" << endl;
+        cout << "This territory is your own!\n"
+             << endl;
         return false;
     }
 
-    cout << "Your order has been validated!\n" << endl;
+    cout << "Your order has been validated!\n"
+         << endl;
 
     return true;
 }
@@ -510,13 +517,15 @@ bool blockade::validate() const
 {
     cout << "Validating Blockade...\n";
 
-    if(target->getTerritoryPlayerID() != currentPlayer->getPlayerID())
+    if (target->getTerritoryPlayerID() != currentPlayer->getPlayerID())
     {
-        cout << "This is not your territory! This order can only be played on your own territory!\n" << endl;
+        cout << "This is not your territory! This order can only be played on your own territory!\n"
+             << endl;
         return false;
     }
 
-    cout << "Your order has been validated!\n" << endl;
+    cout << "Your order has been validated!\n"
+         << endl;
 
     return true;
 }
@@ -527,11 +536,13 @@ bool airlift::validate() const
 
     if (source->getTerritoryPlayerID() != currentPlayer->getPlayerID())
     {
-        cout << "The source territory is not your own!\n" << endl;
+        cout << "The source territory is not your own!\n"
+             << endl;
         return false;
     }
 
-    cout << "Your order has been validated!\n" << endl;
+    cout << "Your order has been validated!\n"
+         << endl;
 
     return true;
 }
@@ -540,13 +551,15 @@ bool negotiate::validate() const
 {
     cout << "Validating Negotiate...\n";
 
-    if(targetPlayer->getPlayerID() == currentPlayer->getPlayerID())
+    if (targetPlayer->getPlayerID() == currentPlayer->getPlayerID())
     {
-        cout << "You cannot negotiate with yourself!\n" << endl;
+        cout << "You cannot negotiate with yourself!\n"
+             << endl;
         return false;
     }
 
-    cout << "Your order has been validated!\n" << endl;
+    cout << "Your order has been validated!\n"
+         << endl;
 
     return true;
 }
@@ -560,7 +573,8 @@ void deploy::execute() const
     {
         cout << "Deploy is being executed!\n";
         target->setNumOfArmies(*amount + target->getNumOfArmies());
-        cout << "Deploy has finished executing!\n" << endl;
+        cout << "Deploy has finished executing!\n"
+             << endl;
     }
 }
 
@@ -580,14 +594,16 @@ void AdvanceOrder::advance::execute() const
         {
             if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
             {
-                cout << "You cannot attack this player!\n" << endl;
+                cout << "You cannot attack this player!\n"
+                     << endl;
                 return;
             }
 
             attackSimulation(source, target, currentPlayer, amount);
         }
 
-        cout << "Advance has finished executing!\n" << endl;
+        cout << "Advance has finished executing!\n"
+             << endl;
     }
 }
 
@@ -597,13 +613,16 @@ void bomb::execute() const
     {
         if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
         {
-            cout << "You cannot attack this player!\n" << endl;
+            cout << "You cannot attack this player!\n"
+                 << endl;
             return;
         }
 
-        cout << "Bomb is being executed!\n" << endl;
+        cout << "Bomb is being executed!\n"
+             << endl;
         target->setNumOfArmies(target->getNumOfArmies() / 2);
-        cout << "Bomb has finished executing!\n" << endl;
+        cout << "Bomb has finished executing!\n"
+             << endl;
     }
 }
 
@@ -624,7 +643,8 @@ void airlift::execute() const
     {
         if (!currentPlayer->canAttack(target->getTerritoryPlayerID()))
         {
-            cout << "You cannot attack this player!\n" << endl;
+            cout << "You cannot attack this player!\n"
+                 << endl;
             return;
         }
 
@@ -641,7 +661,8 @@ void airlift::execute() const
             attackSimulation(source, target, currentPlayer, amount);
         }
 
-        cout << "Advance has finished executing!\n" << endl;
+        cout << "Advance has finished executing!\n"
+             << endl;
     }
 }
 
@@ -665,43 +686,47 @@ void negotiate::execute() const
  * these subclasses don't have object specific data members.
  * @return
  */
-Order* deploy::clone() const
+Order *deploy::clone() const
 {
     return new deploy(*this);
 }
 
-Order* AdvanceOrder::advance::clone() const
+Order *AdvanceOrder::advance::clone() const
 {
     return new advance(*this);
 }
 
-Order* bomb::clone() const
+Order *bomb::clone() const
 {
     return new bomb(*this);
 }
 
-Order* blockade::clone() const
+Order *blockade::clone() const
 {
     return new blockade(*this);
 }
 
-Order* airlift::clone() const
+Order *airlift::clone() const
 {
     return new airlift(*this);
 }
 
-Order* negotiate::clone() const
+Order *negotiate::clone() const
 {
     return new negotiate(*this);
 }
 
-void attackSimulation(Territory* source, Territory* target, Player* currentPlayer, int* amount)
+void attackSimulation(Territory *source, Territory *target, Player *currentPlayer, int *amount)
 {
     source->setNumOfArmies(source->getNumOfArmies() - *amount); // Attackers leave home territory
 
     srand(time(NULL));
     int successAttack = 0;
     int successDefend = 0;
+
+    int adversaryId;
+    vector<Territory *> adversaryTerritories;
+    vector<Territory *> adversaryDefendList;
 
     for (int i = 1; i <= *amount; i++) // Attacking Phase
     {
@@ -738,30 +763,39 @@ void attackSimulation(Territory* source, Territory* target, Player* currentPlaye
 
     if (remainingAttackArmies > 0 && remainingDefendArmies == 0) // Win
     {
-        cout << "Territory conquered! You have won this battle!\n" << endl;
+        cout << "Territory conquered! You have won this battle!\n"
+             << endl;
         target->setTerritoryPlayerID(currentPlayer->getPlayerID()); // Current player now occupies territory
-        currentPlayer->getTerritoryList()->push_back(target);// territory added to player list
-        target->setNumOfArmies(remainingAttackArmies); // Attackers advance to conquered territory
-        currentPlayer->getGE()->Notify(); // Notify stats observer since a player conquered a territory
+        currentPlayer->getTerritoryList()->push_back(target);       // territory added to player list
+        currentPlayer->getDefendList()->push_back(target);          // add territory to the defendList of the player
+        adversaryId = currentPlayer->getGE()->getMap()->getTerritoryById(target->getTerritoryID())->getTerritoryPlayerID();
+        adversaryTerritories = *currentPlayer->getGE()->getPlayerByID(adversaryId)->getTerritoryList();
+        adversaryTerritories.erase(remove(adversaryTerritories.begin(), adversaryTerritories.end(), target), adversaryTerritories.end()); // removed from territoryList of adversary
+        adversaryDefendList = *currentPlayer->getGE()->getPlayerByID(adversaryId)->getDefendList();
+        adversaryDefendList.erase(remove(adversaryDefendList.begin(), adversaryDefendList.end(), target), adversaryDefendList.end()); // remove from defendList of adversary
+        target->setNumOfArmies(remainingAttackArmies);                                                                                // Attackers advance to conquered territory
+        currentPlayer->getGE()->Notify();                                                                                             // Notify stats observer since a player conquered a territory
     }
 
     else // Lose. A draw is considered a loss. If any, attackers retreat. If any, defenders retreat.
     {
-        cout << "Territory has not been conquered. You have lost this battle!\n" << endl;
+        cout << "Territory has not been conquered. You have lost this battle!\n"
+             << endl;
         source->setNumOfArmies(source->getNumOfArmies() + remainingAttackArmies); // Attackers retreat
         target->setNumOfArmies(remainingDefendArmies);
     }
 
     if (source->getNumOfArmies() == 0)
     {
-        cout << "The attacker has lost his territory in the process!\n" << endl;
+        cout << "The attacker has lost his territory in the process!\n"
+             << endl;
         source->setTerritoryPlayerID(-1);
     }
 
     if (target->getNumOfArmies() == 0)
     {
-        cout << "The defender has lost his territory in the process!\n" << endl;
+        cout << "The defender has lost his territory in the process!\n"
+             << endl;
         target->setTerritoryPlayerID(-1);
     }
 }
-
